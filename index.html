@@ -871,22 +871,44 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    .bonus-grid{grid-template-columns:1fr 1fr;}
 	    .h-kpi-grid{grid-template-columns:1fr;}
 	    .h-kpi-stack{grid-template-rows:auto;grid-template-columns:1fr 1fr;}
+	    #panel-home{width:100%;max-width:100%;margin-left:0;transform:none;overflow-x:hidden;}
+	    #panel-home>div:first-child{display:grid!important;grid-template-columns:1fr!important;align-items:start!important;margin-bottom:12px!important;gap:10px!important;}
+	    #home-calc-btn{width:100%;min-height:44px;justify-content:center;}
 	    .home-kpi-grid{grid-template-columns:1fr 1fr;gap:8px;}
-	    .home-kpi{padding:12px;}
+	    .home-kpi{padding:11px 10px;border-radius:11px;}
 	    .home-kpi.primary{grid-column:1/-1;}
-	    .home-kpi-value{font-size:24px;}
+	    .home-kpi-value{font-size:21px;white-space:normal;overflow-wrap:anywhere;}
+	    .home-kpi-sub{white-space:normal;}
 	    .home-layout{grid-template-columns:1fr;gap:0;}
-	    #panel-home{width:calc(100vw - 28px);}
 	    #panel-futuros{width:calc(100vw - 28px);}
 	    .fut-hero{padding:13px 14px;border-radius:14px;align-items:flex-start;}
 	    .fut-hero .h-greeting-name{font-size:21px;}
 	    .fut-new-btn{width:100%;min-height:44px;}
+	    .home-filter-card{padding:12px;border-radius:12px;margin-bottom:10px;}
+	    .home-filter-head{display:grid;grid-template-columns:1fr;gap:9px;align-items:start;margin-bottom:10px;}
+	    .home-filter-title{font-size:14px;}
+	    .home-filter-sub{line-height:1.35;}
+	    .home-reset-btn{width:100%;min-height:40px;}
 	    .home-dashboard-grid{grid-template-columns:1fr 1fr;gap:8px;}
+	    .home-metric{padding:11px 10px;border-radius:11px;}
+	    .home-metric-label{font-size:8px;letter-spacing:.75px;margin-bottom:5px;}
+	    .home-metric-value{font-size:18px;white-space:normal;overflow-wrap:anywhere;}
+	    .home-metric-sub{white-space:normal;font-size:9.5px;}
 	    .home-filter-grid{grid-template-columns:1fr;}
 	    .home-section-grid{grid-template-columns:1fr;}
 	    .home-status-grid{grid-template-columns:1fr 1fr;}
-	    .home-filter-head{align-items:flex-start;}
-	    .home-panel{padding:12px;}
+	    .home-panel{padding:11px 10px;border-radius:12px;margin-bottom:10px;overflow:hidden;}
+	    .home-panel-head{display:grid;grid-template-columns:1fr;gap:3px;margin-bottom:9px;}
+	    .home-panel-title{font-size:9px;letter-spacing:1.1px;}
+	    .home-status-card{padding:10px;border-radius:10px;}
+	    .home-status-top{margin-bottom:8px;}
+	    .home-status-name{font-size:9px;letter-spacing:.55px;}
+	    .home-status-num{font-size:21px;}
+	    .home-status-sub{font-size:9.5px;}
+	    .home-table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;}
+	    .home-table{min-width:680px;}
+	    .home-table th{padding:8px 8px;font-size:7.8px;letter-spacing:.65px;}
+	    .home-table td{padding:9px 8px;font-size:10.5px;}
 	    .fut-summary{grid-template-columns:1fr 1fr;gap:8px;}
 	    .fut-layout{grid-template-columns:1fr;}
 	    .fut-form{order:1;}
@@ -1427,7 +1449,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
               <div class="bio-value">
                 <div class="bio-line"><span class="bio-line-label">@ produzida / animal</span><span class="bio-line-value" id="d-atProd">—</span></div>
                 <div class="bio-line"><span class="bio-line-label">GMC (kg carcaça/dia)</span><span class="bio-line-value" id="d-gmc">—</span></div>
-                <div class="bio-line tech-ms-only"><span class="bio-line-label">Eficiência biológica</span><span class="bio-line-value" id="d-efic">—</span></div>
+                <div class="bio-line tech-ms-only"><span class="bio-line-label">Eficiência biológica chegada</span><span class="bio-line-value" id="d-efic">—</span></div>
+                <div class="bio-line tech-ms-only"><span class="bio-line-label">Eficiência biológica origem</span><span class="bio-line-value" id="d-efic-origem">—</span></div>
                 <div class="bio-line tech-ms-only"><span class="bio-line-label">Consumo MS total / animal</span><span class="bio-line-value" id="d-consumoTotal">—</span></div>
               </div>
             </div>
@@ -1516,8 +1539,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <div class="field"><label>Vencimento</label><input type="month" id="fut-vencimento" onchange="atualizarCodigoB3();atualizarFuturoPreview()"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Qtd contratos</label><input type="number" id="fut-qtd" value="1" step="1" min="0" oninput="atualizarFuturoPreview()"></div>
-            <div class="field"><label>@ por contrato</label><input type="number" id="fut-arrobas" value="330" step="1" min="0" oninput="atualizarFuturoPreview()" onblur="ajustarQtdContratoB3NoForm()"><div class="hint">Padrão B3: 330 @ por contrato.</div></div>
+            <div class="field"><label>Qtd contratos</label><input type="number" id="fut-qtd" value="1.00" step="0.01" min="0" oninput="atualizarFuturoPreview()" onblur="ajustarQtdContratoB3NoForm()"></div>
+            <div class="field"><label>@ por contrato</label><input type="number" id="fut-arrobas" value="330" readonly tabindex="-1"><div class="hint">Padrão fixo B3: 330 @ por contrato.</div></div>
           </div>
           <div class="g2">
             <div class="field"><label>Data venda</label><input type="date" id="fut-data-venda"></div>
@@ -1820,6 +1843,7 @@ const USERS={'hastaagro':'hasta2024','caroline':'csilva@2025','alexmorimoto':'al
 const ADMINS=['hastaagro','caroline','alexmorimoto'];
 const PARAM_ADMINS=['alexmorimoto','hastaagro'];
 const FULL_ACCESS=['hastaagro','alexmorimoto'];
+const SESSION_KEY='vmagro_user_session_v1';
 let currentUser='';
 let calcMode='standalone';
 let activeLoteId=null;
@@ -2020,6 +2044,9 @@ function gerarCodigoB3(vencimento){
   var ano=String(m[1]).slice(-2);
   return 'BGI'+(B3_MONTH_CODES[mes]||'')+ano;
 }
+function fmtContratosB3(v){
+  return (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
 function normalizarQtdContratoB3(c){
   c=c||{};
   var qtd=parseFloat(c.qtdContratos);
@@ -2030,9 +2057,10 @@ function normalizarQtdContratoB3(c){
     var qtdDerivada=at/330;
     if(Math.abs(qtdDerivada-Math.round(qtdDerivada))<0.02){
       qtd=Math.round(qtdDerivada);
-      at=330;
     }
   }
+  at=330;
+  qtd=Math.round(qtd*100)/100;
   return {qtd:qtd,arrobasPorContrato:at,arrobas:qtd*at};
 }
 function futuroResultado(c){
@@ -2091,8 +2119,8 @@ function necessidadeContratosB3(lote,orc){
 function textoCoberturaB3(lote,orc,resumo){
   resumo=resumo||resultadoB3Lote(lote&&lote.id);
   var nec=necessidadeContratosB3(lote,orc);
-  if(!nec.necessarios)return resumo.contratos?resumo.contratos.toLocaleString('pt-BR',{maximumFractionDigits:0})+' ctr':'Sem meta';
-  return (resumo.contratos||0).toLocaleString('pt-BR',{maximumFractionDigits:0})+'/'+nec.necessarios.toLocaleString('pt-BR',{maximumFractionDigits:0})+' ctr';
+  if(!nec.necessarios)return resumo.contratos?fmtContratosB3(resumo.contratos)+' ctr':'Sem meta';
+  return fmtContratosB3(resumo.contratos||0)+'/'+fmtContratosB3(nec.necessarios)+' ctr';
 }
 function normalizarFrigorifico(f){
   f=f||{};
@@ -2140,23 +2168,28 @@ function bioRows(id,rows){
 }
 
 /* ── LOGIN / LOGOUT ────────────────────────────── */
+function entrarApp(u,tab){
+  currentUser=u;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('user-display').textContent=u;
+  var err=document.getElementById('login-err');if(err)err.textContent='';
+  document.getElementById('tab-config').style.display='';
+  document.getElementById('csn-params').style.display=PARAM_ADMINS.includes(u)?'':'none';
+  sanitizarLotes();populateTipoSelects();populateFrigSelect();populateBoitelSelect();populateVendSelect();populateFilterVend();populateFilterFrig();populateCalcVendSelect();
+  switchTab(tab||'home');
+}
 function doLogin(){
   const u=document.getElementById('inp-user').value.trim().toLowerCase();
   const p=document.getElementById('inp-pass').value;
   const err=document.getElementById('login-err');
   if(USERS[u]&&USERS[u]===p){
-    currentUser=u;
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('user-display').textContent=u;
-    err.textContent='';
-    document.getElementById('tab-config').style.display='';
-    document.getElementById('csn-params').style.display=PARAM_ADMINS.includes(u)?'':'none';
-    sanitizarLotes();populateTipoSelects();populateFrigSelect();populateBoitelSelect();populateVendSelect();populateFilterVend();populateFilterFrig();populateCalcVendSelect();
-    switchTab('home');
+    localStorage.setItem(SESSION_KEY,u);
+    entrarApp(u,'home');
   }else{err.textContent='Usuário ou senha incorretos.';document.getElementById('inp-pass').value='';document.getElementById('inp-pass').focus();}
 }
 function doLogout(){currentUser='';
+  localStorage.removeItem(SESSION_KEY);
   document.getElementById('tab-config').style.display='none';document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('inp-user').value='alexmorimoto';document.getElementById('inp-pass').value='alex@2025';}
 
 /* ── TABS ──────────────────────────────────────── */
@@ -2754,9 +2787,11 @@ function ajustarQtdContratoB3NoForm(){
   var beforeAt=parseFloat(atEl.value)||0;
   var norm=normalizarQtdContratoB3({qtdContratos:beforeQtd,arrobasPorContrato:beforeAt});
   if(norm.qtd!==beforeQtd||norm.arrobasPorContrato!==beforeAt){
-    qtdEl.value=norm.qtd;
-    atEl.value=norm.arrobasPorContrato;
+    qtdEl.value=norm.qtd.toFixed(2);
+    atEl.value=330;
   }
+  qtdEl.value=norm.qtd.toFixed(2);
+  atEl.value=330;
   atualizarFuturoPreview();
 }
 function atualizarFuturoPreview(){
@@ -2777,20 +2812,20 @@ function atualizarFuturoPreview(){
   }
   var c={
     qtdContratos:parseFloat((document.getElementById('fut-qtd')||{}).value)||0,
-    arrobasPorContrato:parseFloat((document.getElementById('fut-arrobas')||{}).value)||0,
+    arrobasPorContrato:330,
     precoVenda:parseFloat((document.getElementById('fut-preco-venda')||{}).value)||0,
     precoCompra:(document.getElementById('fut-preco-compra')||{}).value,
     custos:parseFloat((document.getElementById('fut-custos')||{}).value)||0
   };
   var r=futuroResultado(c);
   preview.className='fut-preview-value '+(r.resultado>=0?'pos':'neg');
-  preview.textContent=r.liquidado?fmt(r.resultado):'Aberto · '+(r.qtdContratos||0).toLocaleString('pt-BR',{maximumFractionDigits:0})+' contrato(s) · '+(r.arrobas||0).toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ protegidas';
+  preview.textContent=r.liquidado?fmt(r.resultado):'Aberto · '+fmtContratosB3(r.qtdContratos||0)+' contrato(s) · '+(r.arrobas||0).toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ protegidas';
 }
 function limparFormFuturo(loteId){
   var ids=['fut-id','fut-codigo','fut-vencimento','fut-data-venda','fut-preco-venda','fut-data-compra','fut-preco-compra','fut-custos','fut-obs'];
   ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   var tipo=document.getElementById('fut-tipo');if(tipo)tipo.value='bolsa';
-  var qtd=document.getElementById('fut-qtd');if(qtd)qtd.value='1';
+  var qtd=document.getElementById('fut-qtd');if(qtd)qtd.value='1.00';
   var at=document.getElementById('fut-arrobas');if(at)at.value='330';
   fillFuturoLoteSelects();
   var loteSel=document.getElementById('fut-lote');if(loteSel)loteSel.value=loteId||'';
@@ -2807,7 +2842,7 @@ function salvarFuturo(){
   var arr=getFuturos();
   var norm=normalizarQtdContratoB3({
     qtdContratos:parseFloat((document.getElementById('fut-qtd')||{}).value)||0,
-    arrobasPorContrato:parseFloat((document.getElementById('fut-arrobas')||{}).value)||330
+    arrobasPorContrato:330
   });
   var vencimento=(document.getElementById('fut-vencimento')||{}).value||'';
   var entry={
@@ -2847,8 +2882,8 @@ function editarFuturo(id){
   set('fut-vencimento',c.vencimento);
   set('fut-codigo',gerarCodigoB3(c.vencimento)||c.codigo);
   var norm=normalizarQtdContratoB3(c);
-  set('fut-qtd',norm.qtd);
-  set('fut-arrobas',norm.arrobasPorContrato);
+  set('fut-qtd',norm.qtd.toFixed(2));
+  set('fut-arrobas',330);
   set('fut-data-venda',c.dataVenda);
   set('fut-preco-venda',c.precoVenda);
   set('fut-data-compra',c.dataCompra);
@@ -2892,8 +2927,8 @@ function renderFuturos(){
   });
   var sum=document.getElementById('fut-summary');
   if(sum){
-    sum.innerHTML='<div class="fut-card primary"><div class="fut-card-label">Resultado B3</div><div class="fut-card-value">'+fmt(total.resultado)+'</div><div class="fut-card-sub">'+total.liquidados.toLocaleString('pt-BR',{maximumFractionDigits:0})+' contrato(s) liquidado(s)</div></div>'
-      +'<div class="fut-card"><div class="fut-card-label">Contratos</div><div class="fut-card-value">'+total.contratos.toLocaleString('pt-BR',{maximumFractionDigits:0})+'</div><div class="fut-card-sub">'+total.abertos.toLocaleString('pt-BR',{maximumFractionDigits:0})+' aberto(s) · '+total.registros+' lançamento(s)</div></div>'
+    sum.innerHTML='<div class="fut-card primary"><div class="fut-card-label">Resultado B3</div><div class="fut-card-value">'+fmt(total.resultado)+'</div><div class="fut-card-sub">'+fmtContratosB3(total.liquidados)+' contrato(s) liquidado(s)</div></div>'
+      +'<div class="fut-card"><div class="fut-card-label">Contratos</div><div class="fut-card-value">'+fmtContratosB3(total.contratos)+'</div><div class="fut-card-sub">'+fmtContratosB3(total.abertos)+' aberto(s) · '+total.registros+' lançamento(s)</div></div>'
       +'<div class="fut-card"><div class="fut-card-label">@ protegidas</div><div class="fut-card-value">'+total.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div><div class="fut-card-sub">Somatório dos contratos</div></div>'
       +'<div class="fut-card"><div class="fut-card-label">Filtro atual</div><div class="fut-card-value">'+filtrados.length+'</div><div class="fut-card-sub">lançamento(s) na lista</div></div>';
   }
@@ -2918,7 +2953,7 @@ function renderFuturos(){
     var contrato=escHtml(gerarCodigoB3(c.vencimento)||c.codigo||'Contrato B3');
     var loteNome=escHtml(loteLabelB3(lote));
     var loteStatus=escHtml(lote&&STATUS_CFG[lote.status]?STATUS_CFG[lote.status].label:'—');
-    var cobertura=lote?textoCoberturaB3(lote,(lote.orcamentos&&lote.orcamentos[0]),resultadoB3Lote(lote.id)):(r.qtdContratos.toLocaleString('pt-BR',{maximumFractionDigits:0})+' ctr');
+    var cobertura=lote?textoCoberturaB3(lote,(lote.orcamentos&&lote.orcamentos[0]),resultadoB3Lote(lote.id)):(fmtContratosB3(r.qtdContratos)+' ctr');
     var venda='R$ '+(r.precoVenda||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@';
     var vendaData=c.dataVenda?dateBRFromIso(c.dataVenda):'—';
     var liq=r.liquidado?'R$ '+r.precoCompra.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@':'—';
@@ -3103,7 +3138,7 @@ function renderContratosPrecoStatusHtml(lote){
     return '<tr>'
       +'<td><span class="badge '+(r.liquidado?'st-receb':'st-emb')+'">'+(r.liquidado?'Liquidado':'Aberto')+'</span><div class="muted">'+escHtml(tipo)+'</div></td>'
       +'<td>'+escHtml(codigo)+'<div class="muted">'+escHtml(c.vencimento||'Sem vencimento')+'</div></td>'
-      +'<td>'+r.qtdContratos.toLocaleString('pt-BR',{maximumFractionDigits:0})+' ctr<div class="muted">'+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></td>'
+      +'<td>'+fmtContratosB3(r.qtdContratos)+' ctr<div class="muted">'+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></td>'
       +'<td class="money">'+(r.precoVenda?fmt(r.precoVenda)+'/@':'—')+'<div class="muted">'+(c.dataVenda?dateBRFromIso(c.dataVenda):'—')+'</div></td>'
       +'<td class="money">'+(r.liquidado?fmt(r.precoCompra)+'/@':'Aberto')+'<div class="muted">'+(c.dataCompra?dateBRFromIso(c.dataCompra):'Sem liquidação')+'</div></td>'
       +'<td class="money '+(r.resultado>=0?'pos':'neg')+'">'+(r.liquidado?fmt(r.resultado):'—')+'</td>'
@@ -4701,8 +4736,8 @@ function renderDTabB3(){
     +'</tr>';
   }).join('');
   el.innerHTML='<div class="fut-summary">'
-      +'<div class="fut-card primary"><div class="fut-card-label">Resultado B3 do lote</div><div class="fut-card-value">'+fmt(resumo.resultado)+'</div><div class="fut-card-sub">'+resumo.liquidados.toLocaleString('pt-BR',{maximumFractionDigits:0})+' contrato(s) liquidado(s)</div></div>'
-      +'<div class="fut-card"><div class="fut-card-label">Contratos</div><div class="fut-card-value">'+escHtml(cobertura)+'</div><div class="fut-card-sub">'+resumo.abertos.toLocaleString('pt-BR',{maximumFractionDigits:0})+' aberto(s) · '+resumo.registros+' lançamento(s)</div></div>'
+      +'<div class="fut-card primary"><div class="fut-card-label">Resultado B3 do lote</div><div class="fut-card-value">'+fmt(resumo.resultado)+'</div><div class="fut-card-sub">'+fmtContratosB3(resumo.liquidados)+' contrato(s) liquidado(s)</div></div>'
+      +'<div class="fut-card"><div class="fut-card-label">Contratos</div><div class="fut-card-value">'+escHtml(cobertura)+'</div><div class="fut-card-sub">'+fmtContratosB3(resumo.abertos)+' aberto(s) · '+resumo.registros+' lançamento(s)</div></div>'
       +'<div class="fut-card"><div class="fut-card-label">@ protegidas</div><div class="fut-card-value">'+resumo.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div><div class="fut-card-sub">Somatório vinculado</div></div>'
       +'<div class="fut-card"><div class="fut-card-label">Ação</div><div class="fut-card-value" style="font-size:14px;"><button class="btn-save" onclick="switchTab(\'futuros\');limparFormFuturo(\''+lote.id+'\')">+ Novo B3</button></div><div class="fut-card-sub">Já vinculado a este lote</div></div>'
     +'</div>'
@@ -4741,7 +4776,7 @@ function renderDTabResumo(){
   }
   if(lote.apuracao)alertsHtml+='<div class="alert-tag info">✓ Apuração final disponível.</div>';
   var b3Resumo=resultadoB3Lote(lote.id);
-  if(b3Resumo.contratos)alertsHtml+='<div class="alert-tag info">B3: '+b3Resumo.contratos.toLocaleString('pt-BR',{maximumFractionDigits:0})+' contrato(s) · '+b3Resumo.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ · resultado '+fmt(b3Resumo.resultado)+'</div>';
+  if(b3Resumo.contratos)alertsHtml+='<div class="alert-tag info">B3: '+fmtContratosB3(b3Resumo.contratos)+' contrato(s) · '+b3Resumo.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ · resultado '+fmt(b3Resumo.resultado)+'</div>';
   // Compra
   var compraTotal=lote.qtd*lote.pesoMedio*lote.precoKg;
   var freteEst=lote.qtd*(lote.distanciaKm||0)*p.freteCusto;
@@ -6179,6 +6214,7 @@ function calcular(opts){
   s('d-atProd',fmtAt(atProd));
   s('d-gmc',fmtNum(gmcV,4)+' kg/dia');
   s('d-efic',fmtNum(efic,2)+' kg MS / @');  // kg MS consumed per @ produced
+  s('d-efic-origem',fmtNum(eficOrigem,2)+' kg MS / @');
   s('d-consumoTotal',fmtNum(consumoTotal,1)+' kg MS');
   (function(){
     var dd=calcDatas();
@@ -6622,6 +6658,7 @@ function aplicarTecladoNumerico(root){
     var decimal=step&&step!=='1'&&step!=='1.0';
     if(/valor|preco|preço|kg|peso|rend|gmd|ms|custo|bonus|bônus|desconto|senar|arroba|quebra|comissao|comissão|capital|fat|lucro|taxa|oper|sanidade|efic/.test(id))decimal=true;
     if(/qtd|dias|prazo|contratos|distancia|distância|km/.test(id)&&!/(custo|preco|preço|valor)/.test(id))decimal=false;
+    if(id==='fut-qtd')decimal=true;
     el.setAttribute('inputmode',decimal?'decimal':'numeric');
     el.setAttribute('pattern',decimal?'[0-9]*[,.]?[0-9]*':'[0-9]*');
     el.setAttribute('enterkeyhint','done');
@@ -6840,6 +6877,15 @@ function toast(msg, duration){
   clearTimeout(window._toastTimer);
   window._toastTimer=setTimeout(function(){t.classList.remove('show');}, duration||2500);
 }
+
+(function restaurarSessaoLogin(){
+  var u='';
+  try{u=localStorage.getItem(SESSION_KEY)||'';}catch(e){u='';}
+  if(u&&USERS[u]){
+    var inp=document.getElementById('inp-user');if(inp)inp.value=u;
+    entrarApp(u,'home');
+  }
+})();
 
 </script>
 <div id="toast"></div>
