@@ -6562,8 +6562,39 @@ function deletarBoitel(id){
   populateBoitelSelect('');
 }
 
+function aplicarTecladoNumerico(root){
+  root=root||document;
+  var inputs=[];
+  if(root.matches&&root.matches('input[type="number"], input[inputmode="decimal"], input[inputmode="numeric"]'))inputs.push(root);
+  if(root.querySelectorAll)inputs=inputs.concat(Array.from(root.querySelectorAll('input[type="number"], input[inputmode="decimal"], input[inputmode="numeric"]')));
+  inputs.forEach(function(el){
+    var step=String(el.getAttribute('step')||'');
+    var id=String(el.id||'').toLowerCase();
+    var decimal=step&&step!=='1'&&step!=='1.0';
+    if(/valor|preco|preço|kg|peso|rend|gmd|ms|custo|bonus|bônus|desconto|senar|arroba|quebra|comissao|comissão|capital|fat|lucro|taxa|oper|sanidade|efic/.test(id))decimal=true;
+    if(/qtd|dias|prazo|contratos|distancia|distância|km/.test(id)&&!/(custo|preco|preço|valor)/.test(id))decimal=false;
+    el.setAttribute('inputmode',decimal?'decimal':'numeric');
+    el.setAttribute('pattern',decimal?'[0-9]*[,.]?[0-9]*':'[0-9]*');
+    el.setAttribute('enterkeyhint','done');
+    el.setAttribute('autocomplete','off');
+  });
+}
+
 /* ── INIT ──────────────────────────────────────── */
 (function(){var btn=document.querySelector('.tab-btn[onclick*="calc"]');if(btn)btn.addEventListener('click',function(){if(calcMode==='standalone'&&!calcStandaloneInitialized)abrirCalcStandalone();});})();
+(function(){
+  aplicarTecladoNumerico(document);
+  if(typeof MutationObserver==='function'){
+    var obs=new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes&&m.addedNodes.forEach(function(n){
+          if(n&&n.nodeType===1)aplicarTecladoNumerico(n);
+        });
+      });
+    });
+    obs.observe(document.body,{childList:true,subtree:true});
+  }
+})();
 
 
 function populateTipoSelects(){
