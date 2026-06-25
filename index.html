@@ -663,8 +663,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .status-total-value.neg{color:var(--red);}
   .status-total-sub{font-size:9px;color:var(--text-3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .status-table-wrap{background:#fff;border:1px solid var(--border);border-radius:14px;overflow-x:auto;box-shadow:0 6px 22px rgba(13,27,42,.07);width:100%;}
-  .status-table{width:100%;min-width:1280px;}
-.status-head,.status-filter-row,.status-row{display:grid;grid-template-columns:92px 54px minmax(96px,.8fr) minmax(150px,1.35fr) 94px 58px 86px 86px 98px minmax(108px,1fr) minmax(108px,1fr) minmax(100px,.9fr) 72px 72px 92px;align-items:center;}
+  .status-table{width:100%;min-width:1300px;}
+.status-head,.status-filter-row,.status-row{display:grid;grid-template-columns:92px 54px minmax(96px,.8fr) minmax(150px,1.35fr) 94px 58px 86px 86px 98px minmax(108px,1fr) minmax(108px,1fr) minmax(100px,.9fr) 72px 72px 108px;align-items:center;}
   .status-head{background:#f6f9fb;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;}
   .status-head-cell{padding:10px 9px;font-size:8.5px;font-weight:850;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3);white-space:nowrap;}
   .status-head-cell:first-child{text-align:center;}
@@ -738,8 +738,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 	  @media(max-width:1180px){
 	    #panel-lotes{width:calc(100vw - 28px);}
-	    .status-table{min-width:1280px;}
-	    .status-head,.status-filter-row,.status-row{grid-template-columns:86px 52px 112px 160px 90px 54px 84px 84px 96px 112px 112px 102px 70px 70px 88px;}
+	    .status-table{min-width:1320px;}
+	    .status-head,.status-filter-row,.status-row{grid-template-columns:86px 52px 112px 160px 90px 54px 84px 84px 96px 112px 112px 102px 70px 70px 104px;}
 	    .status-head-cell{padding:9px 7px;font-size:8px;}
 	    .status-cell{padding:8px 7px;font-size:11.5px;}
 	  }
@@ -790,8 +790,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    .status-total-card{padding:9px 10px;}
 	    .status-total-value{font-size:14px;}
 	    .status-table-wrap{border-radius:12px;}
-	    .status-table{min-width:1300px;}
-	    .status-head,.status-filter-row,.status-row{grid-template-columns:86px 56px 132px 170px 90px 54px 86px 86px 98px 116px 116px 106px 72px 72px 88px;}
+	    .status-table{min-width:1340px;}
+	    .status-head,.status-filter-row,.status-row{grid-template-columns:86px 56px 132px 170px 90px 54px 86px 86px 98px 116px 116px 106px 72px 72px 106px;}
 	    .status-head-cell{padding:9px 7px;font-size:8px;}
 	    .status-filter-cell{padding:5px;}
 	    .status-filter-cell input,.status-filter-cell select{height:26px;font-size:10px;}
@@ -1823,6 +1823,7 @@ const FULL_ACCESS=['hastaagro','alexmorimoto'];
 let currentUser='';
 let calcMode='standalone';
 let activeLoteId=null;
+let calcStandaloneInitialized=false;
 let activeLoteDetailId=null;
 let activeOrcEditIndex=null;
 let activeLoteReturnStatus=null;
@@ -1869,8 +1870,8 @@ function resultadoStatusLote(lote,orc){
   if(orc&&!capital&&!lucro&&orc.fatLiqLote)faturamento=parseFloat(orc.fatLiqLote)||0;
   var rent=orc?(parseFloat(orc.rent)||0):0;
   var rentMes=orc?(parseFloat(orc.rentMes)||0):0;
-  var bio=orc?biometriaSimuladaOrc(orc):{efic:0};
-  var eficienciaBio=bio&&bio.efic?bio.efic:0;
+  var bio=orc?biometriaSimuladaOrc(orc):{efic:0,eficOrigem:0};
+  var eficienciaBio=bio&&(bio.eficOrigem||bio.efic)?(bio.eficOrigem||bio.efic):0;
   var origem='Simulado';
   if(real){
     if(real.custoReal!==undefined&&real.custoReal!==null&&!isNaN(parseFloat(real.custoReal)))capital=parseFloat(real.custoReal)||0;
@@ -1880,7 +1881,7 @@ function resultadoStatusLote(lote,orc){
     rent=real.rentReal!==undefined&&real.rentReal!==null&&!isNaN(parseFloat(real.rentReal))?parseFloat(real.rentReal):(capital>0?lucro/capital:0);
     rentMes=real.rentMesReal!==undefined&&real.rentMesReal!==null&&!isNaN(parseFloat(real.rentMesReal))?parseFloat(real.rentMesReal):rentMes;
     var realZoo=zootecRealCalc(lote,orc,real);
-    eficienciaBio=realZoo&&realZoo.efic?realZoo.efic:eficienciaBio;
+    eficienciaBio=realZoo&&(realZoo.eficOrigem||realZoo.efic)?(realZoo.eficOrigem||realZoo.efic):eficienciaBio;
     origem=real.manual?'Realizado manual':'Realizado';
   }
   var b3=resultadoB3Lote(lote.id);
@@ -1915,16 +1916,19 @@ function biometriaSimuladaOrc(orc){
   var rendE=(parseFloat(orc.rendE_pct)||0)/100;
   var rendA=(parseFloat(orc.rendA_pct)||0)/100;
   var consPC=(parseFloat(orc.consPC_pct)||0)/100;
-  if(!pesoCom)return {consumoTotal:0,efic:0,atProd:0,pesoAbate:0};
+  if(!pesoCom)return {consumoTotal:0,efic:0,eficOrigem:0,atProd:0,atProdOrigem:0,pesoAbate:0};
   var pesoEntrada=pesoCom*(1-quebra);
   var pesoAbate=pesoEntrada+(gmd*dias);
+  var atEntradaOrigem=rendE>0?pesoCom*rendE/15:0;
   var atEntrada=rendE>0?pesoEntrada*rendE/15:0;
   var atAbate=rendA>0?pesoAbate*rendA/15:0;
+  var atProdOrigem=atAbate-atEntradaOrigem;
   var atProd=atAbate-atEntrada;
   var pesoMed=(pesoEntrada+pesoAbate)/2;
   var consumoTotal=pesoMed*consPC*dias;
+  var eficOrigem=atProdOrigem>0&&consumoTotal>0?consumoTotal/atProdOrigem:0;
   var efic=atProd>0&&consumoTotal>0?consumoTotal/atProd:0;
-  return {consumoTotal:consumoTotal,efic:efic,atProd:atProd,pesoAbate:pesoAbate,pesoCompra:pesoCom,pesoEntrada:pesoEntrada};
+  return {consumoTotal:consumoTotal,efic:efic,eficOrigem:eficOrigem,atProd:atProd,atProdOrigem:atProdOrigem,pesoAbate:pesoAbate,pesoCompra:pesoCom,pesoEntrada:pesoEntrada};
 }
 function brNum(v,dec){
   v=parseFloat(v)||0;
@@ -1951,12 +1955,15 @@ function zootecRealCalc(lote,orc,aj){
   var consPC=(parseFloat(orc.consPC_pct)||0)/100;
   var pesoEntrada=pesoCom*(1-quebra);
   var pesoSaida=pesoEntrada+(gmd*dias);
+  var atEntradaOrigem=rendE>0?pesoCom*rendE/15:0;
   var atEntrada=rendE>0?pesoEntrada*rendE/15:0;
   var atAbate=rendA>0?pesoSaida*(rendA/100)/15:0;
+  var atProdOrigem=atAbate-atEntradaOrigem;
   var atProd=atAbate-atEntrada;
   var consumoTotal=((pesoEntrada+pesoSaida)/2)*consPC*dias;
+  var eficOrigem=atProdOrigem>0&&consumoTotal>0?consumoTotal/atProdOrigem:0;
   var efic=atProd>0&&consumoTotal>0?consumoTotal/atProd:0;
-  return {gmd:gmd,rendA:rendA,dias:dias,pesoSaida:pesoSaida,consumoTotal:consumoTotal,efic:efic,atProd:atProd,atAbate:atAbate};
+  return {gmd:gmd,rendA:rendA,dias:dias,pesoSaida:pesoSaida,consumoTotal:consumoTotal,efic:efic,eficOrigem:eficOrigem,atProd:atProd,atProdOrigem:atProdOrigem,atAbate:atAbate};
 }
 function valorAjustePorArroba(base,val,mode){
   base=parseFloat(base)||0;
@@ -2094,6 +2101,7 @@ function fmt(v,d=2){if(v===null||v===undefined||isNaN(v))return '—';const s=v<
 function fmtAt(v){return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:3})+' @';}
 function fmtKg(v){return v.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' kg';}
 function fmtPct(v){if(v===null||v===undefined||isNaN(v))return '—';return(v*100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';}
+function fmtNum(v,d=2){if(v===null||v===undefined||isNaN(v))return '—';return (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});}
 function fmtM(v){if(Math.abs(v)>=1000000)return(v/1000000).toFixed(1)+'M';if(Math.abs(v)>=1000)return(v/1000).toFixed(0)+'k';return fmt(v);}
 function g(id){return parseFloat(document.getElementById(id).value)||0;}
 function s(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
@@ -2139,7 +2147,7 @@ function switchTab(tab){
   if(tab==='config'){
     showCfg('vends');
   }
-  if(tab==='calc'&&calcMode==='standalone')abrirCalcStandalone();
+  if(tab==='calc'&&calcMode==='standalone'&&!calcStandaloneInitialized)abrirCalcStandalone();
 }
 
 /* ── DASHBOARD ─────────────────────────────────── */
@@ -2625,7 +2633,7 @@ function renderHomeDashboardNovo(lotes){
       +metricCard('% lucro operação',fmtPct(total.rent),moneyShort(total.capital)+' de capital')
       +metricCard('% lucro ao mês',fmtPct(total.rentMes),'Prazo médio: '+(total.prazoMedio?Math.round(total.prazoMedio):0)+' dias')
       +metricCard('GMD médio',total.gmd?brNum(total.gmd,2)+' kg/dia':'—','Média ponderada por qtd')
-      +metricCard('Efic. biológica',total.eficiencia?total.eficiencia.toFixed(2)+' kg MS/@':'—','Projetado ou realizado')
+      +metricCard('Efic. biológica',total.eficiencia?fmtNum(total.eficiencia,2)+' kg MS/@':'—','Projetado ou realizado')
     +'</div>'
     +'<div class="home-panel">'
       +'<div class="home-panel-head"><div class="home-panel-title">Relatório por status</div><div class="home-panel-note">Clique em um status para filtrar</div></div>'
@@ -2644,7 +2652,7 @@ function renderHomeDashboardNovo(lotes){
           +'<div class="home-panel-head"><div class="home-panel-title">Relatório por confinamento</div><div class="home-panel-note">'+confRows.length+' grupo(s)</div></div>'
           +'<div class="home-table-wrap"><table class="home-table"><thead><tr><th>Confinamento</th><th>Lotes</th><th>Qtd</th><th>Faturamento</th><th>Capital</th><th>Lucro</th><th>% Oper.</th><th>% Mês</th><th>GMD</th><th>Efic.</th></tr></thead><tbody>'
             +(confRows.length?confRows.map(function(g){
-              return '<tr><td class="strong">'+escHtml(g.nome)+'</td><td>'+g.lotes+'</td><td>'+numCab(g.qtd)+'</td><td class="money">'+fmt(g.faturamento)+'</td><td class="money">'+fmt(g.capital)+'</td><td class="money '+(g.lucro>=0?'pos':'neg')+'">'+fmt(g.lucro)+'</td><td>'+fmtPct(g.rent)+'</td><td>'+fmtPct(g.rentMes)+'</td><td>'+(g.gmd?brNum(g.gmd,2):'—')+'</td><td>'+(g.eficiencia?g.eficiencia.toFixed(2):'—')+'</td></tr>';
+              return '<tr><td class="strong">'+escHtml(g.nome)+'</td><td>'+g.lotes+'</td><td>'+numCab(g.qtd)+'</td><td class="money">'+fmt(g.faturamento)+'</td><td class="money">'+fmt(g.capital)+'</td><td class="money '+(g.lucro>=0?'pos':'neg')+'">'+fmt(g.lucro)+'</td><td>'+fmtPct(g.rent)+'</td><td>'+fmtPct(g.rentMes)+'</td><td>'+(g.gmd?brNum(g.gmd,2):'—')+'</td><td>'+(g.eficiencia?fmtNum(g.eficiencia,2):'—')+'</td></tr>';
             }).join(''):tableEmpty(10,'Sem lotes para os filtros selecionados.'))
           +'</tbody></table></div>'
         +'</div>'
@@ -2662,7 +2670,7 @@ function renderHomeDashboardNovo(lotes){
           +'<div class="home-panel-head"><div class="home-panel-title">Lotes filtrados</div><div class="home-panel-note">'+filtrados.length+' lote(s)</div></div>'
           +'<div class="home-table-wrap"><table class="home-table"><thead><tr><th>Status</th><th>Ano</th><th>Lote</th><th>Qtd</th><th>Entrada</th><th>Abate</th><th>Receb.</th><th>Lucro</th><th>% Mês</th><th>Efic.</th></tr></thead><tbody>'
             +(loteRows.length?loteRows.map(function(r){
-              return '<tr data-home-lid="'+r.id+'" style="cursor:pointer"><td><span class="badge '+(STATUS_CFG[r.status]||{}).cls+'">'+escHtml(r.statusLabel)+'</span></td><td>'+escHtml(r.ano)+'</td><td><span class="strong">'+escHtml(r.lote)+'</span><div class="muted">'+escHtml(r.confinamento)+' · '+r.origem+'</div></td><td>'+numCab(r.qtd)+'</td><td>'+dateBR(r.entrada)+'</td><td>'+dateBR(r.abate)+'</td><td>'+dateBR(r.recebimento)+'</td><td class="money '+(r.lucro>=0?'pos':'neg')+'">'+fmt(r.lucro)+'</td><td>'+fmtPct(r.rentMes)+'</td><td>'+(r.eficiencia?r.eficiencia.toFixed(2):'—')+'</td></tr>';
+              return '<tr data-home-lid="'+r.id+'" style="cursor:pointer"><td><span class="badge '+(STATUS_CFG[r.status]||{}).cls+'">'+escHtml(r.statusLabel)+'</span></td><td>'+escHtml(r.ano)+'</td><td><span class="strong">'+escHtml(r.lote)+'</span><div class="muted">'+escHtml(r.confinamento)+' · '+r.origem+'</div></td><td>'+numCab(r.qtd)+'</td><td>'+dateBR(r.entrada)+'</td><td>'+dateBR(r.abate)+'</td><td>'+dateBR(r.recebimento)+'</td><td class="money '+(r.lucro>=0?'pos':'neg')+'">'+fmt(r.lucro)+'</td><td>'+fmtPct(r.rentMes)+'</td><td>'+(r.eficiencia?fmtNum(r.eficiencia,2):'—')+'</td></tr>';
             }).join(''):tableEmpty(10,'Nenhum lote encontrado nos filtros atuais.'))
           +'</tbody></table></div>'
         +'</div>'
@@ -3227,7 +3235,7 @@ function openEditPanel(loteId, cardEl){
         +'<div class="ep-rs-item">GMD<strong>'+(o.gmd?o.gmd+' kg/dia':'—')+'</strong></div>'
         +'<div class="ep-rs-item">Consumo MS<strong>'+(o.consPC_pct?o.consPC_pct+'% PV/dia':'—')+'</strong></div>'
         +'<div class="ep-rs-item">Consumo total / animal<strong>'+(simBio.consumoTotal?simBio.consumoTotal.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' kg MS':'—')+'</strong></div>'
-        +'<div class="ep-rs-item">Eficiência biológica<strong>'+(simBio.efic?simBio.efic.toFixed(2)+' kg MS/@':'—')+'</strong></div>'
+        +'<div class="ep-rs-item">Eficiência biológica<strong>'+(simBio.efic?fmtNum(simBio.efic,2)+' kg MS/@':'—')+'</strong></div>'
       +'</div>';
   }
   var arquivosHtml=renderEpArquivosHtml(lote);
@@ -3288,7 +3296,7 @@ function openEditPanel(loteId, cardEl){
           +'<div class="field" style="margin:0"><label style="font-size:10px">GMD realizado (kg/dia)</label><input type="text" inputmode="decimal" id="ep-real-gmd" value="'+brNum(realZoo.gmd,2)+'" oninput="atualizarRealizadoPainel()" onblur="formatarRealizadoPainel(this,2)"></div>'
           +'<div class="field" style="margin:0"><label style="font-size:10px">Rendimento carcaça (%)</label><input type="text" inputmode="decimal" id="ep-real-rend" value="'+brNum(realZoo.rendA,2)+'" oninput="atualizarRealizadoPainel()" onblur="formatarRealizadoPainel(this,2)"></div>'
           +'<div class="field" style="margin:0"><label style="font-size:10px">Peso de saída (kg)</label><input type="text" id="ep-real-peso-saida" value="'+brNum(realZoo.pesoSaida,1)+' kg" readonly disabled tabindex="-1" aria-readonly="true" data-raw="'+realZoo.pesoSaida+'" style="background:#fff;font-weight:800;opacity:1;-webkit-text-fill-color:var(--text);cursor:not-allowed;"><div class="hint">Calculado por peso de entrada + GMD × dias.</div></div>'
-          +'<div class="field" style="margin:0"><label style="font-size:10px">Eficiência biológica</label><input type="text" id="ep-real-efic" value="'+(realZoo.efic?realZoo.efic.toFixed(2)+' kg MS/@':'—')+'" readonly disabled tabindex="-1" aria-readonly="true" data-raw="'+realZoo.efic+'" style="background:#fff;font-weight:800;opacity:1;-webkit-text-fill-color:var(--text);cursor:not-allowed;"></div>'
+          +'<div class="field" style="margin:0"><label style="font-size:10px">Eficiência biológica</label><input type="text" id="ep-real-efic" value="'+(realZoo.efic?fmtNum(realZoo.efic,2)+' kg MS/@':'—')+'" readonly disabled tabindex="-1" aria-readonly="true" data-raw="'+realZoo.efic+'" style="background:#fff;font-weight:800;opacity:1;-webkit-text-fill-color:var(--text);cursor:not-allowed;"></div>'
         +'</div>'
         +'<div class="field" style="margin-top:10px"><label style="font-size:10px">Obs. do confinamento</label>'
           +'<textarea id="ep-real-conf-obs" rows="3" class="ep-textarea" placeholder="Observações do confinamento, manejo, ocorrências, qualidade do lote...">'+escHtml((lote.confRecord&&lote.confRecord.obs)||'')+'</textarea>'
@@ -3752,7 +3760,7 @@ function atualizarRealizadoPainel(){
     var pesoEl=document.getElementById('ep-real-peso-saida');
     var eficEl=document.getElementById('ep-real-efic');
     if(pesoEl){pesoEl.value=brNum(zoo.pesoSaida,1)+' kg';pesoEl.dataset.raw=zoo.pesoSaida;}
-    if(eficEl){eficEl.value=zoo.efic?zoo.efic.toFixed(2)+' kg MS/@':'—';eficEl.dataset.raw=zoo.efic;}
+    if(eficEl){eficEl.value=zoo.efic?fmtNum(zoo.efic,2)+' kg MS/@':'—';eficEl.dataset.raw=zoo.efic;}
   }
 }
 function limparRealizadoPainel(){
@@ -4278,7 +4286,7 @@ function renderLotes(){
     var lucroVal=o?fmt(lucro):'—';
     var rentVal=o?fmtPct(metric.rent):'—';
     var rentMesVal=o?fmtPct(metric.rentMes):'—';
-    var eficienciaVal=o&&metric.eficienciaBio?(metric.eficienciaBio.toFixed(2)+' kg MS/@'):'—';
+    var eficienciaVal=o&&metric.eficienciaBio?(fmtNum(metric.eficienciaBio,2)+' kg MS/@'):'—';
     var b3Val=metric.contratosB3?('Travado · '+metric.contratosB3.toLocaleString('pt-BR',{maximumFractionDigits:0})+' ctr · '+metric.arrobasB3.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ · venda '+fmt(metric.b3VendaMedia||0)+'/@'+(metric.b3CompraMedia?' · liq. '+fmt(metric.b3CompraMedia)+'/@':' · aberto')):'Sem trava';
     var filtroLote=cardTitle+(vend?' '+vend.nome:'')+(tipo?' '+tipo:'')+(metric.real?' realizado':' simulado');
     var attrs=' data-qtd-raw="'+qtdRaw+'" data-faturamento-raw="'+(o?faturamento:0)+'" data-capital-raw="'+(o?capital:0)+'" data-lucro-raw="'+(o?lucro:0)+'" data-prazo-dias-raw="'+prazoDias+'"'
@@ -4363,7 +4371,7 @@ function renderLotes(){
       +'<div class="status-head-cell">Lucro</div>'
       +'<div class="status-head-cell">% Oper.</div>'
       +'<div class="status-head-cell">% Mês</div>'
-      +'<div class="status-head-cell">Efic. Bio.</div>'
+      +'<div class="status-head-cell">Efic. Origem</div>'
     +'</div>'
     +'<div class="status-filter-row">'
       +filterStatus()
@@ -4380,7 +4388,7 @@ function renderLotes(){
       +filterInput('lucro','R$')
       +filterInput('rent','%')
       +filterInput('rentmes','%')
-      +filterInput('eficiencia','kg MS/@')
+      +filterInput('eficiencia','kg MS/@ origem')
     +'</div>'
     +'<div class="status-table-body">'
       +lotes.map(buildStatusCard).join('')
@@ -5122,8 +5130,8 @@ function renderDTabApuracao(){
       </div>
       <div class="resumo-block">
         <div class="resumo-block-title">Receita Real</div>
-        <div class="resumo-row"><span>Arrobas reais</span><span>${ar.arrobasTotais.toFixed(2)} @</span></div>
-        <div class="resumo-row"><span>Preço + bônus - desc.</span><span>R$${(ar.precoArroba+ar.bonusArroba-ar.descontoArroba).toFixed(2)}/@</span></div>
+        <div class="resumo-row"><span>Arrobas reais</span><span>${fmtNum(ar.arrobasTotais,2)} @</span></div>
+        <div class="resumo-row"><span>Preço + bônus - desc.</span><span>${fmt(ar.precoArroba+ar.bonusArroba-ar.descontoArroba)}/@</span></div>
         <div class="resumo-row"><span>Valor bruto</span><span>${fmt(ar.valorBruto)}</span></div>
         <div class="resumo-row"><span>Senar descontado</span><span>-${fmt(ar.funruralValor)}</span></div>
         <div class="resumo-row" style="font-weight:700"><span>Valor Líquido</span><span>${fmt(receita)}</span></div>
@@ -5218,11 +5226,11 @@ function atualizarHintPreco(){
   if(_precoModeAt){
     var atVal=parseFloat(document.getElementById('valorAt_compra').value)||0;
     var kgEq=(atVal*(rE/100)/15);
-    hint.textContent='≈ R$'+kgEq.toFixed(2)+'/kg (com rendimento '+rE+'%)';
+    hint.textContent='≈ '+fmt(kgEq)+'/kg (com rendimento '+fmtNum(rE,2)+'%)';
   } else {
     var kgVal=parseFloat(document.getElementById('valorKG').value)||0;
     var atEq=(kgVal*15/(rE/100));
-    hint.textContent='≈ R$'+atEq.toFixed(2)+'/@ (com rendimento '+rE+'%)';
+    hint.textContent='≈ '+fmt(atEq)+'/@ (com rendimento '+fmtNum(rE,2)+'%)';
   }
 }
 var _orcAprovado=false;
@@ -5379,13 +5387,13 @@ function atualizarPreviewBiometria(){
     return;
   }
   if(pesoFinalEl){pesoFinalEl.value=data.pesoAbate>0?fmtKg(data.pesoAbate):'—';pesoFinalEl.dataset.raw=data.pesoAbate||'';}
-  if(eficEl){eficEl.value=data.efic>0?data.efic.toFixed(2)+' kg MS / @':'—';eficEl.dataset.raw=data.efic||'';}
-  if(atProdEl){atProdEl.value=data.atProd>0?data.atProd.toFixed(2)+' @':'—';atProdEl.dataset.raw=data.atProd||'';}
-  if(atOrigemEl){atOrigemEl.value=data.atProdOrigem>0?data.atProdOrigem.toFixed(2)+' @':'—';atOrigemEl.dataset.raw=data.atProdOrigem||'';}
-  if(atChegadaEl){atChegadaEl.value=data.atProd>0?data.atProd.toFixed(2)+' @':'—';atChegadaEl.dataset.raw=data.atProd||'';}
-  if(atDifEl){var dif=(data.atProd||0)-(data.atProdOrigem||0);atDifEl.value=(data.atProd&&data.atProdOrigem)?(dif>=0?'+':'')+dif.toFixed(2)+' @':'—';atDifEl.dataset.raw=dif||'';}
-  if(eficOrigemEl){eficOrigemEl.value=data.eficOrigem>0?data.eficOrigem.toFixed(2)+' kg MS / @':'—';eficOrigemEl.dataset.raw=data.eficOrigem||'';}
-  if(eficChegadaEl){eficChegadaEl.value=data.efic>0?data.efic.toFixed(2)+' kg MS / @':'—';eficChegadaEl.dataset.raw=data.efic||'';}
+  if(eficEl){eficEl.value=data.efic>0?fmtNum(data.efic,2)+' kg MS / @':'—';eficEl.dataset.raw=data.efic||'';}
+  if(atProdEl){atProdEl.value=data.atProd>0?fmtNum(data.atProd,2)+' @':'—';atProdEl.dataset.raw=data.atProd||'';}
+  if(atOrigemEl){atOrigemEl.value=data.atProdOrigem>0?fmtNum(data.atProdOrigem,2)+' @':'—';atOrigemEl.dataset.raw=data.atProdOrigem||'';}
+  if(atChegadaEl){atChegadaEl.value=data.atProd>0?fmtNum(data.atProd,2)+' @':'—';atChegadaEl.dataset.raw=data.atProd||'';}
+  if(atDifEl){var dif=(data.atProd||0)-(data.atProdOrigem||0);atDifEl.value=(data.atProd&&data.atProdOrigem)?(dif>=0?'+':'')+fmtNum(dif,2)+' @':'—';atDifEl.dataset.raw=dif||'';}
+  if(eficOrigemEl){eficOrigemEl.value=data.eficOrigem>0?fmtNum(data.eficOrigem,2)+' kg MS / @':'—';eficOrigemEl.dataset.raw=data.eficOrigem||'';}
+  if(eficChegadaEl){eficChegadaEl.value=data.efic>0?fmtNum(data.efic,2)+' kg MS / @':'—';eficChegadaEl.dataset.raw=data.efic||'';}
   if(custoOrigemEl){custoOrigemEl.value=data.custoProdOrigem>0?fmt(data.custoProdOrigem)+'/@':'—';custoOrigemEl.dataset.raw=data.custoProdOrigem||'';}
   if(custoChegadaEl){custoChegadaEl.value=data.custoProdChegada>0?fmt(data.custoProdChegada)+'/@':'—';custoChegadaEl.dataset.raw=data.custoProdChegada||'';}
 }
@@ -5618,7 +5626,6 @@ function salvarResultadoNoLote(){
   renderHome();
   pillFilter=statusDestino;
   if(typeof syncStatusPills==='function')syncStatusPills();
-  limparCalculadora(false);
   switchTab('lotes');
   toast('✓ Simulação enviada para '+(STATUS_CFG[statusDestino]?STATUS_CFG[statusDestino].label:'Status'));
   return true;
@@ -5643,7 +5650,7 @@ function aplicarTipoAnimal(){
   const a=getRacas()[tipo];if(!a)return;
   document.getElementById('rendEntrada').value=a.rendE;document.getElementById('rendAbate').value=a.rendA;
   document.getElementById('gmd').value=a.gmd;document.getElementById('consumoMS').value=a.ms;
-  document.getElementById('animal-info').innerHTML='<div><div class="aib-label">Rend. Entrada</div><div class="aib-value">'+a.rendE+'%</div></div>'+'<div><div class="aib-label">Rend. Abate</div><div class="aib-value">'+a.rendA+'%</div></div>'+'<div><div class="aib-label">GMD típico</div><div class="aib-value">'+a.gmd.toFixed(2)+' kg/dia</div></div>'+'<div><div class="aib-label">Consumo MS</div><div class="aib-value">'+a.ms+'% PV/dia</div></div>'+'<div><div class="aib-label">Quebra transp.</div><div class="aib-value">+'+a.qExtra+'%</div></div>'+'<div class="aib-desc">'+a.desc+'</div>';
+  document.getElementById('animal-info').innerHTML='<div><div class="aib-label">Rend. Entrada</div><div class="aib-value">'+fmtNum(a.rendE,2)+'%</div></div>'+'<div><div class="aib-label">Rend. Abate</div><div class="aib-value">'+fmtNum(a.rendA,2)+'%</div></div>'+'<div><div class="aib-label">GMD típico</div><div class="aib-value">'+fmtNum(a.gmd,2)+' kg/dia</div></div>'+'<div><div class="aib-label">Consumo MS</div><div class="aib-value">'+fmtNum(a.ms,2)+'% PV/dia</div></div>'+'<div><div class="aib-label">Quebra transp.</div><div class="aib-value">+'+fmtNum(a.qExtra,2)+'%</div></div>'+'<div class="aib-desc">'+a.desc+'</div>';
   recalcularQuebra();aplicarFrigorifico();
 }
 function quebraPorKm(km){return Math.max(0,(parseFloat(km)||0)*1.25/100);}
@@ -5657,7 +5664,7 @@ function recalcularQuebra(){
   document.getElementById('quebra').value=qT.toFixed(2);
   var fd=km.toLocaleString('pt-BR',{maximumFractionDigits:0})+'km';
   var bd=document.getElementById('quebra-bd');
-  if(bd)bd.innerHTML='<div class="qb-item">Distância: <strong>'+fd+'</strong></div><span class="qb-sep">→</span><div class="qb-item">Base: <strong>'+qD.toFixed(2)+'%</strong> <span style="color:var(--text-3);font-size:10px;">(1,25%/100km)</span></div><span class="qb-sep">+</span><div class="qb-item">Raça: <strong>+'+qExtra.toFixed(2)+'%</strong></div><span class="qb-sep">=</span><div class="qb-total">Sugerida: '+qT.toFixed(2)+'%</div>';
+  if(bd)bd.innerHTML='<div class="qb-item">Distância: <strong>'+fd+'</strong></div><span class="qb-sep">→</span><div class="qb-item">Base: <strong>'+fmtNum(qD,2)+'%</strong> <span style="color:var(--text-3);font-size:10px;">(1,25%/100km)</span></div><span class="qb-sep">+</span><div class="qb-item">Raça: <strong>+'+fmtNum(qExtra,2)+'%</strong></div><span class="qb-sep">=</span><div class="qb-total">Sugerida: '+fmtNum(qT,2)+'%</div>';
   atualizarFreteCalculado();
   atualizarPreviewBiometria();
 }
@@ -5780,6 +5787,7 @@ function checkPesoMin(atAbate){
 }
 function abrirCalcStandalone(opts){
   opts=opts||{};
+  calcStandaloneInitialized=true;
   rebuildAllVendSelects(null);
   populateCalcVendSelect();
   populateBoitelSelect('');
@@ -5849,6 +5857,7 @@ function abrirCalcStandalone(opts){
   calcular({silent:true,auto:true,noScroll:true});
 }
 function limparCalculadora(showToast){
+  calcStandaloneInitialized=false;
   abrirCalcStandalone({noAuto:true});
   if(showToast)toast('✓ Calculadora limpa para nova cotação');
 }
@@ -5973,9 +5982,9 @@ function calcular(opts){
   const efic=atProd>0?consumoTotal/atProd:0;
   const eficOrigem=atProdOrigem>0?consumoTotal/atProdOrigem:0;
   const eficField=document.getElementById('eficienciaBio');
-  if(eficField){eficField.value=atProd>0?efic.toFixed(2)+' kg MS / @':'—';eficField.dataset.raw=efic;}
+  if(eficField){eficField.value=atProd>0?fmtNum(efic,2)+' kg MS / @':'—';eficField.dataset.raw=efic;}
   const atProdField=document.getElementById('arrobasProdBoitel');
-  if(atProdField){atProdField.value=atProd>0?atProd.toFixed(2)+' @':'—';atProdField.dataset.raw=atProd;}
+  if(atProdField){atProdField.value=atProd>0?fmtNum(atProd,2)+' @':'—';atProdField.dataset.raw=atProd;}
 
   // ── Venda ──────────────────────────────────────
   const dP=checkPesoMin(atAbate);
@@ -6009,11 +6018,11 @@ function calcular(opts){
   const eficChegadaField=document.getElementById('eficienciaBioChegada');
   const custoOrigemField=document.getElementById('custoProdOrigem');
   const custoChegadaField=document.getElementById('custoProdChegada');
-  if(atOrigemField){atOrigemField.value=atProdOrigem>0?atProdOrigem.toFixed(2)+' @':'—';atOrigemField.dataset.raw=atProdOrigem||'';}
-  if(atChegadaField){atChegadaField.value=atProd>0?atProd.toFixed(2)+' @':'—';atChegadaField.dataset.raw=atProd||'';}
-  if(atDifField){var _atDif=atProd-atProdOrigem;atDifField.value=(atProd>0&&atProdOrigem>0)?(_atDif>=0?'+':'')+_atDif.toFixed(2)+' @':'—';atDifField.dataset.raw=_atDif||'';}
-  if(eficOrigemField){eficOrigemField.value=eficOrigem>0?eficOrigem.toFixed(2)+' kg MS / @':'—';eficOrigemField.dataset.raw=eficOrigem||'';}
-  if(eficChegadaField){eficChegadaField.value=efic>0?efic.toFixed(2)+' kg MS / @':'—';eficChegadaField.dataset.raw=efic||'';}
+  if(atOrigemField){atOrigemField.value=atProdOrigem>0?fmtNum(atProdOrigem,2)+' @':'—';atOrigemField.dataset.raw=atProdOrigem||'';}
+  if(atChegadaField){atChegadaField.value=atProd>0?fmtNum(atProd,2)+' @':'—';atChegadaField.dataset.raw=atProd||'';}
+  if(atDifField){var _atDif=atProd-atProdOrigem;atDifField.value=(atProd>0&&atProdOrigem>0)?(_atDif>=0?'+':'')+fmtNum(_atDif,2)+' @':'—';atDifField.dataset.raw=_atDif||'';}
+  if(eficOrigemField){eficOrigemField.value=eficOrigem>0?fmtNum(eficOrigem,2)+' kg MS / @':'—';eficOrigemField.dataset.raw=eficOrigem||'';}
+  if(eficChegadaField){eficChegadaField.value=efic>0?fmtNum(efic,2)+' kg MS / @':'—';eficChegadaField.dataset.raw=efic||'';}
   var custoCampoChegada=(getCalcModelo()==='atprod'&&custoBoitelAt>0)?custoBoitelAt:custoAtProd;
   var custoCampoOrigem=(getCalcModelo()==='atprod'&&custoBoitelAt>0)?(atProdOrigem>0?(atProd*custoBoitelAt)/atProdOrigem:0):custoAtProdOrigem;
   if(custoOrigemField){custoOrigemField.value=custoCampoOrigem>0?fmt(custoCampoOrigem)+'/@':'—';custoOrigemField.dataset.raw=custoCampoOrigem||'';}
@@ -6110,7 +6119,7 @@ function calcular(opts){
     ['Peso abate',fmtKg(pesoAbate)]
   ]);
   bioRows('d-quebra',[
-    ['Quebra aplicada',quebra_pct.toFixed(2)+'%'],
+    ['Quebra aplicada',fmtNum(quebra_pct,2)+'%'],
     ['Entrada real',fmtKg(pesoEntrada)]
   ]);
   bioRows('d-ats',[
@@ -6119,9 +6128,9 @@ function calcular(opts){
     ['@ abate',fmtAt(atAbate)]
   ]);
   s('d-atProd',fmtAt(atProd));
-  s('d-gmc',gmcV.toFixed(4)+' kg/dia');
-  s('d-efic',efic.toFixed(2)+' kg MS / @');  // kg MS consumed per @ produced
-  s('d-consumoTotal',consumoTotal.toFixed(1)+' kg MS');
+  s('d-gmc',fmtNum(gmcV,4)+' kg/dia');
+  s('d-efic',fmtNum(efic,2)+' kg MS / @');  // kg MS consumed per @ produced
+  s('d-consumoTotal',fmtNum(consumoTotal,1)+' kg MS');
   (function(){
     var dd=calcDatas();
     if(dd.ent){
@@ -6139,7 +6148,7 @@ function calcular(opts){
   const porAtCompra=function(v){return atCompra>0?fmt(v/atCompra)+'/@':'—';};
 
   s('d-custoCom',fmt(valAnim));
-  s('d-custoComAt', atCompra>0 ? 'R$'+(valAnim/atCompra).toFixed(2)+'/@' : '—');
+  s('d-custoComAt', atCompra>0 ? fmt(valAnim/atCompra)+'/@' : '—');
   s('d-custoComBoitel',boi(fmt(valAnim)));
   s('d-freteBrutoAt',porAtCompra(freteBruto));
   s('d-freteBruto',fmt(freteBruto)+' ('+freteKm+'km × R$'+freteCusto.toFixed(2)+')');
@@ -6176,25 +6185,25 @@ function calcular(opts){
   s('d-custoAtBoitel',boi(fmt(custoAtProdBoitel)+'/@'));
 
   // Faturamento por @ e total
-  s('d-valorAt','R$'+valorAt.toFixed(2)+'/@');
+  s('d-valorAt',fmt(valorAt)+'/@');
   s('d-fatBase',fmt(valorAt*totalAtLote));
   s('d-fatBaseBoitel',boi(fmt(valorAt*totalAtLote)));
   const bSign=bonusPerAt>0?'+':'';
-  s('d-bonusAt',bSign+'R$'+bonusPerAt.toFixed(2)+'/@'+(bonusMode==='pct'?'('+bonusVal+'%)':''));
+  s('d-bonusAt',bSign+fmt(bonusPerAt)+'/@'+(bonusMode==='pct'?'('+fmtNum(bonusVal,2)+'%)':''));
   s('d-bonusTotal',bSign+fmt(bonusPerAt*totalAtLote));
   s('d-bonusTotalBoitel',boi(bSign+fmt(bonusPerAt*totalAtLote)));
   s('d-descontoAt','-'+fmt(descontoPerAt,2)+'/@ '+(descontoMode==='pct'?'('+descontoVal+'%)':''));
   s('d-descontoTotal','-'+fmt(descontoPerAt*totalAtLote));
   s('d-descontoTotalBoitel',boi('-'+fmt(descontoPerAt*totalAtLote)));
-  s('d-atLiq','R$'+atLiq.toFixed(2)+'/@');
+  s('d-atLiq',fmt(atLiq)+'/@');
   s('d-fatBruto',fmt(fatBruto));
   s('d-fatBrutoBoitel',boi(fmt(fatBruto)));
-  s('d-funruralAt','-R$'+(atLiq*funrural).toFixed(4)+'/@');
+  s('d-funruralAt','-'+fmt(atLiq*funrural,4)+'/@');
   s('d-funrural','-'+fmt(funrV));
   s('d-funruralBoitel',boi('-'+fmt(funrV)));
-  s('d-totalAt',totalAtLote.toFixed(2)+' @');
-  s('d-totalAtBoitel',boi(totalAtLote.toFixed(2)+' @'));
-  s('d-fatLiqAt','R$'+atLiqFR.toFixed(2)+'/@');
+  s('d-totalAt',fmtNum(totalAtLote,2)+' @');
+  s('d-totalAtBoitel',boi(fmtNum(totalAtLote,2)+' @'));
+  s('d-fatLiqAt',fmt(atLiqFR)+'/@');
   s('d-fatLiq',fmt(fatLiq));
   s('d-fatLiqBoitel',boi(fmt(fatLiq)));
   s('d-investCapAt',fmt(investCapital));
@@ -6554,7 +6563,7 @@ function deletarBoitel(id){
 }
 
 /* ── INIT ──────────────────────────────────────── */
-(function(){var btn=document.querySelector('.tab-btn[onclick*="calc"]');if(btn)btn.addEventListener('click',function(){if(calcMode==='standalone')abrirCalcStandalone();});})();
+(function(){var btn=document.querySelector('.tab-btn[onclick*="calc"]');if(btn)btn.addEventListener('click',function(){if(calcMode==='standalone'&&!calcStandaloneInitialized)abrirCalcStandalone();});})();
 
 
 function populateTipoSelects(){
