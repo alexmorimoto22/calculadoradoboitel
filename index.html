@@ -1071,6 +1071,129 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    #panel-calc .g2>.field,#panel-calc .g3>.field{min-width:0;}
 	    #panel-calc .g2>.field:empty,#panel-calc .g3>.field:empty{display:none;}
 	  }
+
+	  @media(max-width:640px){
+	    #panel-lotes{width:100%;max-width:100%;margin-left:0;transform:none;overflow-x:hidden;}
+	    #panel-lotes .status-summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+	    #panel-lotes .status-total-card{padding:10px;border-radius:12px;}
+	    #panel-lotes .status-total-label{font-size:8px;letter-spacing:.75px;}
+	    #panel-lotes .status-total-value{font-size:15px;white-space:normal;overflow-wrap:anywhere;}
+	    #panel-lotes .status-total-sub{white-space:normal;}
+	    #panel-lotes .status-table-wrap{overflow:visible;background:transparent;border:none;border-radius:0;box-shadow:none;}
+	    #panel-lotes .status-table{width:100%;min-width:0;}
+	    #panel-lotes .status-head,#panel-lotes .status-filter-row{display:none;}
+	    #panel-lotes .status-table-body{display:grid;grid-template-columns:1fr;gap:10px;width:100%;}
+	    #panel-lotes .status-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-height:0;padding:12px;border:1px solid var(--border);border-radius:15px;background:#fff;box-shadow:0 3px 14px rgba(13,27,42,.06);cursor:pointer;overflow:hidden;}
+	    #panel-lotes .status-row:hover{background:#fff;box-shadow:0 4px 18px rgba(13,27,42,.09);}
+	    #panel-lotes .status-row.active-edit{background:#fff;box-shadow:0 0 0 2px rgba(201,162,78,.28),0 4px 18px rgba(13,27,42,.09);}
+	    #panel-lotes .status-cell{display:block;padding:8px;border:1px solid rgba(216,203,181,.72);border-radius:10px;background:rgba(242,237,227,.35);font-size:12px;line-height:1.25;white-space:normal!important;overflow:visible;text-overflow:clip;min-width:0;}
+	    #panel-lotes .status-cell::before{display:block;margin-bottom:4px;font-size:7.5px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);line-height:1.1;}
+	    #panel-lotes .status-cell:nth-child(1)::before{content:"Status";}
+	    #panel-lotes .status-cell:nth-child(2)::before{content:"Ano";}
+	    #panel-lotes .status-cell:nth-child(3)::before{content:"Confinamento";}
+	    #panel-lotes .status-cell:nth-child(4)::before{content:"Lote";}
+	    #panel-lotes .status-cell:nth-child(5)::before{content:"B3";}
+	    #panel-lotes .status-cell:nth-child(6)::before{content:"Qtd";}
+	    #panel-lotes .status-cell:nth-child(7)::before{content:"Entrada";}
+	    #panel-lotes .status-cell:nth-child(8)::before{content:"Abate";}
+	    #panel-lotes .status-cell:nth-child(9)::before{content:"Recebimento";}
+	    #panel-lotes .status-cell:nth-child(10)::before{content:"Faturamento";}
+	    #panel-lotes .status-cell:nth-child(11)::before{content:"Capital";}
+	    #panel-lotes .status-cell:nth-child(12)::before{content:"Lucro";}
+	    #panel-lotes .status-cell:nth-child(13)::before{content:"% Oper.";}
+	    #panel-lotes .status-cell:nth-child(14)::before{content:"% Mês";}
+	    #panel-lotes .status-cell:nth-child(15)::before{content:"Efic. Origem";}
+	    #panel-lotes .status-cell:nth-child(16)::before{content:"Efic. Cheg.";}
+	    #panel-lotes .status-cell:nth-child(4){grid-column:1/-1;order:-3;background:#fff;border-color:rgba(201,162,78,.55);}
+	    #panel-lotes .status-cell:nth-child(1){grid-column:1/-1;order:-2;background:transparent;border:none;padding:0;}
+	    #panel-lotes .status-cell:nth-child(5){grid-column:1/-1;order:-1;background:rgba(13,27,42,.035);}
+	    #panel-lotes .status-cell:nth-child(3){grid-column:1/-1;}
+	    #panel-lotes .status-cell.money{font-size:13px;font-weight:850;background:#fff;}
+	    #panel-lotes .status-cell.rate{font-size:13px;font-weight:850;background:#fff;}
+	    #panel-lotes .status-cell-title{display:block;font-size:15px;line-height:1.22;white-space:normal;overflow-wrap:anywhere;}
+	    #panel-lotes .status-cell-sub{font-size:10px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip;}
+	    #panel-lotes .status-badge-cell{display:flex;align-items:center;justify-content:flex-start;gap:7px;}
+	    #panel-lotes .status-badge-cell::before{display:none;}
+	    #panel-lotes .status-drag-dot{width:5px;height:22px;}
+	    #panel-lotes .badge{font-size:9px;padding:4px 9px;}
+	    #panel-lotes .b3-lock-pill{font-size:8.5px;margin-bottom:3px;}
+	    #panel-lotes .status-table-note{padding:0 2px 10px;line-height:1.45;}
+	    #panel-lotes #edit-panel{width:100%;min-width:0;overflow:hidden;}
+	    #panel-lotes .status-row.active-edit + #edit-panel{margin:-5px 0 12px!important;}
+	    #panel-lotes .status-row.active-edit + #edit-panel .ep{border-radius:0 0 14px 14px;border-top:none;margin:0;padding:14px 12px;}
+	    #panel-lotes .ep{max-width:100%;overflow:hidden;}
+	    #panel-lotes .ep-result-summary{grid-template-columns:1fr;gap:8px;}
+	    #panel-lotes .ep-rs-item strong{font-size:14px;overflow-wrap:anywhere;}
+	    #panel-lotes .fut-table-wrap{overflow-x:auto;}
+	  }
+
+	  @media(max-width:640px){
+	    .topbar{transition:transform .22s ease,box-shadow .22s ease;}
+	    body.mobile-header-hidden .topbar{transform:translateY(-105%);box-shadow:none;}
+	    #panel-lotes .status-table-body{display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 3px 14px rgba(13,27,42,.05);}
+	    #panel-lotes .status-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;margin:0;padding:11px 12px;border:0;border-bottom:1px solid var(--border);border-radius:0;box-shadow:none;background:#fff;min-height:0;}
+	    #panel-lotes .status-row:last-child{border-bottom:none;}
+	    #panel-lotes .status-row:hover{box-shadow:none;background:#fff;}
+	    #panel-lotes .status-row.active-edit{border-bottom:1px solid var(--border);box-shadow:inset 4px 0 0 var(--gold);background:rgba(242,237,227,.32);}
+	    #panel-lotes .status-cell{display:none!important;border:none;background:transparent;border-radius:0;padding:0;font-size:11px;line-height:1.24;white-space:normal!important;overflow:hidden;text-overflow:ellipsis;}
+	    #panel-lotes .status-cell::before{display:none!important;}
+	    #panel-lotes .status-cell:nth-child(1),
+	    #panel-lotes .status-cell:nth-child(4),
+	    #panel-lotes .status-cell:nth-child(5),
+	    #panel-lotes .status-cell:nth-child(6),
+	    #panel-lotes .status-cell:nth-child(10),
+	    #panel-lotes .status-cell:nth-child(12),
+	    #panel-lotes .status-cell:nth-child(14){display:block!important;}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(3),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(7),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(8),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(9),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(11),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(13),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(15),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(16){display:block!important;}
+	    #panel-lotes .status-cell:nth-child(4){grid-column:1;grid-row:1;background:transparent!important;border:none!important;order:0;}
+	    #panel-lotes .status-cell:nth-child(1){grid-column:2;grid-row:1;align-self:start;justify-self:end;background:transparent!important;border:none!important;padding:0!important;order:0;}
+	    #panel-lotes .status-cell:nth-child(5){grid-column:1/-1;order:2;color:var(--text-3);font-weight:700;}
+	    #panel-lotes .status-cell:nth-child(6){grid-column:2;grid-row:2;justify-self:end;text-align:right;font-weight:850;color:var(--text);}
+	    #panel-lotes .status-cell:nth-child(10){grid-column:1;order:3;font-weight:850;color:var(--text);}
+	    #panel-lotes .status-cell:nth-child(12){grid-column:2;order:3;text-align:right;font-weight:850;}
+	    #panel-lotes .status-cell:nth-child(14){grid-column:2;order:4;text-align:right;font-weight:850;color:var(--text);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(3),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(7),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(8),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(9),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(11),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(13),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(15),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(16){background:#fff;border:1px solid rgba(216,203,181,.72);border-radius:9px;padding:7px 8px;font-weight:750;order:5;min-width:0;}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(3),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(15),
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(16){grid-column:1/-1;}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(3)::before{content:"Confinamento";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(7)::before{content:"Entrada";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(8)::before{content:"Abate";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(9)::before{content:"Recebimento";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(11)::before{content:"Capital";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(13)::before{content:"% Oper.";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(15)::before{content:"Eficiência origem";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit .status-cell:nth-child(16)::before{content:"Eficiência chegada";display:block!important;margin-bottom:3px;font-size:7px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);}
+	    #panel-lotes .status-cell-title{font-size:13.5px;line-height:1.22;font-weight:850;display:block;white-space:normal;overflow-wrap:anywhere;}
+	    #panel-lotes .status-cell-sub{font-size:9.5px;line-height:1.25;white-space:normal;overflow:hidden;display:block;}
+	    #panel-lotes .status-badge-cell{display:flex!important;justify-content:flex-end;align-items:flex-start;gap:5px;}
+	    #panel-lotes .status-drag-dot{display:none;}
+	    #panel-lotes .badge{font-size:8px;padding:3px 8px;}
+	    #panel-lotes .b3-lock-pill{font-size:8px;padding:3px 7px;margin-right:5px;}
+	    #panel-lotes .status-cell:nth-child(5) .status-cell-sub:nth-of-type(n+3){display:none;}
+	    #panel-lotes .status-row.active-edit + #edit-panel{margin:0!important;}
+	    #panel-lotes .status-row.active-edit + #edit-panel .ep{border:0;border-bottom:1px solid var(--border);border-radius:0;background:#fff;box-shadow:none;padding:13px 12px 16px;margin:0;}
+	    #panel-lotes .ep-header{margin:0 0 12px;padding-bottom:10px;}
+	    #panel-lotes .ep-title{font-size:14px;}
+	    #panel-lotes .ep-section{font-size:8.5px;letter-spacing:1.1px;margin:12px 0 7px;}
+	    #panel-lotes .ep select.field{height:44px;font-size:14px;}
+	    #panel-lotes .ep textarea{font-size:14px;}
+	    #panel-lotes .status-table-note{font-size:9.5px;margin:9px 2px 0;}
+	  }
 	
 	</style>
 </head>
@@ -2273,9 +2396,10 @@ function necessidadeContratosB3(lote,orc){
 function textoCoberturaB3(lote,orc,resumo,mostrarMetaDecimal){
   resumo=resumo||resultadoB3Lote(lote&&lote.id);
   var nec=necessidadeContratosB3(lote,orc);
-  if(!nec.necessarios)return resumo.contratos?fmtContratosB3(resumo.contratos)+' ctr':'Sem meta';
+  var contratosTravados=parseFloat(resumo.contratos!==undefined?resumo.contratos:resumo.contratosB3)||0;
+  if(!nec.necessarios)return contratosTravados?fmtContratosB3(contratosTravados)+' ctr':'Sem meta';
   var meta=fmtContratosB3(nec.metaOperacional);
-  return fmtContratosB3(resumo.contratos||0)+'/'+meta+' ctr';
+  return fmtContratosB3(contratosTravados)+'/'+meta+' ctr';
 }
 function normalizarFrigorifico(f){
   f=f||{};
@@ -2345,6 +2469,7 @@ function doLogin(){
 }
 function doLogout(){currentUser='';
   localStorage.removeItem(SESSION_KEY);
+  document.body.classList.remove('mobile-header-hidden');
   document.getElementById('tab-config').style.display='none';document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('inp-user').value='alexmorimoto';document.getElementById('inp-pass').value='alex@2025';}
 
 /* ── TABS ──────────────────────────────────────── */
@@ -2363,6 +2488,33 @@ function switchTab(tab){
   }
   if(tab==='calc'&&calcMode==='standalone'&&!calcStandaloneInitialized)abrirCalcStandalone();
 }
+
+var _lastScrollY=0;
+var _mobileHeaderBound=false;
+function setupMobileHeaderAutoHide(){
+  if(_mobileHeaderBound)return;
+  _mobileHeaderBound=true;
+  _lastScrollY=window.scrollY||0;
+  window.addEventListener('scroll',function(){
+    var isMobile=window.matchMedia&&window.matchMedia('(max-width:640px)').matches;
+    if(!isMobile||document.getElementById('app').style.display==='none'){
+      document.body.classList.remove('mobile-header-hidden');
+      _lastScrollY=window.scrollY||0;
+      return;
+    }
+    var y=window.scrollY||0;
+    var delta=y-_lastScrollY;
+    if(y<36){
+      document.body.classList.remove('mobile-header-hidden');
+    }else if(delta>8){
+      document.body.classList.add('mobile-header-hidden');
+    }else if(delta<-8){
+      document.body.classList.remove('mobile-header-hidden');
+    }
+    _lastScrollY=y;
+  },{passive:true});
+}
+setupMobileHeaderAutoHide();
 
 /* ── DASHBOARD ─────────────────────────────────── */
 /* ── HOME PANEL ────────────────────────────────── */
