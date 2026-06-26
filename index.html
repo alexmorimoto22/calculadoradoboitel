@@ -425,28 +425,29 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .fut-form{order:1;background:rgba(255,253,247,.9);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:0 5px 20px rgba(13,27,42,.05);width:100%;margin:0 auto;}
   .fut-list-card{order:2;background:rgba(255,253,247,.9);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 5px 20px rgba(13,27,42,.05);min-width:0;width:100%;}
   .fut-form-title{font-size:15px;font-weight:850;color:var(--navy);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
-  .fut-form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 10px;align-items:end;}
+  .fut-form-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:10px 12px;align-items:end;}
   #panel-futuros .fut-form .field{margin:0;}
   #panel-futuros .fut-form .field label{font-size:9px;margin-bottom:5px;}
   #panel-futuros .fut-form .field input,#panel-futuros .fut-form .field select{min-height:38px;padding:8px 12px;font-size:14px;border-radius:10px;}
   #panel-futuros .fut-form .hint{font-size:9px;line-height:1.25;margin-top:4px;}
-  .fut-span-2{grid-column:span 2;}
+  .fut-span-2{grid-column:span 6;}
+  .fut-span-3{grid-column:span 3;}
   .fut-span-4{grid-column:1/-1;}
-  .fut-preview{background:rgba(201,162,78,.12);border:1px solid rgba(201,162,78,.28);border-radius:12px;padding:12px 13px;margin:4px 0 12px;}
+  .fut-preview{background:rgba(201,162,78,.12);border:1px solid rgba(201,162,78,.28);border-radius:12px;padding:10px 12px;margin:4px 0 12px;min-width:0;}
   .fut-preview-label{font-size:9px;font-weight:850;letter-spacing:1px;text-transform:uppercase;color:var(--taupe);margin-bottom:5px;}
-  .fut-preview-value{font-size:20px;font-weight:850;color:var(--text);}
+  .fut-preview-value{font-size:16px;font-weight:850;color:var(--text);line-height:1.25;}
   .fut-preview-value.pos{color:var(--green);}
   .fut-preview-value.neg{color:var(--red);}
-  .fut-lote-summary{background:#fff;border:1px solid var(--border);border-radius:13px;padding:12px;margin:-4px 0 12px;box-shadow:0 2px 10px rgba(13,27,42,.04);}
-  .fut-lote-summary-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
+  .fut-lote-summary{background:#fff;border:1px solid var(--border);border-radius:13px;padding:10px 12px;margin:0;box-shadow:0 2px 10px rgba(13,27,42,.04);min-width:0;}
+  .fut-lote-summary-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
   .fut-lote-summary-title{font-size:9px;font-weight:850;letter-spacing:1px;text-transform:uppercase;color:var(--taupe);}
   .fut-lote-summary-note{font-size:10px;color:var(--text-3);text-align:right;}
-  .fut-lote-summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;}
-  .fut-lote-summary-item{background:rgba(13,27,42,.035);border:1px solid rgba(216,203,181,.75);border-radius:10px;padding:9px 8px;min-width:0;}
+  .fut-lote-summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;}
+  .fut-lote-summary-item{background:rgba(13,27,42,.035);border:1px solid rgba(216,203,181,.75);border-radius:10px;padding:8px 10px;min-width:0;}
   .fut-lote-summary-item.strong{background:rgba(107,112,86,.08);border-color:rgba(107,112,86,.22);}
   .fut-lote-summary-item.warn{background:rgba(201,162,78,.12);border-color:rgba(201,162,78,.28);}
-  .fut-lote-summary-label{font-size:8px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .fut-lote-summary-value{font-size:14px;font-weight:850;color:var(--text);line-height:1.15;overflow-wrap:anywhere;}
+  .fut-lote-summary-label{font-size:8px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .fut-lote-summary-value{font-size:15px;font-weight:850;color:var(--text);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .fut-lote-summary-sub{font-size:9px;color:var(--text-3);margin-top:4px;line-height:1.25;}
   .fut-toolbar{display:flex;gap:10px;align-items:flex-end;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;}
   .fut-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
@@ -466,10 +467,18 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .fut-action.danger{background:rgba(154,59,48,.06);border-color:rgba(154,59,48,.18);color:var(--red);}
 .fut-mobile-list{display:none;}
 .fut-mobile-card{background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 2px 10px rgba(13,27,42,.05);}
+.fut-mobile-card summary{list-style:none;cursor:pointer;}
+.fut-mobile-card summary::-webkit-details-marker{display:none;}
 .fut-mobile-top{display:flex;justify-content:space-between;gap:10px;padding:12px 13px;background:rgba(13,27,42,.035);border-bottom:1px solid var(--border);}
 .fut-mobile-title{font-size:13px;font-weight:850;color:var(--navy);line-height:1.25;}
 .fut-contract-month{display:inline-flex;align-items:center;margin-left:6px;padding:3px 7px;border-radius:999px;background:rgba(201,162,78,.14);color:var(--taupe);font-size:10px;font-weight:850;white-space:nowrap;vertical-align:middle;}
 .fut-mobile-sub{font-size:10px;color:var(--text-3);margin-top:3px;}
+.fut-mobile-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 13px;background:#fff;border-bottom:1px solid var(--border);}
+.fut-mobile-quick-item{min-width:0;}
+.fut-mobile-quick-label{font-size:8px;font-weight:850;letter-spacing:.75px;text-transform:uppercase;color:var(--taupe);margin-bottom:3px;}
+.fut-mobile-quick-value{font-size:13px;font-weight:850;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fut-mobile-expand{font-size:9.5px;color:var(--text-3);font-weight:750;margin-top:5px;}
+.fut-mobile-card[open] .fut-mobile-expand{display:none;}
 .fut-mobile-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--border);}
 .fut-mobile-cell{padding:10px 12px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
 .fut-mobile-cell:nth-child(2n){border-right:none;}
@@ -939,7 +948,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    .fut-preview{padding:10px 11px;border-radius:11px;margin-bottom:10px;}
 	    .fut-preview-value{font-size:17px;}
 	    .fut-form-grid{grid-template-columns:1fr;}
-	    .fut-span-2,.fut-span-4{grid-column:1;}
+	    .fut-span-2,.fut-span-3,.fut-span-4{grid-column:1;}
 	    .fut-lote-summary{padding:10px;border-radius:12px;}
 	    .fut-lote-summary-head{display:block;margin-bottom:8px;}
 	    .fut-lote-summary-note{text-align:left;margin-top:3px;}
@@ -1566,17 +1575,17 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <input type="hidden" id="fut-id">
           <div class="fut-form-grid">
             <div class="field fut-span-2"><label>Lote vinculado</label><select id="fut-lote" onchange="atualizarFuturoPreview()"></select><div class="hint" id="fut-lote-coverage">Selecione a operação que receberá o resultado do hedge.</div></div>
-            <div class="field"><label>Tipo de trava</label><select id="fut-tipo" onchange="atualizarFuturoPreview()"><option value="bolsa">Bolsa B3</option><option value="direto">Direto / contrato físico</option></select><div class="hint">Bolsa ou direto.</div></div>
-            <div class="field"><label>Qtd contratos</label><input type="number" id="fut-qtd" value="1" step="1" min="0" oninput="atualizarFuturoPreview()" onblur="ajustarQtdContratoB3NoForm()"><div class="hint">Somente inteiros.</div></div>
+            <div class="field fut-span-3"><label>Tipo de trava</label><select id="fut-tipo" onchange="atualizarFuturoPreview()"><option value="bolsa">Bolsa B3</option><option value="direto">Direto / contrato físico</option></select><div class="hint">Bolsa ou direto.</div></div>
+            <div class="field fut-span-3"><label>Qtd contratos</label><input type="number" id="fut-qtd" value="1" step="1" min="0" oninput="atualizarFuturoPreview()" onblur="ajustarQtdContratoB3NoForm()"><div class="hint">Somente inteiros.</div></div>
             <div class="fut-preview fut-span-4" id="fut-lote-summary" style="display:none;margin:0;"></div>
-            <div class="field fut-span-2"><label>Código / vencimento B3</label><input type="text" id="fut-codigo" placeholder="Ex: BGIU26" readonly><div class="hint">Gerado automaticamente pelo vencimento.</div></div>
-            <div class="field"><label>Vencimento</label><input type="month" id="fut-vencimento" onchange="atualizarCodigoB3();atualizarFuturoPreview()"></div>
-            <div class="field"><label>Data venda</label><input type="date" id="fut-data-venda"></div>
-            <div class="field"><label>Preço venda (R$/@)</label><input type="number" id="fut-preco-venda" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
-            <div class="field"><label>Data liquidação</label><input type="date" id="fut-data-compra"></div>
-            <div class="field"><label>Preço compra liquidação (R$/@)</label><input type="number" id="fut-preco-compra" value="" step="0.01" oninput="atualizarFuturoPreview()"><div class="hint">Vazio = aberto.</div></div>
-            <div class="field"><label>Custos / taxas (R$)</label><input type="number" id="fut-custos" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
-            <div class="fut-preview" style="margin:0;">
+            <div class="field fut-span-3"><label>Código / vencimento B3</label><input type="text" id="fut-codigo" placeholder="Ex: BGIU26" readonly><div class="hint">Gerado automaticamente pelo vencimento.</div></div>
+            <div class="field fut-span-3"><label>Vencimento</label><input type="month" id="fut-vencimento" onchange="atualizarCodigoB3();atualizarFuturoPreview()"></div>
+            <div class="field fut-span-3"><label>Data venda</label><input type="date" id="fut-data-venda"></div>
+            <div class="field fut-span-3"><label>Preço venda (R$/@)</label><input type="number" id="fut-preco-venda" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
+            <div class="field fut-span-3"><label>Data liquidação</label><input type="date" id="fut-data-compra"></div>
+            <div class="field fut-span-3"><label>Preço compra liquidação (R$/@)</label><input type="number" id="fut-preco-compra" value="" step="0.01" oninput="atualizarFuturoPreview()"><div class="hint">Vazio = aberto.</div></div>
+            <div class="field fut-span-3"><label>Custos / taxas (R$)</label><input type="number" id="fut-custos" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
+            <div class="fut-preview fut-span-3" style="margin:0;">
               <div class="fut-preview-label">Resultado previsto</div>
               <div class="fut-preview-value" id="fut-preview">—</div>
             </div>
@@ -2877,10 +2886,10 @@ function atualizarFuturoPreview(){
       covEl.textContent='Abate previsto: '+(abate?dateBRFromIso(abate):'sem data')+' · Projeção: '+fmtMetaContratosB3(nec.necessarios)+' ctr · Meta operacional: '+fmtContratosB3(metaOperacional)+' ctr';
       if(sumEl){
         sumEl.style.display='block';
-        sumEl.className='fut-lote-summary';
+        sumEl.className='fut-lote-summary fut-span-4';
         sumEl.innerHTML='<div class="fut-lote-summary-head">'
-          +'<div class="fut-lote-summary-title">Resumo do lote selecionado</div>'
-          +'<div class="fut-lote-summary-note">Meta não ultrapassa a projeção do lote</div>'
+          +'<div class="fut-lote-summary-title">Resumo do lote</div>'
+          +'<div class="fut-lote-summary-note">Meta sem exceder projeção</div>'
         +'</div>'
         +'<div class="fut-lote-summary-grid">'
           +'<div class="fut-lote-summary-item"><div class="fut-lote-summary-label">Abate</div><div class="fut-lote-summary-value">'+(abate?dateBRFromIso(abate):'—')+'</div></div>'
@@ -3069,8 +3078,14 @@ function renderFuturos(){
       +'<td class="money '+resClass+'">'+resultado+'</td>'
       +'<td><button class="fut-action" onclick="abrirLoteNoStatus(\''+c.loteId+'\')">Status</button><button class="fut-action" onclick="editarFuturo(\''+c.id+'\')">Editar</button><button class="fut-action danger" onclick="deletarFuturo(\''+c.id+'\')">Excluir</button></td>'
     +'</tr>');
-    cards.push('<div class="fut-mobile-card">'
-      +'<div class="fut-mobile-top"><div><div class="fut-mobile-title">'+contratoComMes+'</div><div class="fut-mobile-sub">'+loteNome+' · '+loteStatus+'</div></div>'+st+'</div>'
+    cards.push('<details class="fut-mobile-card">'
+      +'<summary>'
+        +'<div class="fut-mobile-top"><div><div class="fut-mobile-title">'+contratoComMes+'</div><div class="fut-mobile-sub">'+loteNome+' · '+loteStatus+'</div><div class="fut-mobile-expand">Toque para ver detalhes</div></div>'+st+'</div>'
+        +'<div class="fut-mobile-quick">'
+          +'<div class="fut-mobile-quick-item"><div class="fut-mobile-quick-label">Contratos</div><div class="fut-mobile-quick-value">'+fmtContratosB3(r.qtdContratos||0)+' ctr · '+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></div>'
+          +'<div class="fut-mobile-quick-item"><div class="fut-mobile-quick-label">Resultado</div><div class="fut-mobile-quick-value '+resClass+'">'+resultado+'</div></div>'
+        +'</div>'
+      +'</summary>'
       +'<div class="fut-mobile-grid">'
         +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Cobertura do lote</div><div class="fut-mobile-value">'+escHtml(cobertura)+'</div></div>'
         +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Contratos protegidos</div><div class="fut-mobile-value">'+fmtContratosB3(r.qtdContratos||0)+' ctr<div class="muted">'+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></div></div>'
@@ -3080,7 +3095,7 @@ function renderFuturos(){
         +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Tipo</div><div class="fut-mobile-value">'+escHtml(tipo)+'</div></div>'
       +'</div>'
       +'<div class="fut-mobile-actions"><button class="fut-action" onclick="abrirLoteNoStatus(\''+c.loteId+'\')">Status</button><button class="fut-action" onclick="editarFuturo(\''+c.id+'\')">Editar</button><button class="fut-action danger" onclick="deletarFuturo(\''+c.id+'\')">Excluir</button></div>'
-    +'</div>');
+    +'</details>');
   });
   list.innerHTML=rows.join('');
   if(mobileList)mobileList.innerHTML=cards.join('');
