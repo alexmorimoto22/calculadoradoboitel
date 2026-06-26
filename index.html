@@ -193,11 +193,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 /* ─ GRID / FIELD ───────────────────────────── */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-@media(max-width:560px){.g2{grid-template-columns:1fr;}.g3{grid-template-columns:1fr 1fr;}}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+@media(max-width:560px){.g2{grid-template-columns:1fr;}.g3,.g4{grid-template-columns:1fr 1fr;}}
 .field{margin-bottom:12px;}
 .field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-3);margin-bottom:5px;}
 .field input,.field select{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--text);outline:none;transition:border-color .15s;-webkit-appearance:none;}
 .field input:focus,.field select:focus{border-color:var(--accent);background:#fff;}
+.unit-input{display:flex;align-items:center;width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:7px;transition:border-color .15s,background .15s;}
+.unit-input:focus-within{border-color:var(--accent);background:#fff;}
+.unit-input-prefix{padding-left:12px;font-size:13px;font-weight:800;color:var(--accent);white-space:nowrap;}
+.field .unit-input input{border:0!important;background:transparent!important;border-radius:0!important;padding-left:6px!important;box-shadow:none!important;}
+.sale-card .field>label,.sale-card .field-label-row,.buy-card .field>label,.buy-card .field-label-row{min-height:26px;display:flex;align-items:center;}
 input[type=number]{appearance:textfield;-moz-appearance:textfield;}
 input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238EA5B5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
@@ -592,6 +598,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .mode-toggle{display:inline-flex;background:var(--surface2);border-radius:5px;padding:1px;gap:1px;flex-shrink:0;}
   .mt-btn{background:none;border:none;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700;cursor:pointer;color:var(--text-3);font-family:'Inter',sans-serif;transition:all .15s;line-height:1.7;}
   .mt-btn.active{background:#fff;color:var(--accent);box-shadow:0 0 0 1px var(--border);}
+  .mode-toggle.single{padding:2px;}
+  .mode-toggle.single .mt-btn{min-width:46px;padding:2px 9px;}
 
   /* UPDATED LOTE CARD */
   .lc2{background:#fff;border:0.5px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
@@ -1519,7 +1527,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
       <!-- Tipo do Animal -->
       <div class="section-label">Tipo do Animal</div>
-      <div class="card">
+      <div class="card sale-card">
         <div class="field" style="margin-bottom:14px">
           <label>Raça / Categoria</label>
           <input type="hidden" id="tipoAnimal" value="">
@@ -1531,21 +1539,25 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
       <!-- Lote -->
       <div class="section-label">Lote</div>
-      <div class="card">
+      <div class="card buy-card">
         <div class="g2">
           <div class="field"><label>Quantidade de Animais</label><input type="number" id="qtd" value="50" min="1"></div>
           <div class="field"><label>Peso de Compra (kg)</label><input type="number" id="pesoCom" value="420" step="0.1"></div>
         </div>
         <div class="g2">
           <div class="field"><label>Rendimento Carcaça Entrada (%)</label><input type="number" id="rendEntrada" value="50" step="0.5" min="1" max="100"><div class="hint">Ex: 50 = 50% de rendimento</div></div>
-          <div class="field"><label>Preço Compra <span id="lbl-preco-mode">R$/@</span> <button onclick="togglePrecoMode()" id="btn-preco-mode" style="font-size:9px;padding:1px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);cursor:pointer;color:var(--text-2);">→ R$/kg</button></label><input type="number" id="valorKG" value="12.50" step="0.01" style="display:none"><input type="number" id="valorAt_compra" value="280" step="1"><div class="hint" id="hint-preco-conv"></div></div>
+          <div class="field">
+            <div class="field-label-row"><label>Preço Compra</label><div class="mode-toggle single"><button type="button" class="mt-btn active" id="btn-preco-mode" onclick="togglePrecoMode()">R$/@</button></div></div>
+            <div class="unit-input"><span class="unit-input-prefix" id="preco-compra-prefix">R$/@</span><input type="number" id="valorKG" value="12.50" step="0.01" style="display:none"><input type="number" id="valorAt_compra" value="280" step="1"></div>
+            <div class="hint" id="hint-preco-conv"></div>
+          </div>
         </div>
         <div class="g2">
           <div class="field">
             <div class="field-label-row"><label>Comissão</label>
-              <div class="mode-toggle"><button class="mt-btn active" data-field="comissao" data-mode="pct" onclick="setFieldMode('comissao','pct',this)">%</button><button class="mt-btn" data-field="comissao" data-mode="val" onclick="setFieldMode('comissao','val',this)">R$</button></div>
+              <div class="mode-toggle single"><button type="button" class="mt-btn active" data-field="comissao" data-mode="pct" onclick="toggleFieldMode('comissao',this)">%</button></div>
             </div>
-            <input type="number" id="comissao" value="3.5" step="0.1">
+            <div class="unit-input"><span class="unit-input-prefix" id="comissao-prefix">%</span><input type="number" id="comissao" value="3.5" step="0.1"></div>
             <div class="hint" id="comissao-hint">% sobre o valor de compra</div>
           </div>
           <div class="field"></div>
@@ -1619,12 +1631,12 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         </div>
         <div class="g2" style="margin-top:4px">
           <div class="field"><label>Rendimento Carcaça Abate (%)</label><input type="number" id="rendAbate" value="56" step="0.5" min="1" max="100"></div>
-          <div class="field only-ms"><label>Eficiência biológica (kg MS/@)</label><input type="text" id="eficienciaBio" value="—" readonly><div class="hint">Atualiza conforme os dados preenchidos.</div></div>
         </div>
-        <div class="g3" style="margin-top:4px">
+        <div class="g4" style="margin-top:4px">
           <div class="field"><label>@ produzidas — peso origem</label><input type="text" id="arrobasProdOrigem" value="—" readonly><div class="hint">Usa o peso de compra, antes da quebra.</div></div>
           <div class="field"><label>@ produzidas — peso chegada</label><input type="text" id="arrobasProdChegada" value="—" readonly><div class="hint">Usa o peso pós-quebra na entrada.</div></div>
-          <div class="field"><label>Diferença origem x chegada</label><input type="text" id="arrobasProdDiferenca" value="—" readonly><div class="hint">Impacto da base usada no cálculo.</div></div>
+          <div class="field"><label>Diferença origem x chegada</label><input type="text" id="arrobasProdDiferenca" value="—" readonly><div class="hint">Diferença entre as bases em @.</div></div>
+          <div class="field"><label>Quebra de peso (kg)</label><input type="text" id="quebraPesoKg" value="—" readonly><div class="hint">Peso de origem - peso de chegada.</div></div>
         </div>
         <div class="g2" style="margin-top:4px">
           <div class="field"><label>Eficiência biológica — peso origem</label><input type="text" id="eficienciaBioOrigem" value="—" readonly><div class="hint">Consumo MS ÷ @ produzidas pela origem.</div></div>
@@ -1663,25 +1675,25 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <div class="hint">Selecione para preencher bônus e desconto automaticamente</div>
         </div>
         <div id="frig-peso-warning"></div>
-        <div class="g2">
-          <div class="field"><label>Valor por Arroba (R$/@)</label><input type="number" id="valorAt" value="350.00" step="0.1"></div>
+        <div class="g2 sale-grid">
+          <div class="field"><label>Valor por Arroba (R$/@)</label><div class="unit-input"><span class="unit-input-prefix">R$</span><input type="number" id="valorAt" value="350.00" step="0.1"></div></div>
           <div class="field">
             <div class="field-label-row"><label>Bônus</label>
-              <div class="mode-toggle"><button class="mt-btn active" data-field="bonus" data-mode="pct" onclick="setFieldMode('bonus','pct',this)">%</button><button class="mt-btn" data-field="bonus" data-mode="val" onclick="setFieldMode('bonus','val',this)">R$/@</button></div>
+              <div class="mode-toggle single"><button type="button" class="mt-btn active" data-field="bonus" data-mode="pct" onclick="toggleFieldMode('bonus',this)">%</button></div>
             </div>
-            <input type="number" id="bonus" value="3.0" step="0.1">
+            <div class="unit-input"><span class="unit-input-prefix" id="bonus-prefix">%</span><input type="number" id="bonus" value="3.0" step="0.1"></div>
             <div class="hint" id="bonus-hint">% sobre o valor da @</div>
           </div>
         </div>
-        <div class="g2">
+        <div class="g2 sale-grid">
           <div class="field">
             <div class="field-label-row"><label>Desconto</label>
-              <div class="mode-toggle"><button class="mt-btn active" data-field="desconto" data-mode="pct" onclick="setFieldMode('desconto','pct',this)">%</button><button class="mt-btn" data-field="desconto" data-mode="val" onclick="setFieldMode('desconto','val',this)">R$/@</button></div>
+              <div class="mode-toggle single"><button type="button" class="mt-btn active" data-field="desconto" data-mode="pct" onclick="toggleFieldMode('desconto',this)">%</button></div>
             </div>
-            <input type="number" id="desconto" value="1.0" step="0.1">
+            <div class="unit-input"><span class="unit-input-prefix" id="desconto-prefix">%</span><input type="number" id="desconto" value="1.0" step="0.1"></div>
             <div class="hint" id="desconto-hint">% sobre o valor da @</div>
           </div>
-          <div class="field"><label>Senar</label><input type="number" id="funrural" value="0.2" step="0.01" min="0" max="5"><div class="hint">Ex: 0.2 = 0,2%</div></div>
+          <div class="field"><label>Senar</label><div class="unit-input"><span class="unit-input-prefix">%</span><input type="number" id="funrural" value="0.2" step="0.01" min="0" max="5"></div><div class="hint">Ex: 0.2 = 0,2%</div></div>
         </div>
       </div>
 
@@ -5449,6 +5461,7 @@ function _setCalcValue(id,val){
 function _setCalcModeBtn(field,mode){
   mode=mode||'pct';
   var btn=document.querySelector('.mt-btn[data-field="'+field+'"][data-mode="'+mode+'"]');
+  if(!btn)btn=document.querySelector('.mt-btn[data-field="'+field+'"]');
   if(btn)setFieldMode(field,mode,btn);
   else fieldModes[field]=mode;
 }
@@ -5862,11 +5875,12 @@ function togglePrecoMode(){
   _precoModeAt=!_precoModeAt;
   var kgEl=document.getElementById('valorKG');
   var atEl=document.getElementById('valorAt_compra');
-  var lbl=document.getElementById('lbl-preco-mode');
   var btn=document.getElementById('btn-preco-mode');
+  var prefix=document.getElementById('preco-compra-prefix');
   if(_precoModeAt){
     kgEl.style.display='none';atEl.style.display='';
-    if(lbl)lbl.textContent='R$/@';if(btn)btn.textContent='→ R$/kg';
+    if(btn)btn.textContent='R$/@';
+    if(prefix)prefix.textContent='R$/@';
     // Sync: convert kg→@
     var rE=parseFloat(document.getElementById('rendEntrada').value)||50;
     var kgVal=parseFloat(kgEl.value)||0;
@@ -5874,7 +5888,8 @@ function togglePrecoMode(){
     atualizarHintPreco();
   } else {
     kgEl.style.display='';atEl.style.display='none';
-    if(lbl)lbl.textContent='R$/kg';if(btn)btn.textContent='→ R$/@';
+    if(btn)btn.textContent='R$/kg';
+    if(prefix)prefix.textContent='R$/kg';
     // Sync: convert @→kg
     var rE2=parseFloat(document.getElementById('rendEntrada').value)||50;
     var atVal=parseFloat(atEl.value)||0;
@@ -6028,7 +6043,7 @@ function calcPreviewBiometria(){
   var usaAtProd=typeof getCalcModelo==='function'&&getCalcModelo()==='atprod'&&custoBoitelAt>0;
   var custoProdChegada=usaAtProd?custoBoitelAt:(atProd>0?custoConf/atProd:0);
   var custoProdOrigem=usaAtProd?(atProdOrigem>0?(atProd*custoBoitelAt)/atProdOrigem:0):(atProdOrigem>0?custoConf/atProdOrigem:0);
-  return {pesoEntrada:pesoEntrada,pesoAbate:pesoAbate,atProd:atProd,atProdOrigem:atProdOrigem,consumoTotal:consumoTotal,efic:efic,eficOrigem:eficOrigem,custoProdOrigem:custoProdOrigem,custoProdChegada:custoProdChegada};
+  return {pesoEntrada:pesoEntrada,pesoAbate:pesoAbate,quebraPesoKg:pesoCom-pesoEntrada,atProd:atProd,atProdOrigem:atProdOrigem,consumoTotal:consumoTotal,efic:efic,eficOrigem:eficOrigem,custoProdOrigem:custoProdOrigem,custoProdChegada:custoProdChegada};
 }
 function atualizarPreviewBiometria(){
   var data=calcPreviewBiometria();
@@ -6038,6 +6053,7 @@ function atualizarPreviewBiometria(){
   var atOrigemEl=document.getElementById('arrobasProdOrigem');
   var atChegadaEl=document.getElementById('arrobasProdChegada');
   var atDifEl=document.getElementById('arrobasProdDiferenca');
+  var quebraPesoEl=document.getElementById('quebraPesoKg');
   var eficOrigemEl=document.getElementById('eficienciaBioOrigem');
   var eficChegadaEl=document.getElementById('eficienciaBioChegada');
   var custoOrigemEl=document.getElementById('custoProdOrigem');
@@ -6046,7 +6062,7 @@ function atualizarPreviewBiometria(){
     if(pesoFinalEl){pesoFinalEl.value='—';delete pesoFinalEl.dataset.raw;}
     if(eficEl){eficEl.value='—';delete eficEl.dataset.raw;}
     if(atProdEl){atProdEl.value='—';delete atProdEl.dataset.raw;}
-    [atOrigemEl,atChegadaEl,atDifEl,eficOrigemEl,eficChegadaEl,custoOrigemEl,custoChegadaEl].forEach(function(el){if(el){el.value='—';delete el.dataset.raw;}});
+    [atOrigemEl,atChegadaEl,atDifEl,quebraPesoEl,eficOrigemEl,eficChegadaEl,custoOrigemEl,custoChegadaEl].forEach(function(el){if(el){el.value='—';delete el.dataset.raw;}});
     return;
   }
   if(pesoFinalEl){pesoFinalEl.value=data.pesoAbate>0?fmtKg(data.pesoAbate):'—';pesoFinalEl.dataset.raw=data.pesoAbate||'';}
@@ -6055,13 +6071,14 @@ function atualizarPreviewBiometria(){
   if(atOrigemEl){atOrigemEl.value=data.atProdOrigem>0?fmtNum(data.atProdOrigem,2)+' @':'—';atOrigemEl.dataset.raw=data.atProdOrigem||'';}
   if(atChegadaEl){atChegadaEl.value=data.atProd>0?fmtNum(data.atProd,2)+' @':'—';atChegadaEl.dataset.raw=data.atProd||'';}
   if(atDifEl){var dif=(data.atProd||0)-(data.atProdOrigem||0);atDifEl.value=(data.atProd&&data.atProdOrigem)?(dif>=0?'+':'')+fmtNum(dif,2)+' @':'—';atDifEl.dataset.raw=dif||'';}
+  if(quebraPesoEl){quebraPesoEl.value=fmtKg(data.quebraPesoKg||0);quebraPesoEl.dataset.raw=data.quebraPesoKg||'';}
   if(eficOrigemEl){eficOrigemEl.value=data.eficOrigem>0?fmtNum(data.eficOrigem,2)+' kg MS / @':'—';eficOrigemEl.dataset.raw=data.eficOrigem||'';}
   if(eficChegadaEl){eficChegadaEl.value=data.efic>0?fmtNum(data.efic,2)+' kg MS / @':'—';eficChegadaEl.dataset.raw=data.efic||'';}
   if(custoOrigemEl){custoOrigemEl.value=data.custoProdOrigem>0?fmt(data.custoProdOrigem)+'/@':'—';custoOrigemEl.dataset.raw=data.custoProdOrigem||'';}
   if(custoChegadaEl){custoChegadaEl.value=data.custoProdChegada>0?fmt(data.custoProdChegada)+'/@':'—';custoChegadaEl.dataset.raw=data.custoProdChegada||'';}
 }
 function limparIndicadoresBiometriaCalc(){
-  ['pesoFinalKg','eficienciaBio','arrobasProdBoitel','arrobasProdOrigem','arrobasProdChegada','arrobasProdDiferenca','eficienciaBioOrigem','eficienciaBioChegada','custoProdOrigem','custoProdChegada'].forEach(function(id){
+  ['pesoFinalKg','eficienciaBio','arrobasProdBoitel','arrobasProdOrigem','arrobasProdChegada','arrobasProdDiferenca','quebraPesoKg','eficienciaBioOrigem','eficienciaBioChegada','custoProdOrigem','custoProdChegada'].forEach(function(id){
     var el=document.getElementById(id);
     if(el){el.value='—';delete el.dataset.raw;}
   });
@@ -6546,10 +6563,34 @@ var fieldHints={
   bonus:{pct:'% sobre o valor da @',val:'R$/@ somado ao preço de venda'},
   desconto:{pct:'% sobre o valor da @',val:'R$/@ descontado do preço de venda'}
 };
+function fieldModeLabel(mode,field){
+  if(field==='comissao')return mode==='pct'?'%':'R$';
+  return mode==='pct'?'%':'R$/@';
+}
+function updateSingleFieldModeButton(field,mode,btn){
+  var buttons=[];
+  if(btn)buttons=[btn];
+  else buttons=Array.from(document.querySelectorAll('.mode-toggle.single .mt-btn[data-field="'+field+'"]'));
+  buttons.forEach(function(b){
+    b.dataset.mode=mode;
+    b.textContent=fieldModeLabel(mode,field);
+    b.classList.add('active');
+    b.setAttribute('aria-label','Alternar '+field+' para '+fieldModeLabel(mode==='pct'?'val':'pct',field));
+    b.title='Clique para alternar para '+fieldModeLabel(mode==='pct'?'val':'pct',field);
+  });
+  var prefix=document.getElementById(field+'-prefix');
+  if(prefix)prefix.textContent=mode==='pct'?'%':'R$';
+}
+function toggleFieldMode(field,btn){
+  var current=getFieldMode(field);
+  setFieldMode(field,current==='pct'?'val':'pct',btn);
+}
 function setFieldMode(field,mode,btn){
   fieldModes[field]=mode;
   var container=btn?btn.closest('.mode-toggle'):null;
-  if(container)container.querySelectorAll('.mt-btn').forEach(function(b){b.classList.toggle('active',b.dataset.mode===mode);});
+  if(container&&container.classList.contains('single'))updateSingleFieldModeButton(field,mode,btn);
+  else if(container)container.querySelectorAll('.mt-btn').forEach(function(b){b.classList.toggle('active',b.dataset.mode===mode);});
+  else updateSingleFieldModeButton(field,mode,null);
   var hint=document.getElementById(field+'-hint');
   if(hint&&fieldHints[field])hint.textContent=fieldHints[field][mode]||'';
   agendarCalculoAutomatico();
@@ -6677,6 +6718,7 @@ function calcular(opts){
   const atOrigemField=document.getElementById('arrobasProdOrigem');
   const atChegadaField=document.getElementById('arrobasProdChegada');
   const atDifField=document.getElementById('arrobasProdDiferenca');
+  const quebraPesoField=document.getElementById('quebraPesoKg');
   const eficOrigemField=document.getElementById('eficienciaBioOrigem');
   const eficChegadaField=document.getElementById('eficienciaBioChegada');
   const custoOrigemField=document.getElementById('custoProdOrigem');
@@ -6684,6 +6726,7 @@ function calcular(opts){
   if(atOrigemField){atOrigemField.value=atProdOrigem>0?fmtNum(atProdOrigem,2)+' @':'—';atOrigemField.dataset.raw=atProdOrigem||'';}
   if(atChegadaField){atChegadaField.value=atProd>0?fmtNum(atProd,2)+' @':'—';atChegadaField.dataset.raw=atProd||'';}
   if(atDifField){var _atDif=atProd-atProdOrigem;atDifField.value=(atProd>0&&atProdOrigem>0)?(_atDif>=0?'+':'')+fmtNum(_atDif,2)+' @':'—';atDifField.dataset.raw=_atDif||'';}
+  if(quebraPesoField){var _kgDif=pesoCom-pesoEntrada;quebraPesoField.value=qtd>0?fmtKg(_kgDif):'—';quebraPesoField.dataset.raw=_kgDif||'';}
   if(eficOrigemField){eficOrigemField.value=eficOrigem>0?fmtNum(eficOrigem,2)+' kg MS / @':'—';eficOrigemField.dataset.raw=eficOrigem||'';}
   if(eficChegadaField){eficChegadaField.value=efic>0?fmtNum(efic,2)+' kg MS / @':'—';eficChegadaField.dataset.raw=efic||'';}
   var custoCampoChegada=(getCalcModelo()==='atprod'&&custoBoitelAt>0)?custoBoitelAt:custoAtProd;
