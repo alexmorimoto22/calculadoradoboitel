@@ -20,7 +20,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 /* ─ LOGIN ─────────────────────────────────── */
 #login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
 .login-box{width:100%;max-width:360px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 32px;box-shadow:0 4px 24px rgba(13,27,42,.08);}
-.login-logo{display:block;margin:0 auto 24px;width:190px;max-width:70%;border-radius:14px;object-fit:contain;box-shadow:0 8px 22px rgba(27,42,53,.08);}
+.login-logo{display:block;margin:0 auto 24px;width:190px;max-width:70%;object-fit:contain;}
 .login-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-3);text-align:center;margin-bottom:24px;}
 .lf{margin-bottom:12px;}
 .lf label{display:block;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-3);margin-bottom:5px;}
@@ -35,7 +35,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 #app{display:none;}
 .topbar{background:linear-gradient(135deg,var(--navy) 0%,#14283B 100%);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--gold);box-shadow:0 8px 22px rgba(13,27,42,.16);}
 .brand-block{display:flex;align-items:center;gap:12px;min-width:0;}
-.topbar-logo{height:44px;width:44px;border-radius:13px;object-fit:cover;background:var(--ivory);box-shadow:0 4px 12px rgba(0,0,0,.16),0 0 0 1px rgba(201,162,78,.35);}
+.topbar-logo{height:48px;width:48px;object-fit:contain;background:transparent;box-shadow:none;}
 .brand-copy{display:flex;flex-direction:column;line-height:1.05;min-width:0;}
 .brand-name{font-size:15px;font-weight:800;color:var(--ivory);letter-spacing:.3px;white-space:nowrap;}
 .brand-subtitle{font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(201,162,78,.86);margin-top:4px;white-space:nowrap;}
@@ -778,7 +778,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    body{background:var(--bg);}
 	    .topbar{height:56px;padding:0 12px;}
 	    .brand-block{gap:9px;}
-	    .topbar-logo{height:38px;width:38px;max-width:none;object-fit:cover;border-radius:11px;}
+	    .topbar-logo{height:40px;width:40px;max-width:none;object-fit:contain;}
 	    .brand-name{font-size:13px;}
 	    .brand-subtitle{display:none;}
 	    .topbar-right{gap:8px;min-width:0;}
@@ -1003,7 +1003,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <!-- ═══ LOGIN ═══════════════════════════════════════════════ -->
 <div id="login-screen">
   <div class="login-box">
-    <img class="login-logo" src="vm-agro-logo.jpeg" alt="VM Agro">
+    <img class="login-logo" src="vm-agro-logo.png" alt="VM Agro">
     <p class="login-title">Área Restrita</p>
     <div class="lf"><label>Usuário</label><input type="text" id="inp-user" value="alexmorimoto" placeholder="Digite seu usuário" autocomplete="username"></div>
     <div class="lf"><label>Senha</label><input type="password" id="inp-pass" value="alex@2025" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -1016,7 +1016,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <div id="app">
   <div class="topbar">
     <div class="brand-block">
-      <img class="topbar-logo" src="vm-agro-logo.jpeg" alt="VM Agro">
+      <img class="topbar-logo" src="vm-agro-logo.png" alt="VM Agro">
       <div class="brand-copy">
         <span class="brand-name">VM Agro</span>
         <span class="brand-subtitle">Gestão de lotes</span>
