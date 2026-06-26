@@ -761,31 +761,36 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .status-total-value.neg{color:var(--red);}
   .status-total-sub{font-size:9px;color:var(--text-3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .status-table-wrap{background:#fff;border:1px solid var(--border);border-radius:14px;overflow-x:auto;box-shadow:0 6px 22px rgba(13,27,42,.07);width:100%;}
-  .status-table{width:100%;min-width:1410px;}
-.status-head,.status-filter-row,.status-row{display:grid;grid-template-columns:92px 54px minmax(96px,.8fr) minmax(150px,1.35fr) 112px 58px 86px 86px 98px minmax(108px,1fr) minmax(108px,1fr) minmax(100px,.9fr) 72px 72px 108px 108px;align-items:center;}
+  .status-table{width:100%;min-width:1320px;}
+.status-head,.status-filter-row,.status-row{display:grid;grid-template-columns:88px 48px 92px minmax(220px,1.35fr) 128px 58px 82px 82px 92px minmax(104px,.95fr) minmax(104px,.95fr) minmax(94px,.85fr) 68px 68px 96px 96px;align-items:center;}
   .status-head{background:#f6f9fb;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;}
   .status-head-cell{padding:10px 9px;font-size:8.5px;font-weight:850;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3);white-space:nowrap;}
   .status-head-cell:first-child{text-align:center;}
   .status-filter-row{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:37px;z-index:2;}
   .status-filter-cell{padding:6px 6px;}
-  .status-filter-cell input,.status-filter-cell select{width:100%;height:28px;border:1px solid var(--border);border-radius:7px;background:var(--surface2);padding:0 7px;font-family:'Inter',sans-serif;font-size:11px;color:var(--text);outline:none;}
-  .status-filter-cell input:focus,.status-filter-cell select:focus{border-color:var(--accent);background:#fff;}
-  .status-filter-cell select{appearance:none;-webkit-appearance:none;padding-right:16px;}
-  .status-row{min-height:58px;border-bottom:1px solid var(--border);cursor:grab;background:#fff;transition:background .15s,box-shadow .15s,transform .15s;}
+  .status-filter-control{position:relative;width:100%;}
+  .status-filter-control input{width:100%;height:30px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);padding:0 22px 0 8px;font-family:'Inter',sans-serif;font-size:11px;color:var(--text);outline:none;font-weight:650;}
+  .status-filter-control input:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 2px rgba(201,162,78,.12);}
+  .status-filter-control::after{content:'⌄';position:absolute;right:7px;top:50%;transform:translateY(-54%);font-size:13px;font-weight:900;color:var(--taupe);pointer-events:none;line-height:1;}
+  .status-row{min-height:42px;border-bottom:1px solid var(--border);cursor:grab;background:#fff;transition:background .15s,box-shadow .15s,transform .15s;}
   .status-row:last-child{border-bottom:none;}
   .status-row:hover{background:#fbfdfe;box-shadow:inset 3px 0 0 var(--accent);}
   .status-row:active{cursor:grabbing;}
   .status-row.active-edit{background:#f9fcfd;box-shadow:inset 3px 0 0 var(--accent);}
   .status-row.active-edit + #edit-panel{width:100%;min-width:0;box-sizing:border-box;margin:0!important;}
   .status-row.active-edit + #edit-panel .ep{border-top:0;border-top-left-radius:0;border-top-right-radius:0;margin:0 0 8px;}
-  .status-cell{padding:9px;font-size:12px;color:var(--text);font-weight:650;line-height:1.24;min-width:0;overflow:hidden;text-overflow:ellipsis;}
+  .status-cell{padding:6px 8px;font-size:12px;color:var(--text);font-weight:650;line-height:1.12;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .status-cell.muted{color:var(--text-2);font-weight:600;}
   .status-cell.money{font-weight:800;white-space:nowrap;}
   .status-cell.rate{font-weight:800;}
   .status-cell.pos{color:var(--green);}
   .status-cell.neg{color:var(--red);}
-  .status-cell-title{font-weight:800;color:var(--text);}
-  .status-cell-sub{display:block;margin-top:2px;font-size:10px;color:var(--text-3);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .status-cell-title{display:inline;min-width:0;font-weight:850;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .status-cell-sub{display:none;margin-top:2px;font-size:10px;color:var(--text-3);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .status-row>.status-cell:nth-child(4){display:flex;align-items:center;gap:8px;}
+  .status-row>.status-cell:nth-child(5){display:flex;align-items:center;gap:6px;}
+  .status-row>.status-cell:nth-child(5) .status-cell-sub{display:inline;margin:0;font-size:11px;}
+  .status-row>.status-cell:nth-child(5) .status-cell-sub:nth-of-type(n+2){display:none;}
   .status-badge-cell{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;}
   .status-drag-dot{width:7px;height:26px;border-radius:99px;flex-shrink:0;background:var(--border);}
   .status-table-note{font-size:10px;color:var(--text-3);margin:8px 2px 0;}
@@ -892,7 +897,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    .status-head,.status-filter-row,.status-row{grid-template-columns:86px 56px 132px 170px 108px 54px 86px 86px 98px 116px 116px 106px 72px 72px 106px 106px;}
 	    .status-head-cell{padding:9px 7px;font-size:8px;}
 	    .status-filter-cell{padding:5px;}
-	    .status-filter-cell input,.status-filter-cell select{height:26px;font-size:10px;}
+	    .status-filter-control input{height:28px;font-size:10px;}
 	    .status-cell{padding:8px 7px;font-size:11px;}
 	    .sc-body{padding:10px;}
 	    .sc-top{flex-direction:row;align-items:flex-start;gap:8px;}
@@ -1193,6 +1198,99 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    #panel-lotes .ep select.field{height:44px;font-size:14px;}
 	    #panel-lotes .ep textarea{font-size:14px;}
 	    #panel-lotes .status-table-note{font-size:9.5px;margin:9px 2px 0;}
+	  }
+
+	  .status-mobile-toolbar,.status-mobile-head,.status-mobile-hint,.status-mobile-line{display:none;}
+
+	  @media(max-width:640px){
+	    #panel-lotes .lotes-toolbar{display:block;margin:0 0 12px;padding:10px;border:1px solid rgba(201,162,78,.35);border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(13,27,42,.06);}
+	    body.status-mobile-filter-open #panel-lotes .lotes-toolbar{display:block;}
+	    #panel-lotes .status-pills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;overflow:visible;padding:0;}
+	    #panel-lotes .status-pills .pill{min-height:36px;padding:7px 8px;font-size:10px;border-radius:999px;}
+	    #panel-lotes .status-summary{display:none!important;}
+	    .status-mobile-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin:0 0 18px;padding:8px;border-radius:18px;background:linear-gradient(135deg,#fff,rgba(242,237,227,.82));box-shadow:0 10px 28px rgba(13,27,42,.07);border:1px solid rgba(201,162,78,.18);}
+	    .status-mobile-filter,.status-mobile-count{appearance:none;border:none;background:transparent;color:var(--text);font-family:Inter,sans-serif;font-weight:850;display:flex;align-items:center;gap:9px;min-height:38px;padding:0 10px;border-radius:13px;}
+	    .status-mobile-filter-icon{width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;color:var(--navy);}
+	    .status-mobile-filter-icon svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+	    .status-mobile-count{font-weight:650;color:var(--taupe);font-size:13px;white-space:nowrap;}
+	    .status-mobile-head{display:flex;align-items:center;gap:12px;margin:8px 0 14px;}
+	    .status-mobile-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(201,162,78,.12);border:1px solid rgba(201,162,78,.12);color:var(--gold);}
+	    .status-mobile-icon svg{width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+	    .status-mobile-title{font-size:22px;line-height:1.05;font-weight:950;color:var(--navy);letter-spacing:-.3px;}
+	    .status-mobile-sub{font-size:13px;color:var(--taupe);margin-top:3px;}
+	    #panel-lotes .status-table-wrap{overflow:visible!important;background:transparent!important;border:none!important;border-radius:0!important;box-shadow:none!important;}
+	    #panel-lotes .status-table-body{display:flex!important;flex-direction:column!important;gap:10px!important;background:transparent!important;border:none!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;}
+	    #panel-lotes .status-row{position:relative!important;display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;gap:9px 12px!important;margin:0!important;padding:14px 14px 12px!important;border:1px solid rgba(216,203,181,.8)!important;border-radius:14px!important;background:#fff!important;box-shadow:0 8px 24px rgba(13,27,42,.08)!important;overflow:hidden!important;}
+	    #panel-lotes .status-row.active-edit{box-shadow:0 0 0 2px rgba(201,162,78,.24),0 10px 28px rgba(13,27,42,.1)!important;background:#fff!important;border-color:rgba(201,162,78,.55)!important;}
+	    #panel-lotes .status-row::before{content:"Lote " attr(data-lote-seq);grid-column:1;grid-row:1;align-self:center;display:inline-flex;align-items:center;justify-content:center;min-width:58px;height:30px;padding:0 11px;border-radius:8px;background:linear-gradient(135deg,var(--navy),#15304a);color:#fff;font-size:12px;font-weight:900;box-shadow:0 5px 12px rgba(13,27,42,.18);}
+	    #panel-lotes .status-cell{display:none!important;}
+	    #panel-lotes .status-cell:nth-child(4){display:block!important;grid-column:2;grid-row:1;align-self:center;background:transparent!important;border:none!important;padding:0!important;min-width:0;}
+	    #panel-lotes .status-cell:nth-child(1){display:flex!important;grid-column:3;grid-row:1;align-self:center;justify-self:end;background:transparent!important;border:none!important;padding:0!important;}
+	    #panel-lotes .status-mobile-line{display:flex!important;grid-column:1/-1;grid-row:2;align-items:center;gap:9px;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0 1px;color:var(--navy);font-size:12px;white-space:nowrap;}
+	    #panel-lotes .status-mobile-line::-webkit-scrollbar{display:none;}
+	    #panel-lotes .status-mobile-line span{display:inline-flex;align-items:center;gap:3px;min-width:max-content;color:var(--navy);}
+	    #panel-lotes .status-mobile-line .muted{color:var(--taupe);}
+	    #panel-lotes .status-mobile-line .money{font-weight:850;}
+	    #panel-lotes .status-mobile-line .profit{color:var(--green);font-weight:900;}
+	    #panel-lotes .status-mobile-line .rate{color:var(--green);font-weight:950;}
+	    #panel-lotes .status-mobile-line i{width:3px;height:3px;min-width:3px;border-radius:50%;background:var(--gold);opacity:.85;}
+	    #panel-lotes .status-mobile-line b{width:1px;height:18px;min-width:1px;background:rgba(138,121,103,.32);}
+	    #panel-lotes .status-cell-title{font-size:14px!important;line-height:1.18!important;font-weight:950!important;color:var(--navy)!important;text-transform:uppercase!important;letter-spacing:-.2px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+	    #panel-lotes .status-cell-sub{font-size:11px!important;color:var(--taupe)!important;}
+	    #panel-lotes .status-badge-cell{align-items:center!important;justify-content:flex-end!important;}
+	    #panel-lotes .badge{font-size:10px!important;letter-spacing:.5px!important;padding:6px 10px!important;border-radius:999px!important;}
+	    #panel-lotes .status-table-note{display:none!important;}
+	    .status-mobile-hint{display:flex;align-items:center;gap:8px;margin:12px 0 0;padding:9px 11px;border-radius:14px;background:rgba(242,237,227,.78);color:var(--taupe);font-size:12px;line-height:1.25;}
+	    .status-mobile-hint-icon{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(138,121,103,.55);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--taupe);}
+	    #panel-lotes .status-row.active-edit + #edit-panel{margin:10px 0 12px!important;}
+	    #panel-lotes .status-row.active-edit + #edit-panel .ep{border:1px solid rgba(216,203,181,.85);border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(13,27,42,.08);padding:13px 12px 16px;margin:0;}
+	  }
+
+	  .status-seq-pc{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:max-content;max-width:100%;margin:0;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,var(--navy),#17314a);color:#fff;font-size:9px;font-weight:900;letter-spacing:.15px;box-shadow:none;}
+
+	  @media(max-width:640px){
+	    #panel-lotes{padding-bottom:94px;}
+	    #panel-lotes .status-mobile-toolbar{display:none!important;}
+	    #panel-lotes .status-mobile-filter,#panel-lotes .status-mobile-count{min-height:34px;padding:0 8px;font-size:13px;}
+	    #panel-lotes .status-mobile-filter-icon{width:22px;height:22px;}
+	    #panel-lotes .status-mobile-count{font-size:12px;}
+	    #panel-lotes .status-mobile-head{gap:9px;margin:4px 0 10px;}
+	    #panel-lotes .status-mobile-icon{width:36px;height:36px;}
+	    #panel-lotes .status-mobile-icon svg{width:19px;height:19px;}
+	    #panel-lotes .status-mobile-title{font-size:20px;}
+	    #panel-lotes .status-mobile-sub{font-size:12px;line-height:1.2;}
+	    #panel-lotes .status-table-body{gap:8px!important;}
+	    #panel-lotes .status-row{grid-template-columns:62px minmax(0,1fr) auto!important;gap:7px 8px!important;padding:10px!important;border-radius:12px!important;box-shadow:0 5px 16px rgba(13,27,42,.07)!important;}
+	    #panel-lotes .status-row::before{min-width:52px;height:26px;padding:0 8px;border-radius:8px;font-size:11px;box-shadow:none;}
+	    #panel-lotes .status-row>.status-cell{display:none!important;}
+	    #panel-lotes .status-row>.status-cell:nth-child(4){display:block!important;grid-column:2!important;grid-row:1!important;align-self:center!important;background:transparent!important;border:none!important;padding:0!important;min-width:0!important;}
+	    #panel-lotes .status-row>.status-cell:nth-child(1){display:flex!important;grid-column:3!important;grid-row:1!important;align-self:center!important;justify-self:end!important;background:transparent!important;border:none!important;padding:0!important;}
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(3),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(5),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(6),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(7),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(8),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(9),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(10),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(11),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(12),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(13),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(14),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(15),
+	    #panel-lotes .status-row.active-edit>.status-cell:nth-child(16){display:none!important;}
+	    #panel-lotes .status-seq-pc{display:none!important;}
+	    #panel-lotes .status-cell-title{font-size:12.5px!important;line-height:1.15!important;max-width:100%!important;}
+	    #panel-lotes .status-cell-sub{display:none!important;}
+	    #panel-lotes .badge{font-size:8.5px!important;padding:5px 8px!important;letter-spacing:.35px!important;}
+	    #panel-lotes .status-mobile-line{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 8px;grid-column:1/-1;grid-row:2;overflow:visible!important;white-space:normal!important;padding-top:3px;font-size:10.5px;line-height:1.15;}
+	    #panel-lotes .status-mobile-line i,#panel-lotes .status-mobile-line b{display:none!important;}
+	    #panel-lotes .status-mobile-line span{display:block!important;min-width:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+	    #panel-lotes .status-mobile-line em{display:block;font-style:normal;font-size:8px;font-weight:850;letter-spacing:.55px;text-transform:uppercase;color:var(--taupe);margin-bottom:2px;}
+	    #panel-lotes .status-mobile-line .money,
+	    #panel-lotes .status-mobile-line .profit,
+	    #panel-lotes .status-mobile-line .rate{font-weight:900;}
+	    #panel-lotes .status-mobile-line .rate{text-align:right;}
+	    #panel-lotes .status-mobile-hint{margin-top:9px;padding:8px 10px;font-size:11px;border-radius:12px;}
 	  }
 	
 	</style>
@@ -2436,6 +2534,14 @@ function fmtKg(v){return v.toLocaleString('pt-BR',{minimumFractionDigits:1,maxim
 function fmtPct(v){if(v===null||v===undefined||isNaN(v))return '—';return(v*100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';}
 function fmtNum(v,d=2){if(v===null||v===undefined||isNaN(v))return '—';return (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});}
 function fmtM(v){if(Math.abs(v)>=1000000)return(v/1000000).toFixed(1)+'M';if(Math.abs(v)>=1000)return(v/1000).toFixed(0)+'k';return fmt(v);}
+function fmtCompactMoney(v){
+  v=parseFloat(v)||0;
+  var abs=Math.abs(v);
+  var sign=v<0?'-':'';
+  if(abs>=1000000)return sign+'R$ '+(abs/1000000).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:2})+' mi';
+  if(abs>=1000)return sign+'R$ '+(abs/1000).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil';
+  return fmt(v);
+}
 function g(id){return parseFloat(document.getElementById(id).value)||0;}
 function s(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
 function bioRows(id,rows){
@@ -4592,7 +4698,8 @@ function statusRowPassaFiltros(row){
     var f=String(statusColumnFilters[key]||'').trim();
     if(!f)continue;
     if(key==='status'){
-      if((row.getAttribute('data-status')||'')!==f)return false;
+      var statusValue=((row.getAttribute('data-status')||'')+' '+(row.getAttribute('data-filter-status')||''));
+      if(_statusNorm(statusValue).indexOf(_statusNorm(f))<0)return false;
     }else{
       var value=row.getAttribute('data-filter-'+key)||'';
       if(_statusNorm(value).indexOf(_statusNorm(f))<0)return false;
@@ -4645,6 +4752,21 @@ function applyStatusColumnFilters(){
   setStatusSub('status-total-prazo',prazoMedio>0?'Prazo médio: '+prazoMedio.toLocaleString('pt-BR',{maximumFractionDigits:0})+' dias':'Prazo médio: —');
   var note=document.getElementById('status-filter-count');
   if(note)note.textContent=visiveis+' lote(s) exibido(s)';
+  var mobileCount=document.getElementById('status-mobile-count');
+  if(mobileCount)mobileCount.textContent=visiveis+' lotes exibidos';
+}
+
+function toggleStatusMobileFilters(){
+  document.body.classList.toggle('status-mobile-filter-open');
+}
+
+function abrirSugestoesFiltroStatus(input){
+  if(!input)return;
+  setTimeout(function(){
+    try{
+      if(input.showPicker)input.showPicker();
+    }catch(e){}
+  },0);
 }
 
 function renderLotes(){
@@ -4688,21 +4810,21 @@ function renderLotes(){
     var v=(val===null||val===undefined||val==='')?'—':String(val);
     return '<div class="status-cell '+(cls||'')+'" title="'+escHtml(v)+'">'+escHtml(v)+'</div>';
   }
+  var statusFilterOptions={};
+  function filterOptionsHtml(key){
+    var opts=statusFilterOptions[key]||[];
+    if(!opts.length)return '';
+    return '<datalist id="status-dl-'+key+'">'+opts.map(function(v){return '<option value="'+escHtml(v)+'"></option>';}).join('')+'</datalist>';
+  }
   function filterInput(key,placeholder){
     var v=statusColumnFilters[key]||'';
-    return '<div class="status-filter-cell"><input type="text" value="'+escHtml(v)+'" placeholder="'+escHtml(placeholder||'Filtrar')+'" oninput="updateStatusColumnFilter(\''+key+'\',this.value)" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()"></div>';
+    return '<div class="status-filter-cell"><div class="status-filter-control"><input type="text" list="status-dl-'+key+'" value="'+escHtml(v)+'" placeholder="'+escHtml(placeholder||'Filtrar')+'" onfocus="abrirSugestoesFiltroStatus(this)" oninput="updateStatusColumnFilter(\''+key+'\',this.value)" onclick="event.stopPropagation();abrirSugestoesFiltroStatus(this)" onpointerdown="event.stopPropagation()">'+filterOptionsHtml(key)+'</div></div>';
   }
   function filterStatus(){
     var cur=statusColumnFilters.status||'';
-    var html='<div class="status-filter-cell"><select onchange="updateStatusColumnFilter(\'status\',this.value)" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()">'
-      +'<option value="">Todos</option>';
-    STATUS_ORDER.forEach(function(s){
-      var sc=STATUS_CFG[s]||STATUS_CFG.embarque;
-      html+='<option value="'+s+'"'+(cur===s?' selected':'')+'>'+escHtml(sc.label)+'</option>';
-    });
-    return html+'</select></div>';
+    return '<div class="status-filter-cell"><div class="status-filter-control"><input type="text" list="status-dl-status" value="'+escHtml(cur)+'" placeholder="Todos" onfocus="abrirSugestoesFiltroStatus(this)" oninput="updateStatusColumnFilter(\'status\',this.value)" onclick="event.stopPropagation();abrirSugestoesFiltroStatus(this)" onpointerdown="event.stopPropagation()">'+filterOptionsHtml('status')+'</div></div>';
   }
-  function buildStatusCard(l){
+  function buildStatusCard(l,idx){
     var vend=vends.find(function(v){return v.id===l.vendedorId;});
     var sc=STATUS_CFG[l.status]||STATUS_CFG.embarque;
     var o=l.orcamentos&&l.orcamentos[0];
@@ -4736,6 +4858,8 @@ function renderLotes(){
     var lucroVal=o?fmt(lucro):'—';
     var rentVal=o?fmtPct(metric.rent):'—';
     var rentMesVal=o?fmtPct(metric.rentMes):'—';
+    var dataEntradaCurta=dataEntrada&&dataEntrada!=='—'?dataEntrada.slice(0,5):'—';
+    var dataAbateCurta=dataAbate&&dataAbate!=='—'?dataAbate.slice(0,5):'—';
     var eficienciaVal=o&&metric.eficienciaBio?(fmtNum(metric.eficienciaBio,2)+' kg MS/@'):'—';
     var eficienciaChegadaVal=o&&metric.eficienciaBioChegada?(fmtNum(metric.eficienciaBioChegada,2)+' kg MS/@'):'—';
     var b3Nec=necessidadeContratosB3(l,o);
@@ -4766,7 +4890,7 @@ function renderLotes(){
       +'<span class="status-drag-dot" style="background:'+(barColor||'var(--border)')+'"></span>'
       +'<span class="badge '+sc.cls+'">'+escHtml(sc.label)+'</span>'
     +'</div>';
-    var loteCell='<div class="status-cell"><span class="status-cell-title">'+escHtml(cardTitle)+'</span>'
+    var loteCell='<div class="status-cell"><span class="status-seq-pc">Lote '+((idx||0)+1)+'</span><span class="status-cell-title">'+escHtml(cardTitle)+'</span>'
       +(vend?'<span class="status-cell-sub">'+escHtml(vend.nome)+'</span>':'')
       +(metric.real?'<span class="status-cell-sub" style="color:var(--green)">Realizado ajustado</span>':'')
     +'</div>';
@@ -4779,7 +4903,17 @@ function renderLotes(){
       +(metric.contratosB3&&!metric.b3CompraMedia?'<span class="status-cell-sub" style="color:#8a4b05">Contrato em aberto</span>':'')
       +(metric.resultadoB3?'<span class="status-cell-sub" style="color:'+(metric.resultadoB3>=0?'var(--green)':'var(--red)')+'">'+fmt(metric.resultadoB3)+'</span>':'')
     +'</div>';
-    return '<div class="status-row" data-lid="'+l.id+'" data-status="'+(l.status||'embarque')+'" draggable="true"'+attrs+'>'
+    var mobileLine='<div class="status-mobile-line">'
+      +'<span><em>Qtd</em>'+escHtml(qtdVal)+'</span>'
+      +'<span><em>Entrada</em>'+escHtml(dataEntradaCurta)+'</span>'
+      +'<span><em>Abate</em>'+escHtml(dataAbateCurta)+'</span>'
+      +'<span><em>B3</em>'+escHtml(b3Cobertura)+'</span>'
+      +'<span class="muted"><em>Trava</em>'+(metric.contratosB3?'Travado':'Sem trava')+'</span>'
+      +'<span class="money"><em>Capital</em>'+escHtml(fmtCompactMoney(capital))+'</span>'
+      +'<span class="profit"><em>Lucro</em>'+escHtml(fmtCompactMoney(lucro))+'</span>'
+      +'<span class="rate"><em>% mês</em>'+escHtml(rentMesVal)+'</span>'
+    +'</div>';
+    return '<div class="status-row" data-lid="'+l.id+'" data-lote-seq="'+((idx||0)+1)+'" data-status="'+(l.status||'embarque')+'" draggable="true"'+attrs+'>'
       +statusLabel
       +statusCell(anoVal,'muted')
       +statusCell(confinamento,'muted')
@@ -4796,6 +4930,7 @@ function renderLotes(){
       +statusCell(rentMesVal,'rate')
       +statusCell(eficienciaVal,'rate')
       +statusCell(eficienciaChegadaVal,'rate')
+      +mobileLine
     +'</div>';
   }
   lotes.sort(function(a,b){
@@ -4806,7 +4941,72 @@ function renderLotes(){
     var bo=b.orcamentos&&b.orcamentos[0]&&b.orcamentos[0].dataEntradaPrev||'';
     return String(ao).localeCompare(String(bo));
   });
-  var html='<div class="status-summary">'
+  function addStatusFilterOption(key,value){
+    value=(value===null||value===undefined)?'':String(value).trim();
+    if(!value||value==='—')return;
+    statusFilterOptions[key]=statusFilterOptions[key]||[];
+    if(statusFilterOptions[key].indexOf(value)<0)statusFilterOptions[key].push(value);
+  }
+  STATUS_ORDER.forEach(function(s){
+    var cfg=STATUS_CFG[s]||STATUS_CFG.embarque;
+    addStatusFilterOption('status',cfg.label);
+  });
+  lotes.forEach(function(l){
+    var vend=vends.find(function(v){return v.id===l.vendedorId;});
+    var o=l.orcamentos&&l.orcamentos[0];
+    var sc=STATUS_CFG[l.status]||STATUS_CFG.embarque;
+    var tipo=l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal]?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'');
+    var cardTitle=(o&&o.label)?o.label:(vend?vend.nome:(tipo?tipo+' · '+l.qtd+' cab.':'Lote '+(l.qtd?l.qtd+' cab.':'sem vendedor')));
+    var confinamento=(o&&o.precificacaoSnapshot&&o.precificacaoSnapshot.boitelNome)
+      ||(o&&o.boitelSnapshot&&(o.boitelSnapshot.boitelNome||o.boitelSnapshot.nome))
+      ||(o&&o.boitelNome)||l.boitelNome||'Manual / sem boitel';
+    var realDates=l.ajusteReal||l.apuracao||{};
+    var entradaIso=realDates.dataEntradaReal||(l.confRecord&&l.confRecord.dataEntrada)||(o&&o.dataEntradaPrev)||'';
+    var saidaIso=realDates.dataAbateReal||(l.confRecord&&l.confRecord.dataSaida?l.confRecord.dataSaida:'');
+    var dias=o?(parseInt(o.dias)||0):0;
+    var prazo=o?(parseInt(o.prazoPag)||0):0;
+    var dataEntrada=statusDate(entradaIso);
+    var dataAbate=saidaIso?statusDate(saidaIso):(entradaIso&&dias?_fmtDataBR(_addDias(entradaIso,dias)):'—');
+    var recebDate=realDates.dataRecebimentoReal?_addDias(realDates.dataRecebimentoReal,0):(saidaIso?_addDias(saidaIso,prazo):(entradaIso&&(dias||prazo)?_addDias(entradaIso,dias+prazo):null));
+    var dataRecebimento=recebDate?_fmtDataBR(recebDate):'—';
+    var metric=resultadoStatusLote(l,o);
+    addStatusFilterOption('status',sc.label);
+    addStatusFilterOption('ano',statusYear(entradaIso,o));
+    addStatusFilterOption('confinamento',confinamento);
+    addStatusFilterOption('lote',cardTitle);
+    addStatusFilterOption('b3',metric.contratosB3?'Travado':'Sem trava');
+    addStatusFilterOption('b3',textoCoberturaB3(l,o,metric,true));
+    addStatusFilterOption('qtd',statusQtd(l.qtd||(o&&o.qtd)));
+    addStatusFilterOption('entrada',dataEntrada);
+    addStatusFilterOption('abate',dataAbate);
+    addStatusFilterOption('recebimento',dataRecebimento);
+    if(o){
+      addStatusFilterOption('faturamento',fmt(metric.faturamento));
+      addStatusFilterOption('capital',fmt(metric.capital));
+      addStatusFilterOption('lucro',fmt(metric.lucro));
+      addStatusFilterOption('rent',fmtPct(metric.rent));
+      addStatusFilterOption('rentmes',fmtPct(metric.rentMes));
+      if(metric.eficienciaBio)addStatusFilterOption('eficiencia',fmtNum(metric.eficienciaBio,2)+' kg MS/@');
+      if(metric.eficienciaBioChegada)addStatusFilterOption('eficienciaChegada',fmtNum(metric.eficienciaBioChegada,2)+' kg MS/@');
+    }
+  });
+  Object.keys(statusFilterOptions).forEach(function(key){
+    statusFilterOptions[key].sort(function(a,b){return String(a).localeCompare(String(b),'pt-BR',{numeric:true});});
+  });
+  var html='<div class="status-mobile-toolbar">'
+      +'<button type="button" class="status-mobile-filter" onclick="toggleStatusMobileFilters()">'
+        +'<span class="status-mobile-filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path></svg></span>'
+        +'<span>Filtrar lotes</span>'
+      +'</button>'
+      +'<button type="button" class="status-mobile-count" onclick="toggleStatusMobileFilters()">'
+        +'<span id="status-mobile-count">'+lotes.length+' lotes exibidos</span><span aria-hidden="true">⌄</span>'
+      +'</button>'
+    +'</div>'
+    +'<div class="status-mobile-head">'
+      +'<div class="status-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4c2.8 0 5.2 1.5 6.5 3.8"></path><path d="M5.5 7.8C6.8 5.5 9.2 4 12 4"></path><path d="M8 9h8"></path><path d="M9 9v4a3 3 0 0 0 6 0V9"></path><path d="M7 14h10"></path></svg></div>'
+      +'<div><div class="status-mobile-title">Status dos lotes</div><div class="status-mobile-sub">Acompanhe o desempenho de cada lote.</div></div>'
+    +'</div>'
+    +'<div class="status-summary">'
       +'<div class="status-total-card"><div class="status-total-label">Qtd total</div><div class="status-total-value" id="status-total-qtd">—</div></div>'
       +'<div class="status-total-card"><div class="status-total-label">Faturamento lote</div><div class="status-total-value" id="status-total-fat">—</div><div class="status-total-sub">Lucro + capital</div></div>'
       +'<div class="status-total-card"><div class="status-total-label">Capital total</div><div class="status-total-value" id="status-total-capital">—</div></div>'
@@ -4852,9 +5052,10 @@ function renderLotes(){
       +filterInput('eficienciaChegada','kg MS/@ cheg.')
     +'</div>'
     +'<div class="status-table-body">'
-      +lotes.map(buildStatusCard).join('')
+      +lotes.map(function(l,idx){return buildStatusCard(l,idx);}).join('')
       +'</div>'
     +'</div></div>';
+  html+='<div class="status-mobile-hint"><span class="status-mobile-hint-icon">i</span><span>Arraste itens horizontalmente para ver mais detalhes.</span></div>';
   html+='<div class="status-table-note"><span id="status-filter-count"></span> · Clique em uma linha para editar. Para mudar o status, arraste a linha para um dos botões de status acima. <button type="button" onclick="limparStatusColumnFilters()" style="border:none;background:none;color:var(--accent);font-weight:800;cursor:pointer;font-family:Inter,sans-serif;font-size:10px;">Limpar filtros</button></div>';
   container.innerHTML=html;
   setupStatusDrag(container);
