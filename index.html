@@ -123,6 +123,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .tab-ico{width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:inherit;}
 .tab-ico svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .tab-label{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.1;}
+.desktop-sidebar{display:none;}
 
 /* ─ MAIN ──────────────────────────────────── */
 .main{max-width:900px;margin:0 auto;padding:28px 16px 72px;}
@@ -877,10 +878,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    .topbar-right{gap:8px;min-width:0;}
 	    .user-badge{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;}
 	    .btn-logout{padding:5px 9px;font-size:10px;}
-	    .tab-bar{position:fixed;top:auto;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:1000;width:calc(100% - 18px);min-height:66px;background:rgba(242,237,227,.94);border:1px solid rgba(201,162,78,.35);border-radius:21px;box-shadow:0 12px 34px rgba(13,27,42,.18);display:flex;align-items:center;justify-content:center;padding:5px;gap:3px;scrollbar-width:none;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
+	    .tab-bar{position:fixed;top:auto;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:1000;width:calc(100% - 18px);min-height:66px;background:linear-gradient(135deg,var(--navy) 0%,#14283B 100%);border:1px solid rgba(201,162,78,.55);border-radius:21px;box-shadow:0 12px 34px rgba(13,27,42,.28);display:flex;align-items:center;justify-content:center;padding:5px;gap:3px;scrollbar-width:none;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
 	    .tab-bar::-webkit-scrollbar{display:none;}
-	    .tab-btn{flex:1;min-width:0;padding:6px 3px 5px;font-size:9.5px;letter-spacing:0;text-transform:none;min-height:56px;border-radius:15px;border-bottom:none;flex-direction:column;gap:4px;}
-	    .tab-btn.active{background:rgba(201,162,78,.18);border-bottom:none;color:var(--navy);}
+	    .tab-btn{flex:1;min-width:0;padding:6px 3px 5px;font-size:9.5px;letter-spacing:0;text-transform:none;min-height:56px;border-radius:15px;border-bottom:none;flex-direction:column;gap:4px;color:rgba(242,237,227,.68);}
+	    .tab-btn:hover{color:#fff;background:rgba(242,237,227,.06);}
+	    .tab-btn.active{background:rgba(201,162,78,.20);border-bottom:none;color:#fff;box-shadow:inset 0 0 0 1px rgba(201,162,78,.42);}
 	    .tab-ico{width:21px;height:21px;}
 	    .tab-ico svg{width:20px;height:20px;}
 	    .main{padding:16px 10px calc(104px + env(safe-area-inset-bottom));max-width:none;}
@@ -1584,6 +1586,107 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     gap:7px 8px;
   }
 }
+
+/* ─ DESKTOP COMMAND CENTER ───────────────────────────── */
+@media(min-width:980px){
+  body{background:linear-gradient(180deg,#f6f1e7 0%,var(--bg) 100%);}
+  .topbar{height:62px;padding:0 28px 0 30px;}
+  .topbar-logo{height:42px;width:42px;}
+  .brand-name{font-size:14px;}
+  .brand-subtitle{font-size:8px;letter-spacing:1.2px;}
+  .tab-bar{display:none;}
+  .desktop-sidebar{
+    position:fixed;left:0;top:62px;bottom:0;z-index:80;width:224px;display:flex;flex-direction:column;
+    gap:8px;padding:18px 14px;background:linear-gradient(180deg,rgba(255,253,247,.96),rgba(242,237,227,.94));
+    border-right:1px solid rgba(201,162,78,.36);box-shadow:10px 0 28px rgba(13,27,42,.06);
+  }
+  .desktop-sidebar-title{
+    padding:2px 10px 10px;font-size:9px;font-weight:900;letter-spacing:1.3px;text-transform:uppercase;
+    color:var(--taupe);border-bottom:1px solid rgba(216,203,181,.75);margin-bottom:4px;
+  }
+  .desktop-nav{
+    border:1px solid transparent;background:transparent;border-radius:12px;padding:11px 12px;text-align:left;
+    font-family:'Inter',sans-serif;color:var(--taupe);cursor:pointer;transition:all .16s;
+  }
+  .desktop-nav span{display:block;font-size:13px;font-weight:900;color:inherit;line-height:1.1;}
+  .desktop-nav small{display:block;margin-top:4px;font-size:9px;font-weight:650;color:rgba(138,121,103,.78);line-height:1.25;}
+  .desktop-nav:hover{background:rgba(201,162,78,.10);border-color:rgba(201,162,78,.20);color:var(--navy);}
+  .desktop-nav.active{
+    background:linear-gradient(135deg,var(--navy),#17314B);border-color:rgba(201,162,78,.35);color:#fff;
+    box-shadow:0 10px 22px rgba(13,27,42,.14);
+  }
+  .desktop-nav.active small{color:rgba(242,237,227,.68);}
+  .main{max-width:none;width:calc(100% - 224px);margin:0 0 0 224px;padding:20px 24px 42px;}
+  #panel-home,#panel-lotes,#panel-futuros,#panel-financeiro{
+    width:100%!important;max-width:none!important;margin-left:0!important;transform:none!important;
+  }
+
+  #panel-home>div:first-child{
+    margin-bottom:14px!important;padding:12px 14px;border:1px solid rgba(216,203,181,.75);border-radius:16px;
+    background:rgba(255,253,247,.78);box-shadow:0 6px 20px rgba(13,27,42,.04);
+  }
+  #panel-home .h-greeting-name{font-size:25px;line-height:1;}
+  #panel-home .h-greeting-date{font-size:11px;color:var(--taupe);margin-top:4px;}
+  #home-calc-btn{min-height:38px!important;padding:9px 14px!important;border-radius:10px!important;font-size:12px!important;}
+  .home-kpi-grid{grid-template-columns:1.15fr 1fr 1fr 1fr!important;gap:10px!important;margin-bottom:12px!important;}
+  .home-kpi{min-height:88px;padding:13px 15px!important;border-radius:14px!important;}
+  .home-kpi-value{font-size:25px!important;}
+  .home-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,.75fr)!important;gap:12px!important;align-items:start;}
+  .h-card{border-radius:14px!important;padding:14px!important;margin-bottom:12px!important;}
+  .h-card-label{font-size:9px!important;letter-spacing:1.25px!important;}
+  .home-link-btn{font-size:10px!important;padding:6px 9px!important;border-radius:8px!important;}
+
+  #panel-lotes .lotes-toolbar{
+    position:sticky;top:62px;z-index:20;margin-bottom:10px;padding:9px;border:1px solid rgba(216,203,181,.78);
+    border-radius:14px;background:rgba(255,253,247,.92);box-shadow:0 8px 22px rgba(13,27,42,.05);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  }
+  #panel-lotes .status-pills{gap:7px;}
+  #panel-lotes .pill{min-height:30px;padding:6px 12px;border-radius:10px;font-size:10px;font-weight:850;}
+  #panel-lotes .status-summary{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:10px;}
+  #panel-lotes .status-total-card{padding:10px 12px;border-radius:12px;}
+  #panel-lotes .status-total-value{font-size:16px;}
+  #panel-lotes .status-table-wrap{max-height:calc(100vh - 238px);overflow:auto;border-radius:14px;}
+  #panel-lotes .status-table{min-width:1380px;}
+  #panel-lotes .status-head{position:sticky;top:0;z-index:6;background:#fbfaf5;}
+  #panel-lotes .status-filter-row{position:sticky;top:34px;z-index:5;background:#fffdf7;}
+  #panel-lotes .status-head-cell{padding:8px 9px;font-size:8px;}
+  #panel-lotes .status-filter-cell{padding:5px 6px;}
+  #panel-lotes .status-filter-control input{height:28px;font-size:10px;border-radius:8px;}
+  #panel-lotes .status-row{min-height:38px;}
+  #panel-lotes .status-cell{padding:5px 8px;font-size:11px;}
+  #panel-lotes .status-cell-title{font-size:11.5px;}
+  #panel-lotes .badge{font-size:8.5px;padding:3px 8px;}
+  #panel-lotes .status-seq-pc{font-size:8.5px;padding:3px 7px;min-width:46px;}
+  #panel-lotes #edit-panel .ep{max-width:none;border-radius:14px;padding:16px;}
+
+  #panel-futuros .fut-hero{
+    padding:13px 16px;margin-bottom:10px;border-radius:14px;align-items:center;
+    background:linear-gradient(135deg,rgba(255,253,247,.96),rgba(242,237,227,.9));
+  }
+  #panel-futuros .fut-hero .h-greeting-name{font-size:24px;}
+  #panel-futuros .fut-new-btn{min-height:38px;padding:9px 14px;border-radius:10px;font-size:11px;}
+  #panel-futuros .fut-summary{grid-template-columns:1.1fr .8fr .9fr .8fr;gap:8px;margin-bottom:10px;}
+  #panel-futuros .fut-card{padding:12px 14px;border-radius:13px;}
+  #panel-futuros .fut-card-value{font-size:21px;}
+  #panel-futuros .fut-layout{gap:12px;}
+  #panel-futuros .fut-form,#panel-futuros .fut-list-card{border-radius:15px;padding:14px 16px;}
+  #panel-futuros .fut-form-title{font-size:16px;margin-bottom:10px;padding-bottom:9px;}
+  #panel-futuros .fut-form-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:8px 10px;align-items:start;}
+  #panel-futuros .fut-span-2{grid-column:span 4;}
+  #panel-futuros .fut-span-3{grid-column:span 2;}
+  #panel-futuros .fut-span-4{grid-column:1/-1;}
+  #panel-futuros .fut-form .field{display:grid;grid-template-rows:28px auto 18px;min-width:0;}
+  #panel-futuros .fut-form .field label{min-height:28px;display:flex;align-items:flex-start;line-height:1.1;margin:0;font-size:8.5px;}
+  #panel-futuros .fut-form .field input,#panel-futuros .fut-form .field select{min-height:38px;font-size:13px;border-radius:9px;}
+  #panel-futuros .fut-form .hint{min-height:18px;font-size:8.5px;margin-top:3px;}
+  #panel-futuros .fut-lote-summary-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
+  #panel-futuros .fut-toolbar{margin-bottom:9px;}
+  #panel-futuros .fut-table-wrap{max-height:calc(100vh - 520px);overflow:auto;}
+  #panel-futuros .fut-table{min-width:980px;}
+  #panel-futuros .fut-table th{position:sticky;top:0;z-index:3;padding:8px 10px;background:#fbfaf5;}
+  #panel-futuros .fut-table td{padding:9px 10px;font-size:11px;}
+}
 	
 	</style>
 </head>
@@ -1642,6 +1745,25 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       <button class="btn-logout" onclick="doLogout()">Sair</button>
     </div>
   </div>
+
+  <aside class="desktop-sidebar" aria-label="Navegação desktop">
+    <div class="desktop-sidebar-title">Controle dos lotes</div>
+    <button class="desktop-nav active" data-tab-target="home" onclick="switchTab('home')">
+      <span>Home</span><small>Dashboard geral</small>
+    </button>
+    <button class="desktop-nav" data-tab-target="lotes" onclick="switchTab('lotes')">
+      <span>Status</span><small>Operações e etapas</small>
+    </button>
+    <button class="desktop-nav" data-tab-target="futuros" onclick="switchTab('futuros')">
+      <span>B3</span><small>Contratos e travas</small>
+    </button>
+    <button class="desktop-nav" data-tab-target="calc" onclick="switchTab('calc')">
+      <span>Calculadora</span><small>Nova simulação</small>
+    </button>
+    <button class="desktop-nav" id="side-config" data-tab-target="config" onclick="switchTab('config')" style="display:none">
+      <span>Configurações</span><small>Cadastros e padrões</small>
+    </button>
+  </aside>
 
   <div class="tab-bar">
     <button class="tab-btn" onclick="switchTab('home')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></span><span class="tab-label">Home</span></button>
@@ -3434,6 +3556,7 @@ function entrarApp(u,tab){
   document.getElementById('user-display').textContent=u;
   var err=document.getElementById('login-err');if(err)err.textContent='';
   document.getElementById('tab-config').style.display='';
+  var sideConfig=document.getElementById('side-config');if(sideConfig)sideConfig.style.display='';
   document.getElementById('csn-params').style.display=PARAM_ADMINS.includes(u)?'':'none';
   sanitizarLotes();populateTipoSelects();populateFrigSelect();populateBoitelSelect();populateVendSelect();populateFilterVend();populateFilterFrig();populateCalcVendSelect();
   switchTab(tab||'home');
@@ -3450,9 +3573,14 @@ function doLogin(){
 function doLogout(){currentUser='';
   localStorage.removeItem(SESSION_KEY);
   document.body.classList.remove('mobile-header-hidden');
-  document.getElementById('tab-config').style.display='none';document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('inp-user').value='alexmorimoto';document.getElementById('inp-pass').value='alex@2025';}
+  document.getElementById('tab-config').style.display='none';var sideConfig=document.getElementById('side-config');if(sideConfig)sideConfig.style.display='none';document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('inp-user').value='alexmorimoto';document.getElementById('inp-pass').value='alex@2025';}
 
 /* ── TABS ──────────────────────────────────────── */
+function syncDesktopSidebar(tab){
+  document.querySelectorAll('.desktop-nav').forEach(function(b){
+    b.classList.toggle('active',b.getAttribute('data-tab-target')===tab);
+  });
+}
 function switchTab(tab){
   ['home','lotes','lote-detail','futuros','financeiro','calc','config'].forEach(t=>{const p=document.getElementById('panel-'+t);if(p)p.style.display='none';});
   document.getElementById('panel-'+tab).style.display='block';
@@ -3460,6 +3588,7 @@ function switchTab(tab){
   const map={home:0,lotes:1,futuros:2,financeiro:3,calc:4,config:5};
   const btns=document.querySelectorAll('.tab-btn');
   if(btns[map[tab]])btns[map[tab]].classList.add('active');
+  syncDesktopSidebar(tab);
   if(tab==='home')renderHome();
   if(tab==='lotes'){renderLotes();}
   if(tab==='futuros')renderFuturos();
