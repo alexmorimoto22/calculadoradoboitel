@@ -3566,7 +3566,7 @@ function fmtCompactMoney(v){
   if(abs>=1000)return sign+'R$ '+(abs/1000).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil';
   return fmt(v);
 }
-function g(id){return parseFloat(document.getElementById(id).value)||0;}
+function g(id){var el=document.getElementById(id);return el?finNum(el.value):0;}
 function s(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
 function bioRows(id,rows){
   var el=document.getElementById(id);
@@ -6445,7 +6445,12 @@ function _prefer(){
 function _setCalcValue(id,val){
   if(val===undefined||val===null)return;
   var el=document.getElementById(id);
-  if(el)el.value=val;
+  if(el){
+    var isNum=el.matches&&el.matches('input[type="number"],input[inputmode="decimal"],input[inputmode="numeric"]');
+    if(isNum&&typeof val==='number')el.value=brNum(val,String(val).indexOf('.')>=0?2:0);
+    else if(isNum&&typeof val==='string'&&/^-?\d+\.\d+$/.test(val))el.value=val.replace('.',',');
+    else el.value=val;
+  }
 }
 function _setCalcModeBtn(field,mode){
   mode=mode||'pct';
@@ -6521,14 +6526,14 @@ function editarOrcamento(loteId,idx){
   _setPrecoCompraMode(o.precoCompraMode==='kg'?false:true);
   _setCalcValue('valorKG',precoKg);
   if(_precoModeAt){
-    var rE=parseFloat(document.getElementById('rendEntrada').value)||50;
+    var rE=finNum(document.getElementById('rendEntrada').value)||50;
     var precoAt=_prefer(o.valorAtCompra,precoKg?precoKg*15/(rE/100):0);
-    _setCalcValue('valorAt_compra',precoAt?Number(precoAt).toFixed(2):'');
+    _setCalcValue('valorAt_compra',precoAt||'');
   }
 
   recalcularQuebra();
   var quebraEdit=_prefer(o.quebra_pct,o.quebra);
-  if(quebraEdit!==undefined&&quebraEdit!==null&&quebraEdit!==''&&parseFloat(quebraEdit)<=1)quebraEdit=parseFloat(quebraEdit)*100;
+  if(quebraEdit!==undefined&&quebraEdit!==null&&quebraEdit!==''&&finNum(quebraEdit)<=1)quebraEdit=finNum(quebraEdit)*100;
   _setCalcValue('quebra',quebraEdit);
 
   var vendId=_prefer(o.vendedorId_orc,lote.vendedorId,'');
@@ -6673,16 +6678,16 @@ function renderDTabAbate(){
     </div>`;
 }
 function calcValorAbate(){
-  const at=parseFloat(document.getElementById('ar-arrobas').value)||0;
-  const preco=parseFloat(document.getElementById('ar-preco').value)||0;
-  const bonus=parseFloat(document.getElementById('ar-bonus').value)||0;
-  const desc=parseFloat(document.getElementById('ar-desconto').value)||0;
-  const fr=parseFloat(document.getElementById('ar-funrural').value)||0;
+  const at=finNum(document.getElementById('ar-arrobas').value)||0;
+  const preco=finNum(document.getElementById('ar-preco').value)||0;
+  const bonus=finNum(document.getElementById('ar-bonus').value)||0;
+  const desc=finNum(document.getElementById('ar-desconto').value)||0;
+  const fr=finNum(document.getElementById('ar-funrural').value)||0;
   const bruto=at*(preco+bonus-desc);
   const funrV=bruto*(fr/100);
-  document.getElementById('ar-val-bruto').value=bruto.toFixed(2);
-  document.getElementById('ar-funrural-val').value=funrV.toFixed(2);
-  document.getElementById('ar-val-liq').value=(bruto-funrV).toFixed(2);
+  document.getElementById('ar-val-bruto').value=brNum(bruto,2);
+  document.getElementById('ar-funrural-val').value=brNum(funrV,2);
+  document.getElementById('ar-val-liq').value=brNum(bruto-funrV,2);
 }
 function salvarAbateRecord(finalizar=false){
   const arr=getLotes();const i=arr.findIndex(l=>l.id===activeLoteDetailId);if(i<0)return;
@@ -6691,14 +6696,14 @@ function salvarAbateRecord(finalizar=false){
     frigorifico:document.getElementById('ar-frig').value,
     numeroNota:document.getElementById('ar-nota').value.trim(),
     qtdAbatida:parseInt(document.getElementById('ar-qtd').value)||arr[i].qtd,
-    arrobasTotais:parseFloat(document.getElementById('ar-arrobas').value)||0,
-    precoArroba:parseFloat(document.getElementById('ar-preco').value)||0,
-    bonusArroba:parseFloat(document.getElementById('ar-bonus').value)||0,
-    descontoArroba:parseFloat(document.getElementById('ar-desconto').value)||0,
-    funruralPct:parseFloat(document.getElementById('ar-funrural').value)||0,
-    valorBruto:parseFloat(document.getElementById('ar-val-bruto').value)||0,
-    funruralValor:parseFloat(document.getElementById('ar-funrural-val').value)||0,
-    valorLiquido:parseFloat(document.getElementById('ar-val-liq').value)||0,
+    arrobasTotais:finNum(document.getElementById('ar-arrobas').value)||0,
+    precoArroba:finNum(document.getElementById('ar-preco').value)||0,
+    bonusArroba:finNum(document.getElementById('ar-bonus').value)||0,
+    descontoArroba:finNum(document.getElementById('ar-desconto').value)||0,
+    funruralPct:finNum(document.getElementById('ar-funrural').value)||0,
+    valorBruto:finNum(document.getElementById('ar-val-bruto').value)||0,
+    funruralValor:finNum(document.getElementById('ar-funrural-val').value)||0,
+    valorLiquido:finNum(document.getElementById('ar-val-liq').value)||0,
     obs:document.getElementById('ar-obs').value.trim()
   };
   if(finalizar)arr[i].status='recebido';
@@ -6815,18 +6820,18 @@ function simularLote(id){
   populateBoitelSelect('');
   document.getElementById('tipoAnimal').value=lote.tipoAnimal||'';
   _setCalcValue('tipoAnimalCustom',lote.tipoCustom||labelRaca(lote.tipoAnimal)||'');
-  document.getElementById('qtd').value=lote.qtd;document.getElementById('pesoCom').value=lote.pesoMedio;
-  document.getElementById('gmd').value=a.gmd;document.getElementById('rendEntrada').value=a.rendE;
-  document.getElementById('rendAbate').value=a.rendA;document.getElementById('consumoMS').value=a.ms;
-  document.getElementById('freteKm').value=lote.distanciaKm;document.getElementById('freteCusto').value=p.freteCusto;
-  document.getElementById('valorKG').value=lote.precoKg;document.getElementById('comissao').value=p.comissao;
-  document.getElementById('sanidade').value=p.sanidade;document.getElementById('msKG').value=p.msKG;
-  document.getElementById('opDia').value=p.opDia;document.getElementById('custoArrobaProd').value=p.custoArrobaProd||0;document.getElementById('valorAt').value=p.valorAt;
+  _setCalcValue('qtd',lote.qtd);_setCalcValue('pesoCom',lote.pesoMedio);
+  _setCalcValue('gmd',a.gmd);_setCalcValue('rendEntrada',a.rendE);
+  _setCalcValue('rendAbate',a.rendA);_setCalcValue('consumoMS',a.ms);
+  _setCalcValue('freteKm',lote.distanciaKm);_setCalcValue('freteCusto',p.freteCusto);
+  _setCalcValue('valorKG',lote.precoKg);_setCalcValue('comissao',p.comissao);
+  _setCalcValue('sanidade',p.sanidade);_setCalcValue('msKG',p.msKG);
+  _setCalcValue('opDia',p.opDia);_setCalcValue('custoArrobaProd',p.custoArrobaProd||0);_setCalcValue('valorAt',p.valorAt);
   limparIndicadoresBiometriaCalc();
-  document.getElementById('bonus').value=0;document.getElementById('desconto').value=p.desconto;
-  document.getElementById('funrural').value=p.funrural;document.getElementById('dias').value=p.dias;
+  _setCalcValue('bonus',0);_setCalcValue('desconto',p.desconto);
+  _setCalcValue('funrural',p.funrural);_setCalcValue('dias',p.dias);
   aplicarTipoAnimal();
-  if(_precoModeAt){var rE=parseFloat(document.getElementById('rendEntrada').value)||50;var kg=parseFloat(document.getElementById('valorKG').value)||0;if(kg>0)document.getElementById('valorAt_compra').value=(kg*15/(rE/100)).toFixed(2);}
+  if(_precoModeAt){var rE=finNum(document.getElementById('rendEntrada').value)||50;var kg=finNum(document.getElementById('valorKG').value)||0;if(kg>0)_setCalcValue('valorAt_compra',kg*15/(rE/100));}
   recalcularQuebra();
   atualizarHintPreco();
   atualizarDatas();
@@ -6871,31 +6876,31 @@ function togglePrecoMode(){
     if(btn)btn.textContent='R$/@';
     if(prefix)prefix.textContent='R$/@';
     // Sync: convert kg→@
-    var rE=parseFloat(document.getElementById('rendEntrada').value)||50;
-    var kgVal=parseFloat(kgEl.value)||0;
-    atEl.value=(kgVal*15/(rE/100)).toFixed(2);
+    var rE=finNum(document.getElementById('rendEntrada').value)||50;
+    var kgVal=finNum(kgEl.value)||0;
+    atEl.value=brNum(kgVal*15/(rE/100),2);
     atualizarHintPreco();
   } else {
     kgEl.style.display='';atEl.style.display='none';
     if(btn)btn.textContent='R$/kg';
     if(prefix)prefix.textContent='R$/kg';
     // Sync: convert @→kg
-    var rE2=parseFloat(document.getElementById('rendEntrada').value)||50;
-    var atVal=parseFloat(atEl.value)||0;
-    kgEl.value=(atVal*(rE2/100)/15).toFixed(4);
+    var rE2=finNum(document.getElementById('rendEntrada').value)||50;
+    var atVal=finNum(atEl.value)||0;
+    kgEl.value=brNum(atVal*(rE2/100)/15,4);
     atualizarHintPreco();
   }
   agendarCalculoAutomatico();
 }
 function atualizarHintPreco(){
   var hint=document.getElementById('hint-preco-conv');if(!hint)return;
-  var rE=parseFloat(document.getElementById('rendEntrada').value)||50;
+  var rE=finNum(document.getElementById('rendEntrada').value)||50;
   if(_precoModeAt){
-    var atVal=parseFloat(document.getElementById('valorAt_compra').value)||0;
+    var atVal=finNum(document.getElementById('valorAt_compra').value)||0;
     var kgEq=(atVal*(rE/100)/15);
     hint.textContent='≈ '+fmt(kgEq)+'/kg (com rendimento '+fmtNum(rE,2)+'%)';
   } else {
-    var kgVal=parseFloat(document.getElementById('valorKG').value)||0;
+    var kgVal=finNum(document.getElementById('valorKG').value)||0;
     var atEq=(kgVal*15/(rE/100));
     hint.textContent='≈ '+fmt(atEq)+'/@ (com rendimento '+fmtNum(rE,2)+'%)';
   }
@@ -7005,7 +7010,7 @@ function atualizarDatas(){
   atualizarPreviewBiometria();
 }
 function calcPreviewBiometria(){
-  var num=function(id){var el=document.getElementById(id);return el?parseFloat(el.value)||0:0;};
+  var num=function(id){var el=document.getElementById(id);return el?finNum(el.value):0;};
   var pesoCom=num('pesoCom');
   var quebra=num('quebra')/100;
   var gmd=num('gmd');
@@ -7075,7 +7080,7 @@ function limparIndicadoresBiometriaCalc(){
 function calcPreviewFrete(){
   var num=function(id){
     var el=document.getElementById(id);
-    return el?parseFloat(el.value)||0:0;
+    return el?finNum(el.value):0;
   };
   var qtd=num('qtd');
   var km=num('freteKm');
@@ -7119,7 +7124,7 @@ document.addEventListener('input',function(evt){
     setTimeout(atualizarFreteCalculado,0);
   }
   var panel=document.getElementById('panel-calc');
-  if(panel&&panel.contains(evt.target)&&evt.target&&evt.target.type==='number'){
+  if(panel&&panel.contains(evt.target)&&evt.target&&evt.target.matches&&evt.target.matches('input[type="number"],input[inputmode="decimal"],input[inputmode="numeric"]')){
     agendarCalculoAutomatico();
   }
 });
@@ -7127,7 +7132,7 @@ document.addEventListener('change',function(evt){
   var panel=document.getElementById('panel-calc');
   if(!panel||!panel.contains(evt.target))return;
   var id=evt.target&&evt.target.id;
-  if(['boitel','frigorifico','dataEntradaPrev'].indexOf(id)>=0||evt.target.type==='number'){
+  if(['boitel','frigorifico','dataEntradaPrev'].indexOf(id)>=0||(evt.target.matches&&evt.target.matches('input[type="number"],input[inputmode="decimal"],input[inputmode="numeric"]'))){
     agendarCalculoAutomatico();
   }
 });
@@ -7326,15 +7331,15 @@ function aplicarTipoAnimal(){
   document.getElementById('animal-info').innerHTML='<div><div class="aib-label">Rend. Entrada</div><div class="aib-value">'+fmtNum(a.rendE,2)+'%</div></div>'+'<div><div class="aib-label">Rend. Abate</div><div class="aib-value">'+fmtNum(a.rendA,2)+'%</div></div>'+'<div><div class="aib-label">GMD típico</div><div class="aib-value">'+fmtNum(a.gmd,2)+' kg/dia</div></div>'+'<div><div class="aib-label">Consumo MS</div><div class="aib-value">'+fmtNum(a.ms,2)+'% PV/dia</div></div>'+'<div><div class="aib-label">Quebra transp.</div><div class="aib-value">+'+fmtNum(a.qExtra,2)+'%</div></div>'+'<div class="aib-desc">'+a.desc+'</div>';
   recalcularQuebra();aplicarFrigorifico();
 }
-function quebraPorKm(km){return Math.max(0,(parseFloat(km)||0)*1.25/100);}
+function quebraPorKm(km){return Math.max(0,(finNum(km)||0)*1.25/100);}
 function recalcularQuebra(){
-  var km=parseFloat(document.getElementById('freteKm').value)||0;
+  var km=finNum(document.getElementById('freteKm').value)||0;
   var tipo=document.getElementById('tipoAnimal').value;
   var a=tipo?getRacas()[tipo]:null;
   var qD=quebraPorKm(km);           // 1,25% a cada 100km
   var qExtra=a?(a.qExtra||0):0;     // já em %
   var qT=Math.min(qD+qExtra,15);
-  document.getElementById('quebra').value=qT.toFixed(2);
+  document.getElementById('quebra').value=brNum(qT,2);
   var fd=km.toLocaleString('pt-BR',{maximumFractionDigits:0})+'km';
   var bd=document.getElementById('quebra-bd');
   if(bd)bd.innerHTML='<div class="qb-item">Distância: <strong>'+fd+'</strong></div><span class="qb-sep">→</span><div class="qb-item">Base: <strong>'+fmtNum(qD,2)+'%</strong> <span style="color:var(--text-3);font-size:10px;">(1,25%/100km)</span></div><span class="qb-sep">+</span><div class="qb-item">Raça: <strong>+'+fmtNum(qExtra,2)+'%</strong></div><span class="qb-sep">=</span><div class="qb-total">Sugerida: '+fmtNum(qT,2)+'%</div>';
@@ -7489,19 +7494,19 @@ function abrirCalcStandalone(opts){
   Object.keys(map).forEach(function(k){
     if(p[k]===undefined||p[k]===null)return;
     var el=document.getElementById(map[k]);
-    if(el)el.value=p[k];
+    if(el)_setCalcValue(map[k],p[k]);
   });
-  var precoPadrao=parseFloat(p.valorKG)||0;
+  var precoPadrao=finNum(p.valorKG)||0;
   var precoModePadrao=p.precoCompraMode==='at'?'at':'kg';
   _setPrecoCompraMode(precoModePadrao==='at');
   if(precoModePadrao==='at'){
     _setCalcValue('valorAt_compra',precoPadrao);
-    var rendPadrao=parseFloat(document.getElementById('rendEntrada').value)||50;
+    var rendPadrao=finNum(document.getElementById('rendEntrada').value)||50;
     _setCalcValue('valorKG',precoPadrao*(rendPadrao/100)/15);
   }else{
     _setCalcValue('valorKG',precoPadrao);
-    var rendPadraoKg=parseFloat(document.getElementById('rendEntrada').value)||50;
-    _setCalcValue('valorAt_compra',precoPadrao?Number(precoPadrao*15/(rendPadraoKg/100)).toFixed(2):'');
+    var rendPadraoKg=finNum(document.getElementById('rendEntrada').value)||50;
+    _setCalcValue('valorAt_compra',precoPadrao?precoPadrao*15/(rendPadraoKg/100):'');
   }
   _setCalcModeBtn('comissao',p.comissaoMode==='val'?'val':'pct');
   var res=document.getElementById('resultado');if(res)res.style.display='none';
@@ -7512,10 +7517,10 @@ function abrirCalcStandalone(opts){
   activeOrcEditIndex=null;
   activeLoteReturnStatus=null;
   if(_precoModeAt){
-    var _rE=parseFloat(document.getElementById('rendEntrada').value)||50;
-    var _kg=parseFloat(document.getElementById('valorKG').value)||0;
-    var _at=parseFloat(document.getElementById('valorAt_compra').value)||0;
-    if(!_at&&_kg>0)document.getElementById('valorAt_compra').value=(_kg*15/(_rE/100)).toFixed(2);
+    var _rE=finNum(document.getElementById('rendEntrada').value)||50;
+    var _kg=finNum(document.getElementById('valorKG').value)||0;
+    var _at=finNum(document.getElementById('valorAt_compra').value)||0;
+    if(!_at&&_kg>0)_setCalcValue('valorAt_compra',_kg*15/(_rE/100));
   }
   recalcularQuebra();
   atualizarHintPreco();
@@ -8269,6 +8274,7 @@ function aplicarTecladoNumerico(root){
   if(root.matches&&root.matches('input[type="number"], input[inputmode="decimal"], input[inputmode="numeric"]'))inputs.push(root);
   if(root.querySelectorAll)inputs=inputs.concat(Array.from(root.querySelectorAll('input[type="number"], input[inputmode="decimal"], input[inputmode="numeric"]')));
   inputs.forEach(function(el){
+    if(el.type==='number')el.type='text';
     var step=String(el.getAttribute('step')||'');
     var id=String(el.id||'').toLowerCase();
     var decimal=step&&step!=='1'&&step!=='1.0';
@@ -8279,6 +8285,41 @@ function aplicarTecladoNumerico(root){
     el.setAttribute('pattern',decimal?'[0-9]*[,.]?[0-9]*':'[0-9]*');
     el.setAttribute('enterkeyhint','done');
     el.setAttribute('autocomplete','off');
+    if(el.dataset.numericMaskReady!=='1'){
+      el.dataset.numericMaskReady='1';
+      el.addEventListener('beforeinput',function(ev){
+        if(el.getAttribute('inputmode')!=='decimal')return;
+        if(ev.data!=='.')return;
+        ev.preventDefault();
+        var start=el.selectionStart==null?el.value.length:el.selectionStart;
+        var end=el.selectionEnd==null?start:el.selectionEnd;
+        var next=el.value.slice(0,start)+','+el.value.slice(end);
+        var first=next.indexOf(',');
+        if(first>=0)next=next.slice(0,first+1)+next.slice(first+1).replace(/[,.]/g,'');
+        el.value=next;
+        try{el.setSelectionRange(start+1,start+1);}catch(e){}
+        el.dispatchEvent(new Event('input',{bubbles:true}));
+      });
+      el.addEventListener('input',function(){
+      var start=el.selectionStart;
+      var before=el.value;
+      var next=before;
+      if(el.getAttribute('inputmode')==='decimal'){
+        next=next.replace(/\./g,',');
+        var first=next.indexOf(',');
+        if(first>=0)next=next.slice(0,first+1)+next.slice(first+1).replace(/,/g,'');
+      }else{
+        next=next.replace(/[,.]/g,'');
+      }
+      if(next!==before){
+        el.value=next;
+        try{el.setSelectionRange(Math.max(0,(start||next.length)-(before.length-next.length)),Math.max(0,(start||next.length)-(before.length-next.length)));}catch(e){}
+      }
+      });
+      el.addEventListener('blur',function(){
+        if(el.getAttribute('inputmode')==='decimal')el.value=String(el.value||'').replace(/\./g,',');
+      });
+    }
   });
 }
 
