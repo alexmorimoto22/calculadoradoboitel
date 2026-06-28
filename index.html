@@ -1113,6 +1113,22 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    #panel-calc .g2,#panel-calc .g3{grid-template-columns:repeat(2,minmax(0,1fr));}
 	    #panel-calc .g2>.field,#panel-calc .g3>.field{min-width:0;}
 	    #panel-calc .g2>.field:empty,#panel-calc .g3>.field:empty{display:none;}
+	    #cfg-params .card{padding:13px 11px;overflow:hidden;}
+	    #cfg-params .g2{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 8px;align-items:start;}
+	    #cfg-params .g2>.field{min-width:0;margin:0;display:grid;grid-template-rows:32px auto 24px;align-items:start;}
+	    #cfg-params .g2>.field:empty{display:none;}
+	    #cfg-params .field label{min-height:32px;margin:0;display:flex;align-items:flex-start;font-size:8.2px;line-height:1.12;letter-spacing:.75px;overflow:hidden;}
+	    #cfg-params .field-label-row{min-height:32px;margin:0;display:flex;align-items:flex-start;justify-content:space-between;gap:5px;}
+	    #cfg-params .field-label-row label{min-height:0;flex:1;}
+	    #cfg-params .mode-toggle{flex-shrink:0;}
+	    #cfg-params .mt-btn{min-height:26px;padding:3px 7px;font-size:9px;}
+	    #cfg-params .field input,#cfg-params .field select{min-height:42px;padding:9px 10px;font-size:15px;border-radius:8px;}
+	    #cfg-params .hint{min-height:24px;margin-top:4px;font-size:9px;line-height:1.25;}
+	    #cfg-params .cfg-row-lbl{margin:13px 0 8px;font-size:9px;letter-spacing:1.2px;}
+	  }
+
+	  @media(max-width:360px){
+	    #cfg-params .g2{grid-template-columns:1fr;}
 	  }
 
 	  @media(max-width:640px){
@@ -2544,66 +2560,66 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         <div class="card">
           <div class="cfg-row-lbl">Compra e lote</div>
           <div class="g2">
-            <div class="field"><label>Quantidade padrão (cab.)</label><input type="number" id="p-qtd" value="50" step="1"></div>
-            <div class="field"><label>Peso compra padrão (kg)</label><input type="number" id="p-pesoCom" value="420" step="1"></div>
+            <div class="field"><label>Quantidade padrão (cab.)</label><input type="text" inputmode="numeric" id="p-qtd" value="50"></div>
+            <div class="field"><label>Peso compra padrão (kg)</label><input type="text" inputmode="numeric" id="p-pesoCom" value="420"></div>
           </div>
           <div class="g2">
             <div class="field">
               <div class="field-label-row"><label>Preço compra</label>
                 <div class="mode-toggle"><button type="button" class="mt-btn active" data-param-field="preco" data-mode="kg" onclick="setParamPrecoMode('kg',this)">R$/kg</button><button type="button" class="mt-btn" data-param-field="preco" data-mode="at" onclick="setParamPrecoMode('at',this)">R$/@</button></div>
               </div>
-              <input type="number" id="p-valorKG" value="12.50" step="0.01">
+              <input type="text" inputmode="decimal" id="p-valorKG" value="12,50">
               <div class="hint" id="p-valorKG-hint">R$/kg usado como preço padrão de compra</div>
             </div>
             <div class="field">
               <div class="field-label-row"><label>Comissão</label>
                 <div class="mode-toggle"><button type="button" class="mt-btn active" data-param-field="comissao" data-mode="pct" onclick="setParamComissaoMode('pct',this)">%</button><button type="button" class="mt-btn" data-param-field="comissao" data-mode="val" onclick="setParamComissaoMode('val',this)">R$</button></div>
               </div>
-              <input type="number" id="p-comissao" value="1.0" step="0.1">
+              <input type="text" inputmode="decimal" id="p-comissao" value="1,0">
               <div class="hint" id="p-comissao-hint">Ex: 1 = 1% do valor de compra</div>
             </div>
           </div>
           <div class="cfg-row-lbl">Zootécnico</div>
           <div class="g2">
-            <div class="field"><label>GMD padrão (kg/dia)</label><input type="number" id="p-gmd" value="1.50" step="0.05"></div>
-            <div class="field"><label>Dias de confinamento</label><input type="number" id="p-dias" value="100" step="1"></div>
+            <div class="field"><label>GMD padrão (kg/dia)</label><input type="text" inputmode="decimal" id="p-gmd" value="1,50"></div>
+            <div class="field"><label>Dias de confinamento</label><input type="text" inputmode="numeric" id="p-dias" value="100"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Rendimento entrada (%)</label><input type="number" id="p-rendE" value="50" step="0.5"></div>
-            <div class="field"><label>Rendimento abate (%)</label><input type="number" id="p-rendA" value="55" step="0.5"></div>
+            <div class="field"><label>Rendimento entrada (%)</label><input type="text" inputmode="decimal" id="p-rendE" value="50"></div>
+            <div class="field"><label>Rendimento abate (%)</label><input type="text" inputmode="decimal" id="p-rendA" value="55"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Consumo MS (% PV/dia)</label><input type="number" id="p-consumoMS" value="2.4" step="0.1"></div>
-            <div class="field"><label>Quebra padrão (%)</label><input type="number" id="p-quebra" value="8.0" step="0.5"></div>
+            <div class="field"><label>Consumo MS (% PV/dia)</label><input type="text" inputmode="decimal" id="p-consumoMS" value="2,4"></div>
+            <div class="field"><label>Quebra padrão (%)</label><input type="text" inputmode="decimal" id="p-quebra" value="8,0"></div>
           </div>
           <div class="cfg-row-lbl">Custos operacionais</div>
           <div class="g2">
-            <div class="field"><label>Matéria Seca (R$/kg)</label><input type="number" id="p-msKG" value="1.30" step="0.01"></div>
-            <div class="field"><label>Operacional (R$/animal/dia)</label><input type="number" id="p-opDia" value="2.00" step="0.01"></div>
+            <div class="field"><label>Matéria Seca (R$/kg)</label><input type="text" inputmode="decimal" id="p-msKG" value="1,30"></div>
+            <div class="field"><label>Operacional (R$/animal/dia)</label><input type="text" inputmode="decimal" id="p-opDia" value="2,00"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Custo boitel R$/@ produzida</label><input type="number" id="p-custoArrobaProd" value="0" step="0.50"></div>
+            <div class="field"><label>Custo boitel R$/@ produzida</label><input type="text" inputmode="decimal" id="p-custoArrobaProd" value="0"></div>
             <div class="field"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Sanidade (R$/animal)</label><input type="number" id="p-sanidade" value="12.00" step="0.50"></div>
-            <div class="field"><label>Custo frete (R$/km)</label><input type="number" id="p-freteCusto" value="17.00" step="0.10"></div>
+            <div class="field"><label>Sanidade (R$/animal)</label><input type="text" inputmode="decimal" id="p-sanidade" value="12,00"></div>
+            <div class="field"><label>Custo frete (R$/km)</label><input type="text" inputmode="decimal" id="p-freteCusto" value="17,00"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Bônus frete (R$/animal)</label><input type="number" id="p-bonusFrete" value="60" step="1"></div>
-            <div class="field"><label>Distância padrão (km)</label><input type="number" id="p-freteKm" value="150" step="10"></div>
+            <div class="field"><label>Bônus frete (R$/animal)</label><input type="text" inputmode="decimal" id="p-bonusFrete" value="60"></div>
+            <div class="field"><label>Distância padrão (km)</label><input type="text" inputmode="numeric" id="p-freteKm" value="150"></div>
           </div>
           <div class="cfg-row-lbl">Venda</div>
           <div class="g2">
-            <div class="field"><label>Valor @ padrão (R$/@)</label><input type="number" id="p-valorAt" value="350.00" step="0.50"></div>
-            <div class="field"><label>Senar (%)</label><input type="number" id="p-funrural" value="0.2" step="0.01"><div class="hint">Ex: 0.2 = 0,2%</div></div>
+            <div class="field"><label>Valor @ padrão (R$/@)</label><input type="text" inputmode="decimal" id="p-valorAt" value="350,00"></div>
+            <div class="field"><label>Senar (%)</label><input type="text" inputmode="decimal" id="p-funrural" value="0,2"><div class="hint">Ex: 0,2 = 0,2%</div></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Bônus padrão (% s/ @)</label><input type="number" id="p-bonus" value="1.0" step="0.1"></div>
-            <div class="field"><label>Desconto padrão (% s/ @)</label><input type="number" id="p-desconto" value="1.0" step="0.1"></div>
+            <div class="field"><label>Bônus padrão (% s/ @)</label><input type="text" inputmode="decimal" id="p-bonus" value="1,0"></div>
+            <div class="field"><label>Desconto padrão (% s/ @)</label><input type="text" inputmode="decimal" id="p-desconto" value="1,0"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Prazo recebimento (dias)</label><input type="number" id="p-prazoPag" value="7" step="1"></div>
+            <div class="field"><label>Prazo recebimento (dias)</label><input type="text" inputmode="numeric" id="p-prazoPag" value="7"></div>
             <div class="field"></div>
           </div>
           <div class="form-btns">
@@ -7954,7 +7970,7 @@ function loadParamsForm(){
   var p=getParams();
   ['qtd','pesoCom','valorKG','comissao','gmd','dias','rendE','rendA','consumoMS','quebra','msKG','opDia','custoArrobaProd','sanidade','freteCusto','bonusFrete','freteKm','valorAt','funrural','bonus','desconto','prazoPag'].forEach(function(k){
     var el=document.getElementById('p-'+k);
-    if(el&&p[k]!==undefined&&p[k]!==null)el.value=p[k];
+    if(el&&p[k]!==undefined&&p[k]!==null)el.value=brNum(p[k],String(p[k]).indexOf('.')>=0?2:0);
   });
   setParamPrecoMode(p.precoCompraMode==='at'?'at':'kg');
   setParamComissaoMode(p.comissaoMode==='val'?'val':'pct');
@@ -7964,11 +7980,12 @@ function salvarParams(){
   if(!cfg.params)cfg.params={};
   ['qtd','pesoCom','valorKG','comissao','gmd','dias','rendE','rendA','consumoMS','quebra','msKG','opDia','custoArrobaProd','sanidade','freteCusto','bonusFrete','freteKm','valorAt','funrural','bonus','desconto','prazoPag'].forEach(function(k){
     var el=document.getElementById('p-'+k);
-    if(el&&el.value!=='')cfg.params[k]=parseFloat(el.value);
+    if(el&&el.value!=='')cfg.params[k]=finNum(el.value);
   });
   cfg.params.precoCompraMode=getParamPrecoMode();
   cfg.params.comissaoMode=getParamComissaoMode();
   saveConfig(cfg);
+  loadParamsForm();
   toast('✓ Parâmetros salvos — novas simulações usarão estes valores');
 }
 function getParamPrecoMode(){
@@ -7984,9 +8001,9 @@ function setParamPrecoMode(mode,btn){
   var old=getParamPrecoMode();
   var input=document.getElementById('p-valorKG');
   if(btn&&input&&old!==mode){
-    var rend=parseFloat((document.getElementById('p-rendE')||{}).value)||50;
-    var val=parseFloat(input.value)||0;
-    if(val>0)input.value=mode==='at'?(val*15/(rend/100)).toFixed(2):(val*(rend/100)/15).toFixed(4);
+    var rend=finNum((document.getElementById('p-rendE')||{}).value)||50;
+    var val=finNum(input.value)||0;
+    if(val>0)input.value=mode==='at'?brNum(val*15/(rend/100),2):brNum(val*(rend/100)/15,4);
   }
   document.querySelectorAll('.mt-btn[data-param-field="preco"]').forEach(function(b){
     b.classList.toggle('active',b.dataset.mode===mode);
@@ -7999,14 +8016,14 @@ function setParamComissaoMode(mode,btn){
   var old=getParamComissaoMode();
   var input=document.getElementById('p-comissao');
   if(btn&&input&&old!==mode){
-    var qtdPeso=parseFloat((document.getElementById('p-pesoCom')||{}).value)||0;
-    var preco=parseFloat((document.getElementById('p-valorKG')||{}).value)||0;
+    var qtdPeso=finNum((document.getElementById('p-pesoCom')||{}).value)||0;
+    var preco=finNum((document.getElementById('p-valorKG')||{}).value)||0;
     var precoMode=getParamPrecoMode();
-    var rend=parseFloat((document.getElementById('p-rendE')||{}).value)||50;
+    var rend=finNum((document.getElementById('p-rendE')||{}).value)||50;
     var precoKg=precoMode==='at'?(preco*(rend/100)/15):preco;
     var compraAnimal=qtdPeso*precoKg;
-    var val=parseFloat(input.value)||0;
-    if(compraAnimal>0)input.value=mode==='val'?(compraAnimal*val/100).toFixed(2):(val/compraAnimal*100).toFixed(2);
+    var val=finNum(input.value)||0;
+    if(compraAnimal>0)input.value=mode==='val'?brNum(compraAnimal*val/100,2):brNum(val/compraAnimal*100,2);
   }
   document.querySelectorAll('.mt-btn[data-param-field="comissao"]').forEach(function(b){
     b.classList.toggle('active',b.dataset.mode===mode);
