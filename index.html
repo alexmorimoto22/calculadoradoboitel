@@ -1778,13 +1778,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   </aside>
 
   <div class="tab-bar">
-    <button class="tab-btn" onclick="switchTab('home')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></span><span class="tab-label">Home</span></button>
-    <button class="tab-btn" onclick="switchTab('lotes')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6h12"></path><path d="M8 12h12"></path><path d="M8 18h12"></path><path d="M4 6h.01"></path><path d="M4 12h.01"></path><path d="M4 18h.01"></path></svg></span><span class="tab-label">Status</span></button>
-    <button class="tab-btn tab-calc-mobile active" onclick="switchTab('calc')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"></rect><path d="M8 7h8"></path><path d="M8.5 11.5h.01"></path><path d="M12 11.5h.01"></path><path d="M15.5 11.5h.01"></path><path d="M8.5 15h.01"></path><path d="M12 15h.01"></path><path d="M15.5 15h.01"></path></svg></span><span class="tab-label">Calculadora</span></button>
-    <button class="tab-btn" onclick="switchTab('futuros')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="m7 15 4-4 3 3 5-7"></path><path d="M17 7h2v2"></path></svg></span><span class="tab-label">B3</span></button>
+    <button class="tab-btn" data-tab-target="home" onclick="switchTab('home')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></span><span class="tab-label">Home</span></button>
+    <button class="tab-btn" data-tab-target="lotes" onclick="switchTab('lotes')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6h12"></path><path d="M8 12h12"></path><path d="M8 18h12"></path><path d="M4 6h.01"></path><path d="M4 12h.01"></path><path d="M4 18h.01"></path></svg></span><span class="tab-label">Status</span></button>
+    <button class="tab-btn tab-calc-mobile active" data-tab-target="calc" onclick="switchTab('calc')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"></rect><path d="M8 7h8"></path><path d="M8.5 11.5h.01"></path><path d="M12 11.5h.01"></path><path d="M15.5 11.5h.01"></path><path d="M8.5 15h.01"></path><path d="M12 15h.01"></path><path d="M15.5 15h.01"></path></svg></span><span class="tab-label">Calculadora</span></button>
+    <button class="tab-btn" data-tab-target="futuros" onclick="switchTab('futuros')"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="m7 15 4-4 3 3 5-7"></path><path d="M17 7h2v2"></path></svg></span><span class="tab-label">B3</span></button>
     <!-- Financeiro mantido no histórico do arquivo; aba oculta temporariamente para testes. -->
-    <button class="tab-btn" data-hidden-history="financeiro" onclick="switchTab('financeiro')" style="display:none"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h2"></path><path d="M13 15h4"></path></svg></span><span class="tab-label">Financeiro</span></button>
-    <button class="tab-btn" id="tab-config" onclick="switchTab('config')" style="display:none"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.22.35.56.7 1 .9.35.16.73.2 1.1.2H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51.9Z"></path></svg></span><span class="tab-label">Configurações</span></button>
+    <button class="tab-btn" data-hidden-history="financeiro" data-tab-target="financeiro" onclick="switchTab('financeiro')" style="display:none"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h2"></path><path d="M13 15h4"></path></svg></span><span class="tab-label">Financeiro</span></button>
+    <button class="tab-btn" id="tab-config" data-tab-target="config" onclick="switchTab('config')" style="display:none"><span class="tab-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.22.35.56.7 1 .9.35.16.73.2 1.1.2H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51.9Z"></path></svg></span><span class="tab-label">Configurações</span></button>
   </div>
 
   <div class="main">
@@ -3596,10 +3596,9 @@ function syncDesktopSidebar(tab){
 function switchTab(tab){
   ['home','lotes','lote-detail','futuros','financeiro','calc','config'].forEach(t=>{const p=document.getElementById('panel-'+t);if(p)p.style.display='none';});
   document.getElementById('panel-'+tab).style.display='block';
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  const map={home:0,lotes:1,futuros:2,financeiro:3,calc:4,config:5};
-  const btns=document.querySelectorAll('.tab-btn');
-  if(btns[map[tab]])btns[map[tab]].classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(function(b){
+    b.classList.toggle('active',b.getAttribute('data-tab-target')===tab);
+  });
   syncDesktopSidebar(tab);
   if(tab==='home')renderHome();
   if(tab==='lotes'){renderLotes();}
