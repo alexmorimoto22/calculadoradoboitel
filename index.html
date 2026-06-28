@@ -4122,46 +4122,16 @@ function renderHomeDashboardNovo(lotes){
       +metricCard('GMD médio',total.gmd?brNum(total.gmd,2)+' kg/dia':'—','Média ponderada por qtd')
       +metricCard('Efic. biológica',total.eficiencia?fmtNum(total.eficiencia,2)+' kg MS/@':'—','Projetado ou realizado')
     +'</div>'
-    +'<div class="home-panel">'
-      +'<div class="home-panel-head"><div class="home-panel-title">Relatório por status</div><div class="home-panel-note">Clique em um status para filtrar</div></div>'
-      +'<div class="home-status-grid">'+statusGroups.map(function(g){
-        var color=STATUS_COLORS[g.status]||'var(--accent)';
-        return '<div class="home-status-card" onclick="homeQuickFilter(\'status\',\''+g.status+'\')">'
-          +'<div class="home-status-top"><div style="display:flex;align-items:center;gap:7px;min-width:0;"><span class="home-status-dot" style="background:'+color+'"></span><span class="home-status-name">'+escHtml(g.nome)+'</span></div><span class="badge '+(STATUS_CFG[g.status]||{}).cls+'">'+g.lotes+'</span></div>'
-          +'<div class="home-status-num" style="color:'+color+'">'+numCab(g.qtd).replace(' cab.','')+'</div>'
-          +'<div class="home-status-sub">'+moneyShort(g.lucro)+' lucro · '+fmtPct(g.rentMes)+'/mês</div>'
-        +'</div>';
-      }).join('')+'</div>'
-    +'</div>'
-    +'<div class="home-section-grid">'
-      +'<div>'
-        +'<div class="home-panel">'
-          +'<div class="home-panel-head"><div class="home-panel-title">Relatório por confinamento</div><div class="home-panel-note">'+confRows.length+' grupo(s)</div></div>'
-          +'<div class="home-table-wrap"><table class="home-table"><thead><tr><th>Confinamento</th><th>Lotes</th><th>Qtd</th><th>Faturamento</th><th>Capital</th><th>Lucro</th><th>% Oper.</th><th>% Mês</th><th>GMD</th><th>Efic.</th></tr></thead><tbody>'
-            +(confRows.length?confRows.map(function(g){
-              return '<tr><td class="strong">'+escHtml(g.nome)+'</td><td>'+g.lotes+'</td><td>'+numCab(g.qtd)+'</td><td class="money">'+fmt(g.faturamento)+'</td><td class="money">'+fmt(g.capital)+'</td><td class="money '+(g.lucro>=0?'pos':'neg')+'">'+fmt(g.lucro)+'</td><td>'+fmtPct(g.rent)+'</td><td>'+fmtPct(g.rentMes)+'</td><td>'+(g.gmd?brNum(g.gmd,2):'—')+'</td><td>'+(g.eficiencia?fmtNum(g.eficiencia,2):'—')+'</td></tr>';
-            }).join(''):tableEmpty(10,'Sem lotes para os filtros selecionados.'))
-          +'</tbody></table></div>'
-        +'</div>'
-        +'<div class="home-panel">'
-          +'<div class="home-panel-head"><div class="home-panel-title">Histórico anual</div><div class="home-panel-note">Resumo por ano de entrada</div></div>'
-          +'<div class="home-table-wrap"><table class="home-table"><thead><tr><th>Ano</th><th>Lotes</th><th>Qtd</th><th>Faturamento</th><th>Capital</th><th>Lucro</th><th>% Oper.</th><th>% Mês</th><th>Prazo médio</th></tr></thead><tbody>'
-            +(anoRows.length?anoRows.map(function(g){
-              return '<tr><td class="strong">'+escHtml(g.nome)+'</td><td>'+g.lotes+'</td><td>'+numCab(g.qtd)+'</td><td class="money">'+fmt(g.faturamento)+'</td><td class="money">'+fmt(g.capital)+'</td><td class="money '+(g.lucro>=0?'pos':'neg')+'">'+fmt(g.lucro)+'</td><td>'+fmtPct(g.rent)+'</td><td>'+fmtPct(g.rentMes)+'</td><td>'+(g.prazoMedio?Math.round(g.prazoMedio):0)+' dias</td></tr>';
-            }).join(''):tableEmpty(9,'Sem histórico para os filtros selecionados.'))
-          +'</tbody></table></div>'
-        +'</div>'
+    +'<div class="home-panel home-list-only">'
+      +'<div class="home-panel-head">'
+        +'<div><div class="home-panel-title">Lotes filtrados</div><div class="home-panel-note">'+escHtml(filtroResumo)+'</div></div>'
+        +'<div class="home-panel-note">'+filtrados.length+' lote(s) · '+numCab(total.qtd)+' · lucro '+moneyShort(total.lucro)+'</div>'
       +'</div>'
-      +'<div>'
-        +'<div class="home-panel">'
-          +'<div class="home-panel-head"><div class="home-panel-title">Lotes filtrados</div><div class="home-panel-note">'+filtrados.length+' lote(s)</div></div>'
-          +'<div class="home-table-wrap"><table class="home-table"><thead><tr><th>Status</th><th>Ano</th><th>Lote</th><th>Qtd</th><th>Entrada</th><th>Abate</th><th>Receb.</th><th>Lucro</th><th>% Mês</th><th>Efic.</th></tr></thead><tbody>'
-            +(loteRows.length?loteRows.map(function(r){
-              return '<tr data-home-lid="'+r.id+'" style="cursor:pointer"><td><span class="badge '+(STATUS_CFG[r.status]||{}).cls+'">'+escHtml(r.statusLabel)+'</span></td><td>'+escHtml(r.ano)+'</td><td><span class="strong">'+escHtml(r.lote)+'</span><div class="muted">'+escHtml(r.confinamento)+' · '+r.origem+'</div></td><td>'+numCab(r.qtd)+'</td><td>'+dateBR(r.entrada)+'</td><td>'+dateBR(r.abate)+'</td><td>'+dateBR(r.recebimento)+'</td><td class="money '+(r.lucro>=0?'pos':'neg')+'">'+fmt(r.lucro)+'</td><td>'+fmtPct(r.rentMes)+'</td><td>'+(r.eficiencia?fmtNum(r.eficiencia,2):'—')+'</td></tr>';
-            }).join(''):tableEmpty(10,'Nenhum lote encontrado nos filtros atuais.'))
-          +'</tbody></table></div>'
-        +'</div>'
-      +'</div>'
+      +'<div class="home-table-wrap"><table class="home-table"><thead><tr><th>Status</th><th>Ano</th><th>Confinamento</th><th>Lote</th><th>Qtd</th><th>Entrada</th><th>Abate</th><th>Receb.</th><th>Faturamento</th><th>Capital</th><th>Lucro</th><th>% Oper.</th><th>% Mês</th><th>Efic.</th></tr></thead><tbody>'
+        +(loteRows.length?loteRows.map(function(r){
+          return '<tr data-home-lid="'+r.id+'" style="cursor:pointer"><td><span class="badge '+(STATUS_CFG[r.status]||{}).cls+'">'+escHtml(r.statusLabel)+'</span></td><td>'+escHtml(r.ano)+'</td><td>'+escHtml(r.confinamento)+'</td><td><span class="strong">'+escHtml(r.lote)+'</span><div class="muted">'+r.origem+'</div></td><td>'+numCab(r.qtd)+'</td><td>'+dateBR(r.entrada)+'</td><td>'+dateBR(r.abate)+'</td><td>'+dateBR(r.recebimento)+'</td><td class="money">'+fmt(r.faturamento)+'</td><td class="money">'+fmt(r.capital)+'</td><td class="money '+(r.lucro>=0?'pos':'neg')+'">'+fmt(r.lucro)+'</td><td>'+fmtPct(r.rent)+'</td><td>'+fmtPct(r.rentMes)+'</td><td>'+(r.eficiencia?fmtNum(r.eficiencia,2):'—')+'</td></tr>';
+        }).join(''):tableEmpty(14,'Nenhum lote encontrado nos filtros atuais.'))
+      +'</tbody></table></div>'
     +'</div>';
 
   live.querySelectorAll('[data-home-lid]').forEach(function(el){
