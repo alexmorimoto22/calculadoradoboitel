@@ -2022,6 +2022,43 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   #panel-futuros .fut-table th{position:sticky;top:0;z-index:3;padding:8px 10px;background:#fbfaf5;}
   #panel-futuros .fut-table td{padding:9px 10px;font-size:11px;}
 }
+
+  /* ── EXPORTAÇÃO DE RELATÓRIOS ───────────────────── */
+  .export-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin:0 0 14px;
+    padding:10px 12px;
+    border:1px solid rgba(201,162,78,.28);
+    border-radius:14px;
+    background:rgba(242,237,227,.72);
+    box-shadow:0 8px 24px rgba(13,27,42,.04);
+  }
+  .export-title{font-size:11px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;color:var(--navy)}
+  .export-sub{margin-top:2px;font-size:11px;color:var(--text-3)}
+  .export-wrap{position:relative;display:flex;align-items:center;justify-content:flex-end}
+  .export-btn{
+    min-height:38px;border:1px solid rgba(201,162,78,.5);border-radius:12px;padding:0 14px;background:var(--navy);color:#fff;
+    font-size:12px;font-weight:900;letter-spacing:.2px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 18px rgba(13,27,42,.12);
+  }
+  .export-btn[disabled]{opacity:.65;cursor:wait}
+  .export-btn svg{width:16px;height:16px;stroke:#C9A24E;stroke-width:2;fill:none}
+  .export-menu{
+    position:absolute;top:calc(100% + 8px);right:0;min-width:170px;padding:6px;border:1px solid rgba(201,162,78,.35);border-radius:12px;
+    background:#fffaf0;box-shadow:0 18px 42px rgba(13,27,42,.18);display:none;z-index:50;
+  }
+  .export-wrap.open .export-menu{display:block}
+  .export-menu button{
+    width:100%;min-height:38px;border:0;border-radius:9px;background:transparent;text-align:left;padding:0 10px;font-size:12px;font-weight:800;color:var(--navy);cursor:pointer;
+  }
+  .export-menu button:hover{background:rgba(201,162,78,.16)}
+  @media (max-width:640px){
+    .export-row{align-items:flex-start;padding:10px;margin-bottom:10px}
+    .export-sub{display:none}
+    .export-btn{min-height:36px;padding:0 12px}
+  }
 	
 	</style>
 </head>
@@ -3939,6 +3976,7 @@ function switchTab(tab){
     showCfg('vends');
   }
   if(tab==='calc'&&calcMode==='standalone'&&!calcStandaloneInitialized)abrirCalcStandalone();
+  ensureExportControls();
 }
 
 var _lastScrollY=0;
@@ -8776,6 +8814,287 @@ function restaurarRacas(){
   if(!confirm('Restaurar todos os valores de raça para o padrão original?'))return;
   var cfg=loadConfig();delete cfg.racas;saveConfig(cfg);
   renderRacasList();toast('✓ Padrões restaurados');
+}
+
+/* ── EXPORTAÇÃO PDF / EXCEL ────────────────────── */
+function exportButtonHtml(tab,label){
+  return '<div class="export-row" data-export-tab="'+tab+'">'
+    +'<div><div class="export-title">'+label+'</div><div class="export-sub">Exporta apenas os dados visíveis e filtrados desta tela</div></div>'
+    +'<div class="export-wrap" id="export-wrap-'+tab+'">'
+      +'<button type="button" class="export-btn" onclick="toggleExportMenu(\''+tab+'\',event)">'
+        +'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>'
+        +'<span>Exportar</span>'
+      +'</button>'
+      +'<div class="export-menu">'
+        +'<button type="button" onclick="exportReport(\''+tab+'\',\'pdf\')">Baixar PDF</button>'
+        +'<button type="button" onclick="exportReport(\''+tab+'\',\'excel\')">Baixar Excel</button>'
+      +'</div>'
+    +'</div>'
+  +'</div>';
+}
+function ensureExportControls(){
+  [
+    ['home','panel-home','Relatório Home'],
+    ['status','panel-lotes','Relatório Status'],
+    ['b3','panel-futuros','Relatório B3'],
+    ['calc','panel-calc','Relatório da Simulação']
+  ].forEach(function(d){
+    var panel=document.getElementById(d[1]);if(!panel||panel.querySelector('.export-row[data-export-tab="'+d[0]+'"]'))return;
+    var tmp=document.createElement('div');tmp.innerHTML=exportButtonHtml(d[0],d[2]);
+    panel.insertBefore(tmp.firstChild,panel.firstChild);
+  });
+}
+function toggleExportMenu(tab,ev){
+  if(ev)ev.stopPropagation();
+  document.querySelectorAll('.export-wrap').forEach(function(w){if(w.id!=='export-wrap-'+tab)w.classList.remove('open');});
+  var wrap=document.getElementById('export-wrap-'+tab);if(wrap)wrap.classList.toggle('open');
+}
+document.addEventListener('click',function(){document.querySelectorAll('.export-wrap.open').forEach(function(w){w.classList.remove('open');});});
+function setExportLoading(tab,on,type){
+  var wrap=document.getElementById('export-wrap-'+tab);if(!wrap)return;
+  var btn=wrap.querySelector('.export-btn');if(!btn)return;
+  btn.disabled=!!on;
+  var txt=btn.querySelector('span');if(txt)txt.textContent=on?(type==='pdf'?'Gerando PDF...':'Gerando Excel...'):'Exportar';
+}
+function exportReport(tab,type){
+  try{
+    setExportLoading(tab,true,type);
+    var data=buildExportData(tab);
+    if(!data){toast('Não foi possível gerar o relatório. Tente novamente.');return;}
+    if(type==='pdf')downloadReportPdf(data);else downloadReportXlsx(data);
+  }catch(e){
+    console.error(e);
+    toast('Não foi possível gerar o relatório. Tente novamente.');
+  }finally{
+    setTimeout(function(){setExportLoading(tab,false,type);},450);
+  }
+}
+function exportNowLabel(){
+  try{return new Date().toLocaleString('pt-BR');}catch(e){return new Date().toISOString();}
+}
+function exportDateFile(){
+  return new Date().toISOString().slice(0,10);
+}
+function exportUser(){
+  return (currentUser&&currentUser.user)||document.getElementById('current-user')?.textContent||'Usuário';
+}
+function exportText(el){
+  return (el?String(el.textContent||el.value||''):'').replace(/\s+/g,' ').trim();
+}
+function exportVal(id){
+  var el=document.getElementById(id);if(!el)return '';
+  if(el.tagName==='SELECT')return el.options[el.selectedIndex]?el.options[el.selectedIndex].text:'';
+  return String(el.value||exportText(el)||'');
+}
+function exportVisible(el){
+  return !!(el&&(el.offsetWidth||el.offsetHeight||el.getClientRects().length));
+}
+function exportSelectText(id){
+  var el=document.getElementById(id);if(!el)return 'Todos';
+  return el.options&&el.selectedIndex>=0?el.options[el.selectedIndex].text:String(el.value||'Todos');
+}
+function exportRowsFromTable(rootSel,tableSel){
+  var root=document.querySelector(rootSel);if(!root)return [];
+  var table=root.querySelector(tableSel||'table');if(!table)return [];
+  var heads=[].map.call(table.querySelectorAll('thead th'),exportText).filter(Boolean);
+  var rows=[];
+  if(heads.length)rows.push(heads);
+  [].forEach.call(table.querySelectorAll('tbody tr'),function(tr){
+    if(!exportVisible(tr))return;
+    var cells=[].map.call(tr.children,function(td){return exportText(td);});
+    if(cells.some(Boolean))rows.push(cells);
+  });
+  return rows;
+}
+function exportSummaryCards(rootSel,cardSel,labelSel,valueSel,subSel){
+  var rows=[['Indicador','Valor','Observação']];
+  [].forEach.call(document.querySelectorAll(rootSel+' '+cardSel),function(card){
+    var label=exportText(card.querySelector(labelSel));
+    var value=exportText(card.querySelector(valueSel));
+    var sub=exportText(card.querySelector(subSel));
+    if(label||value||sub)rows.push([label,value,sub]);
+  });
+  return rows;
+}
+function buildExportData(tab){
+  if(tab==='home')return buildHomeExportData();
+  if(tab==='status')return buildStatusExportData();
+  if(tab==='b3')return buildB3ExportData();
+  if(tab==='calc')return buildCalcExportData();
+  return null;
+}
+function buildHomeExportData(){
+  var filters=[['Ano',exportSelectText('home-filter-ano')],['Status',exportSelectText('home-filter-status')],['Confinamento',exportSelectText('home-filter-conf')]];
+  var resumo=exportSummaryCards('#panel-home','.home-kpi','.home-kpi-label','.home-kpi-value','.home-kpi-sub');
+  if(resumo.length===1)resumo=exportSummaryCards('#panel-home','.home-metric','.home-metric-label','.home-metric-value','.home-metric-sub');
+  var lotes=exportRowsFromTable('#panel-home','.home-table');
+  if(lotes.length<2)lotes=buildStatusLotRows();
+  return {tab:'Home',title:'Relatório Home',file:'VM_Agro_Home_'+exportDateFile(),filters:filters,sheets:[{name:'Resumo',rows:resumo},{name:'Lotes',rows:lotes}]};
+}
+function buildStatusLotRows(){
+  var rows=[['Status','Ano','Confinamento','Lote','B3','Qtd','Entrada','Abate','Recebimento','Faturamento','Capital','Lucro','% operação','% ao mês','Efic. origem','Efic. chegada']];
+  [].forEach.call(document.querySelectorAll('#lote-list .status-row[data-lid]'),function(row){
+    if(!exportVisible(row)||row.style.display==='none')return;
+    rows.push([
+      row.dataset.filterStatus||'',row.dataset.filterAno||'',row.dataset.filterConfinamento||'',row.dataset.filterLote||'',row.dataset.filterB3||'',
+      row.dataset.filterQtd||'',row.dataset.filterEntrada||'',row.dataset.filterAbate||'',row.dataset.filterRecebimento||'',
+      row.dataset.filterFaturamento||'',row.dataset.filterCapital||'',row.dataset.filterLucro||'',row.dataset.filterRent||'',row.dataset.filterRentmes||'',
+      row.dataset.filterEficiencia||'',row.dataset.filterEficienciachegada||row.dataset.filterEficienciaChegada||''
+    ]);
+  });
+  return rows;
+}
+function buildStatusSummaryRows(){
+  var map={};
+  [].forEach.call(document.querySelectorAll('#lote-list .status-row[data-lid]'),function(row){
+    if(!exportVisible(row)||row.style.display==='none')return;
+    var st=row.dataset.filterStatus||'Sem status';
+    if(!map[st])map[st]={lotes:0,qtd:0,fat:0,cap:0,lucro:0,prazo:0};
+    var g=map[st];g.lotes+=1;g.qtd+=Number(row.dataset.qtdRaw||0);g.fat+=Number(row.dataset.faturamentoRaw||0);g.cap+=Number(row.dataset.capitalRaw||0);g.lucro+=Number(row.dataset.lucroRaw||0);g.prazo+=Number(row.dataset.prazoDiasRaw||0)*Number(row.dataset.capitalRaw||0);
+  });
+  var rows=[['Status','Qtd lotes','Qtd animais','Faturamento','Capital','Lucro','% operação','% ao mês']];
+  Object.keys(map).forEach(function(st){
+    var g=map[st],rent=g.cap?g.lucro/g.cap*100:0,prazo=g.cap?g.prazo/g.cap:0,rentMes=prazo?rent/(prazo/30):0;
+    rows.push([st,g.lotes,g.qtd+' cab.',fmt(g.fat),fmt(g.cap),fmt(g.lucro),fmtPct(rent),fmtPct(rentMes)]);
+  });
+  return rows;
+}
+function buildStatusExportData(){
+  var filters=[['Status',document.querySelector('.status-pills .pill.active')?exportText(document.querySelector('.status-pills .pill.active')):'Todos']];
+  document.querySelectorAll('#panel-lotes .status-filter-control input').forEach(function(i){if(i.value)filters.push([i.getAttribute('placeholder')||'Filtro',i.value]);});
+  return {tab:'Status',title:'Relatório por Status',file:'VM_Agro_Status_'+exportDateFile(),filters:filters,sheets:[{name:'Resumo por Status',rows:buildStatusSummaryRows()},{name:'Lotes por Status',rows:buildStatusLotRows()}]};
+}
+function buildB3ExportData(){
+  var filters=[['Status',exportSelectText('fut-filter-status')],['Lote',exportSelectText('fut-filter-lote')]];
+  var resumo=exportSummaryCards('#panel-futuros','.fut-card','.fut-card-label','.fut-card-value','.fut-card-sub');
+  var contratos=exportRowsFromTable('#panel-futuros','.fut-table');
+  if(contratos.length&&contratos[0][contratos[0].length-1]==='Ações')contratos.forEach(function(r){r.pop();});
+  return {tab:'B3',title:'Relatório B3',file:'VM_Agro_B3_'+exportDateFile(),filters:filters,sheets:[{name:'Resumo B3',rows:resumo},{name:'Contratos',rows:contratos}]};
+}
+function buildCalcExportData(){
+  var dados=[
+    ['Campo','Valor'],
+    ['Nome/referência',exportVal('nomeRef')],
+    ['Vendedor',exportVal('calc-vend')],
+    ['Raça/categoria',exportVal('tipoCustom')],
+    ['Quantidade de animais',exportVal('qtd')],
+    ['Peso de compra',exportVal('pesoCom')],
+    ['Rendimento entrada',exportVal('rendEntrada')],
+    ['Preço compra',exportVal('precoCompra')],
+    ['Comissão',exportVal('comissao')],
+    ['Distância',exportVal('dist')],
+    ['Custo frete/km',exportVal('freteKm')],
+    ['Bônus frete',exportVal('bonusFrete')],
+    ['Quebra',exportVal('quebra')],
+    ['Boitel',exportVal('boitel')],
+    ['Matéria seca',exportVal('msKg')],
+    ['Operacional',exportVal('opDia')],
+    ['Sanidade',exportVal('sanidade')],
+    ['Dias',exportVal('dias')],
+    ['Peso final',exportVal('pesoFinal')],
+    ['Frigorífico',exportVal('frig')],
+    ['Preço venda',exportVal('valorAt')]
+  ];
+  var resumo=[
+    ['Indicador','Total','Por boi'],
+    ['% ao mês',exportText(document.getElementById('sum-rent-mes')),''],
+    ['% da operação',exportText(document.getElementById('sum-rent-total')),''],
+    ['Faturamento do lote',exportText(document.getElementById('sum-fat-lote')),exportText(document.getElementById('sum-fat-boi'))],
+    ['Capital investido',exportText(document.getElementById('sum-capital')),exportText(document.getElementById('sum-capital-boi'))],
+    ['Lucro líquido',exportText(document.getElementById('sum-lucro')),exportText(document.getElementById('sum-lucro-boi'))],
+    ['GMD',exportText(document.getElementById('d-gmc')),''],
+    ['Eficiência biológica',exportText(document.getElementById('d-efic')),''],
+    ['Eficiência biológica origem',exportText(document.getElementById('d-efic-origem')),''],
+    ['Consumo total / animal',exportText(document.getElementById('d-consumoTotal')),'']
+  ];
+  var custos=exportRowsFromTable('#panel-calc','.res-table');
+  return {tab:'Calculadora',title:'Relatório da Simulação',file:'VM_Agro_Calculadora_'+exportDateFile(),filters:[['Modalidade',exportText(document.querySelector('#op-summary .op-summary-badge'))||'Atual']],sheets:[{name:'Dados da Simulação',rows:dados},{name:'Resumo',rows:resumo},{name:'Custos e Resultado',rows:custos}]};
+}
+function exportXml(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function downloadReportPdf(data){
+  var logoSrc=new URL('vm-agro-logo.png',location.href).href;
+  var filters=(data.filters||[]).map(function(f){return '<span><b>'+exportXml(f[0])+':</b> '+exportXml(f[1]||'Todos')+'</span>';}).join('');
+  var sections=data.sheets.map(function(sheet){
+    return '<section><h2>'+exportXml(sheet.name)+'</h2>'+htmlTable(sheet.rows)+'</section>';
+  }).join('');
+  var html='<!doctype html><html><head><meta charset="utf-8"><title>'+exportXml(data.title)+'</title><style>'
+    +'body{font-family:Inter,Arial,sans-serif;margin:28px;color:#0D1B2A;background:#fff}header{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #C9A24E;padding-bottom:14px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.brand img{width:54px;height:54px;object-fit:contain}.brand h1{margin:0;font-size:22px;letter-spacing:.5px}.meta{font-size:12px;color:#8A7967;text-align:right}.filters{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.filters span{border:1px solid #D8CBB5;border-radius:999px;padding:6px 10px;font-size:11px;background:#F2EDE3}h2{font-size:13px;letter-spacing:1.8px;text-transform:uppercase;margin:22px 0 8px;color:#0D1B2A}table{width:100%;border-collapse:collapse;page-break-inside:auto}th{background:#F2EDE3;color:#0D1B2A;text-align:left;font-size:10px;letter-spacing:.8px;text-transform:uppercase}td,th{border:1px solid #D8CBB5;padding:7px 8px;font-size:11px;vertical-align:top}tr{page-break-inside:avoid}footer{position:fixed;bottom:12px;left:28px;right:28px;border-top:1px solid #D8CBB5;padding-top:6px;font-size:10px;color:#8A7967}@page{margin:18mm 12mm}</style></head><body>'
+    +'<header><div class="brand"><img src="'+logoSrc+'"><div><h1>'+exportXml(data.title)+'</h1><div style="font-size:12px;color:#8A7967">VM Agro · Gestão de Lotes</div></div></div><div class="meta">Exportado em '+exportXml(exportNowLabel())+'<br>Usuário: '+exportXml(exportUser())+'</div></header>'
+    +'<div class="filters">'+filters+'</div>'+sections+'<footer>VM Agro · Gestão de Lotes</footer></body></html>';
+  var win=window.open('','_blank');
+  if(!win){toast('Permita pop-ups para gerar o PDF.');return;}
+  win.document.open();win.document.write(html);win.document.close();
+  setTimeout(function(){win.focus();win.print();},550);
+  toast('✓ PDF pronto para salvar');
+}
+function htmlTable(rows){
+  rows=rows&&rows.length?rows:[['Sem dados']];
+  return '<table><thead><tr>'+rows[0].map(function(c){return '<th>'+exportXml(c)+'</th>';}).join('')+'</tr></thead><tbody>'
+    +rows.slice(1).map(function(r){return '<tr>'+r.map(function(c){return '<td>'+exportXml(c)+'</td>';}).join('')+'</tr>';}).join('')
+    +'</tbody></table>';
+}
+function downloadReportXlsx(data){
+  var files=buildXlsxFiles(data.sheets||[]);
+  var blob=new Blob([makeZip(files)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=data.file+'.xlsx';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1200);
+  toast('✓ Excel exportado');
+}
+function cleanSheetName(name,i){
+  var s=String(name||('Aba '+i)).replace(/[\\/?*[\]:]/g,' ').trim().slice(0,31);
+  return s||('Aba '+i);
+}
+function colName(n){var s='';while(n>0){var m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26);}return s;}
+function sheetXml(rows){
+  rows=rows&&rows.length?rows:[['Sem dados']];
+  var max=rows.reduce(function(m,r){return Math.max(m,r.length);},1);
+  var cols='<cols>';for(var c=1;c<=max;c++)cols+='<col min="'+c+'" max="'+c+'" width="22" customWidth="1"/>';cols+='</cols>';
+  var body=rows.map(function(r,ri){
+    var cells=[];for(var ci=0;ci<max;ci++){var ref=colName(ci+1)+(ri+1),v=r[ci]==null?'':String(r[ci]);cells.push('<c r="'+ref+'" t="inlineStr"'+(ri===0?' s="1"':'')+'><is><t>'+exportXml(v)+'</t></is></c>');}
+    return '<row r="'+(ri+1)+'">'+cells.join('')+'</row>';
+  }).join('');
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+cols+'<sheetData>'+body+'</sheetData></worksheet>';
+}
+function buildXlsxFiles(sheets){
+  var files=[],sheetDefs=sheets.map(function(s,i){return {name:cleanSheetName(s.name,i+1),rows:s.rows||[]};});
+  files.push({name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+sheetDefs.map(function(s,i){return '<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';}).join('')+'<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>'});
+  files.push({name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>'});
+  files.push({name:'xl/workbook.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheetDefs.map(function(s,i){return '<sheet name="'+exportXml(s.name)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>';}).join('')+'</sheets></workbook>'});
+  files.push({name:'xl/_rels/workbook.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheetDefs.map(function(s,i){return '<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>';}).join('')+'<Relationship Id="rId'+(sheetDefs.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'});
+  files.push({name:'xl/styles.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="1"><fill><patternFill patternType="none"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>'});
+  sheetDefs.forEach(function(s,i){files.push({name:'xl/worksheets/sheet'+(i+1)+'.xml',data:sheetXml(s.rows)});});
+  files.push({name:'docProps/core.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/"><dc:creator>VM Agro</dc:creator><dc:title>Relatório VM Agro</dc:title><dcterms:created xsi:type="dcterms:W3CDTF" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+new Date().toISOString()+'</dcterms:created></cp:coreProperties>'});
+  files.push({name:'docProps/app.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>VM Agro</Application></Properties>'});
+  return files;
+}
+function makeZip(files){
+  var enc=new TextEncoder(),chunks=[],central=[],offset=0;
+  files.forEach(function(f){
+    var nameBytes=enc.encode(f.name),dataBytes=typeof f.data==='string'?enc.encode(f.data):f.data,crc=crc32(dataBytes),size=dataBytes.length,local=[];
+    pushU32(local,0x04034b50);pushU16(local,20);pushU16(local,0);pushU16(local,0);pushU16(local,0);pushU16(local,0);pushU32(local,crc);pushU32(local,size);pushU32(local,size);pushU16(local,nameBytes.length);pushU16(local,0);
+    chunks.push(new Uint8Array(local),nameBytes,dataBytes);
+    var cen=[];pushU32(cen,0x02014b50);pushU16(cen,20);pushU16(cen,20);pushU16(cen,0);pushU16(cen,0);pushU16(cen,0);pushU16(cen,0);pushU32(cen,crc);pushU32(cen,size);pushU32(cen,size);pushU16(cen,nameBytes.length);pushU16(cen,0);pushU16(cen,0);pushU16(cen,0);pushU16(cen,0);pushU32(cen,0);pushU32(cen,offset);
+    central.push(new Uint8Array(cen),nameBytes);
+    offset+=local.length+nameBytes.length+size;
+  });
+  var centralSize=central.reduce(function(s,c){return s+c.length;},0),end=[];
+  pushU32(end,0x06054b50);pushU16(end,0);pushU16(end,0);pushU16(end,files.length);pushU16(end,files.length);pushU32(end,centralSize);pushU32(end,offset);pushU16(end,0);
+  return concatBytes(chunks.concat(central,[new Uint8Array(end)]));
+}
+function pushU16(a,v){a.push(v&255,(v>>>8)&255);}
+function pushU32(a,v){a.push(v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255);}
+function concatBytes(parts){
+  var len=parts.reduce(function(s,p){return s+p.length;},0),out=new Uint8Array(len),pos=0;
+  parts.forEach(function(p){out.set(p,pos);pos+=p.length;});
+  return out;
+}
+var CRC_TABLE=null;
+function crc32(bytes){
+  if(!CRC_TABLE){CRC_TABLE=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=((c&1)?(0xedb88320^(c>>>1)):(c>>>1));CRC_TABLE[n]=c>>>0;}}
+  var crc=0xffffffff;for(var i=0;i<bytes.length;i++)crc=CRC_TABLE[(crc^bytes[i])&255]^(crc>>>8);
+  return (crc^0xffffffff)>>>0;
 }
 
 /* ── BACKUP / RESTORE ──────────────────────────── */
