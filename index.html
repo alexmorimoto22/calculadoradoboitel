@@ -1559,12 +1559,50 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   #panel-calc{
     width:100%!important;
     max-width:none!important;
+    height:calc(100vh - 108px);
+    overflow:hidden;
   }
   #panel-calc .calc-desktop-shell{
     display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(420px,1fr);
+    grid-template-columns:minmax(680px,1fr) minmax(430px,520px);
     gap:22px;
-    align-items:start;
+    height:100%;
+    min-height:0;
+    align-items:stretch;
+  }
+  #panel-calc .calc-form-column,
+  #panel-calc .calc-result-column{
+    min-height:0;
+    max-height:100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(138,121,103,.45) rgba(216,203,181,.35);
+  }
+  #panel-calc .calc-form-column{
+    padding:0 8px 24px 0;
+  }
+  #panel-calc .calc-result-column{
+    padding:0 8px 24px 0;
+  }
+  #panel-calc .calc-form-column::-webkit-scrollbar,
+  #panel-calc .calc-result-column::-webkit-scrollbar{
+    width:8px;
+  }
+  #panel-calc .calc-form-column::-webkit-scrollbar-track,
+  #panel-calc .calc-result-column::-webkit-scrollbar-track{
+    background:rgba(216,203,181,.35);
+    border-radius:999px;
+  }
+  #panel-calc .calc-form-column::-webkit-scrollbar-thumb,
+  #panel-calc .calc-result-column::-webkit-scrollbar-thumb{
+    background:rgba(138,121,103,.45);
+    border-radius:999px;
+  }
+  #panel-calc .calc-form-column::-webkit-scrollbar-thumb:hover,
+  #panel-calc .calc-result-column::-webkit-scrollbar-thumb:hover{
+    background:rgba(13,27,42,.55);
   }
   #panel-calc .calc-form-column{
     counter-reset:calc-section;
@@ -1622,8 +1660,6 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     min-height:18px;
   }
   #panel-calc .calc-result-column{
-    position:sticky;
-    top:80px;
     align-self:start;
   }
   #panel-calc #resultado{
@@ -1952,6 +1988,14 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   }
   .desktop-nav.active small{color:rgba(242,237,227,.68);}
   .main{max-width:none;width:calc(100% - 224px);margin:0 0 0 224px;padding:20px 24px 42px;}
+  body.calc-tab-active{
+    overflow:hidden;
+  }
+  body.calc-tab-active .main{
+    height:calc(100vh - 62px);
+    overflow:hidden;
+    padding-bottom:20px;
+  }
   #panel-home,#panel-lotes,#panel-futuros,#panel-financeiro{
     width:100%!important;max-width:none!important;margin-left:0!important;transform:none!important;
   }
@@ -3069,6 +3113,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
 /* ── DADOS ─────────────────────────────────────── */
 const USERS={'hastaagro':'hasta2024','caroline':'csilva@2025','alexmorimoto':'alex@2025','vitormorimoto':'vitor@2025'};
@@ -3253,6 +3299,185 @@ const FUTUROS_KEY='hasta_futuros_b3_v1';
 const FIN_TX_KEY='vmagro_financeiro_lancamentos_v1';
 const FIN_DOC_KEY='vmagro_financeiro_notas_v1';
 const FIN_FREIGHT_KEY='vmagro_financeiro_fretes_v1';
+const SUPABASE_APP_ID='vm-agro';
+const SUPABASE_TABLE='vm_agro_data';
+const SUPABASE_LOCAL_KEYS={};
+SUPABASE_LOCAL_KEYS[CONFIG_KEY]='config';
+SUPABASE_LOCAL_KEYS[LOTES_KEY]='lotes';
+SUPABASE_LOCAL_KEYS[FUTUROS_KEY]='futuros';
+SUPABASE_LOCAL_KEYS[FIN_TX_KEY]='financeiro_lancamentos';
+SUPABASE_LOCAL_KEYS[FIN_DOC_KEY]='financeiro_notas';
+SUPABASE_LOCAL_KEYS[FIN_FREIGHT_KEY]='financeiro_fretes';
+const SUPABASE_REMOTE_KEYS=Object.keys(SUPABASE_LOCAL_KEYS).reduce(function(acc,localKey){
+  acc[SUPABASE_LOCAL_KEYS[localKey]]=localKey;
+  return acc;
+},{});
+var supabaseClient=null;
+var supabaseHydrating=false;
+var supabasePendingWrites={};
+var supabaseWriteTimer=null;
+var supabaseLastLoadUser='';
+
+function supabaseCfg(){
+  var cfg=window.VM_AGRO_SUPABASE_CONFIG||{};
+  return {
+    url:(cfg.url||window.VITE_SUPABASE_URL||'').trim(),
+    anonKey:(cfg.anonKey||window.VITE_SUPABASE_ANON_KEY||'').trim()
+  };
+}
+function supabaseIsConfigured(){
+  var cfg=supabaseCfg();
+  return !!(cfg.url&&cfg.anonKey&&window.supabase&&typeof window.supabase.createClient==='function');
+}
+function getSupabaseClient(){
+  if(!supabaseIsConfigured())return null;
+  if(!supabaseClient){
+    var cfg=supabaseCfg();
+    supabaseClient=window.supabase.createClient(cfg.url,cfg.anonKey);
+  }
+  return supabaseClient;
+}
+function supabaseUserKey(){
+  return currentUser||localStorage.getItem(SESSION_KEY)||'sem_usuario';
+}
+function safeJsonParse(raw,fallback){
+  try{return JSON.parse(raw);}catch(e){return fallback;}
+}
+function localKeyFromRemoteKey(key){
+  return SUPABASE_REMOTE_KEYS[key]||'';
+}
+function remoteKeyFromLocalKey(key){
+  return SUPABASE_LOCAL_KEYS[key]||'';
+}
+async function buscarDadosBanco(key){
+  var client=getSupabaseClient();
+  if(!client)return null;
+  var remoteKey=remoteKeyFromLocalKey(key)||key;
+  var res=await client.from(SUPABASE_TABLE)
+    .select('value')
+    .eq('app_id',SUPABASE_APP_ID)
+    .eq('user_key',supabaseUserKey())
+    .eq('key',remoteKey)
+    .maybeSingle();
+  if(res.error)throw res.error;
+  return res.data?res.data.value:null;
+}
+async function salvarDadosBanco(key,value){
+  var client=getSupabaseClient();
+  if(!client)return false;
+  var remoteKey=remoteKeyFromLocalKey(key)||key;
+  var payload={
+    app_id:SUPABASE_APP_ID,
+    user_key:supabaseUserKey(),
+    user_id:null,
+    key:remoteKey,
+    value:value===undefined?null:value
+  };
+  var res=await client.from(SUPABASE_TABLE).upsert(payload,{onConflict:'app_id,user_key,key'});
+  if(res.error)throw res.error;
+  return true;
+}
+async function editarDadosBanco(key,value){
+  return salvarDadosBanco(key,value);
+}
+async function excluirDadosBanco(key){
+  var client=getSupabaseClient();
+  if(!client)return false;
+  var remoteKey=remoteKeyFromLocalKey(key)||key;
+  var res=await client.from(SUPABASE_TABLE)
+    .delete()
+    .eq('app_id',SUPABASE_APP_ID)
+    .eq('user_key',supabaseUserKey())
+    .eq('key',remoteKey);
+  if(res.error)throw res.error;
+  return true;
+}
+function agendarSyncSupabase(localKey,rawValue){
+  if(supabaseHydrating)return;
+  if(!remoteKeyFromLocalKey(localKey))return;
+  if(!supabaseIsConfigured())return;
+  supabasePendingWrites[localKey]=rawValue;
+  clearTimeout(supabaseWriteTimer);
+  supabaseWriteTimer=setTimeout(flushSupabaseWrites,350);
+}
+async function flushSupabaseWrites(){
+  if(!supabaseIsConfigured())return;
+  var entries=Object.entries(supabasePendingWrites);
+  supabasePendingWrites={};
+  for(var i=0;i<entries.length;i++){
+    var localKey=entries[i][0];
+    var rawValue=entries[i][1];
+    try{
+      await salvarDadosBanco(localKey,safeJsonParse(rawValue,rawValue));
+    }catch(err){
+      console.warn('Falha ao salvar no Supabase',localKey,err);
+      toast('⚠ Dados salvos neste aparelho. Verifique o Supabase.');
+      supabasePendingWrites[localKey]=rawValue;
+    }
+  }
+}
+async function sincronizarCacheLocalComSupabase(){
+  if(!supabaseIsConfigured())return false;
+  var localKeys=Object.keys(SUPABASE_LOCAL_KEYS);
+  for(var i=0;i<localKeys.length;i++){
+    var localKey=localKeys[i];
+    var raw=localStorage.getItem(localKey);
+    if(raw===null)continue;
+    await salvarDadosBanco(localKey,safeJsonParse(raw,raw));
+  }
+  return true;
+}
+async function carregarDadosSupabase(){
+  if(!supabaseIsConfigured())return false;
+  var userKey=supabaseUserKey();
+  if(supabaseLastLoadUser===userKey)return true;
+  var client=getSupabaseClient();
+  try{
+    var res=await client.from(SUPABASE_TABLE)
+      .select('key,value')
+      .eq('app_id',SUPABASE_APP_ID)
+      .eq('user_key',userKey);
+    if(res.error)throw res.error;
+    var rows=res.data||[];
+    if(!rows.length){
+      await sincronizarCacheLocalComSupabase();
+      supabaseLastLoadUser=userKey;
+      return true;
+    }
+    supabaseHydrating=true;
+    rows.forEach(function(row){
+      var localKey=localKeyFromRemoteKey(row.key);
+      if(!localKey)return;
+      localStorage.setItem(localKey,JSON.stringify(row.value));
+    });
+    supabaseHydrating=false;
+    supabaseLastLoadUser=userKey;
+    return true;
+  }catch(err){
+    supabaseHydrating=false;
+    console.warn('Falha ao carregar Supabase',err);
+    toast('⚠ Não foi possível carregar o banco online. Usando dados locais.');
+    return false;
+  }
+}
+function instalarSyncSupabaseLocalStorage(){
+  if(window.__vmAgroSupabaseStorageBridge)return;
+  if(!window.Storage||!Storage.prototype)return;
+  window.__vmAgroSupabaseStorageBridge=true;
+  var nativeSetItem=Storage.prototype.setItem;
+  var nativeRemoveItem=Storage.prototype.removeItem;
+  Storage.prototype.setItem=function(key,value){
+    nativeSetItem.call(this,key,value);
+    if(this===localStorage)agendarSyncSupabase(key,value);
+  };
+  Storage.prototype.removeItem=function(key){
+    nativeRemoveItem.call(this,key);
+    if(this===localStorage&&remoteKeyFromLocalKey(key))excluirDadosBanco(key).catch(function(err){
+      console.warn('Falha ao excluir no Supabase',key,err);
+    });
+  };
+}
+instalarSyncSupabaseLocalStorage();
 function loadConfig(){
   var c=null;
   try{c=JSON.parse(localStorage.getItem(CONFIG_KEY));}catch(e){c=null;}
@@ -3954,12 +4179,13 @@ function bioRows(id,rows){
 }
 
 /* ── LOGIN / LOGOUT ────────────────────────────── */
-function entrarApp(u,tab){
+async function entrarApp(u,tab){
   currentUser=u;
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('user-display').textContent=u;
   var err=document.getElementById('login-err');if(err)err.textContent='';
+  await carregarDadosSupabase();
   document.getElementById('tab-config').style.display='';
   var sideConfig=document.getElementById('side-config');if(sideConfig)sideConfig.style.display='';
   document.getElementById('csn-params').style.display=PARAM_ADMINS.includes(u)?'':'none';
@@ -3977,7 +4203,7 @@ function doLogin(){
 }
 function doLogout(){currentUser='';
   localStorage.removeItem(SESSION_KEY);
-  document.body.classList.remove('mobile-header-hidden');
+  document.body.classList.remove('mobile-header-hidden','calc-tab-active');
   document.getElementById('tab-config').style.display='none';var sideConfig=document.getElementById('side-config');if(sideConfig)sideConfig.style.display='none';document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('inp-user').value='alexmorimoto';document.getElementById('inp-pass').value='alex@2025';}
 
 /* ── TABS ──────────────────────────────────────── */
@@ -3989,6 +4215,7 @@ function syncDesktopSidebar(tab){
 function switchTab(tab){
   ['home','lotes','lote-detail','futuros','financeiro','calc','config'].forEach(t=>{const p=document.getElementById('panel-'+t);if(p)p.style.display='none';});
   document.getElementById('panel-'+tab).style.display='block';
+  document.body.classList.toggle('calc-tab-active',tab==='calc');
   document.querySelectorAll('.tab-btn').forEach(function(b){
     b.classList.toggle('active',b.getAttribute('data-tab-target')===tab);
   });
