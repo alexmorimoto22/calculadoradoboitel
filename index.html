@@ -2564,6 +2564,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         </div>
         <div class="g2" style="margin-top:4px">
           <div class="field"><label>Rendimento Carcaça Abate (%)</label><input type="number" id="rendAbate" value="56" step="0.5" min="1" max="100"></div>
+          <div class="field"><label>@ abate</label><input type="text" id="arrobasAbateCalc" value="—" readonly><div class="hint">Peso final × rendimento de abate ÷ 15.</div></div>
         </div>
         <div class="g4" style="margin-top:4px">
           <div class="field"><label>@ produzidas — peso origem</label><input type="text" id="arrobasProdOrigem" value="—" readonly><div class="hint">Usa o peso de compra, antes da quebra.</div></div>
@@ -7717,11 +7718,12 @@ function calcPreviewBiometria(){
   var usaAtProd=typeof getCalcModelo==='function'&&getCalcModelo()==='atprod'&&custoBoitelAt>0;
   var custoProdChegada=usaAtProd?custoBoitelAt:(atProd>0?custoConf/atProd:0);
   var custoProdOrigem=usaAtProd?(atProdOrigem>0?(atProd*custoBoitelAt)/atProdOrigem:0):(atProdOrigem>0?custoConf/atProdOrigem:0);
-  return {pesoEntrada:pesoEntrada,pesoAbate:pesoAbate,quebraPesoKg:pesoCom-pesoEntrada,atProd:atProd,atProdOrigem:atProdOrigem,consumoTotal:consumoTotal,efic:efic,eficOrigem:eficOrigem,custoProdOrigem:custoProdOrigem,custoProdChegada:custoProdChegada};
+  return {pesoEntrada:pesoEntrada,pesoAbate:pesoAbate,quebraPesoKg:pesoCom-pesoEntrada,atAbate:atAbate,atProd:atProd,atProdOrigem:atProdOrigem,consumoTotal:consumoTotal,efic:efic,eficOrigem:eficOrigem,custoProdOrigem:custoProdOrigem,custoProdChegada:custoProdChegada};
 }
 function atualizarPreviewBiometria(){
   var data=calcPreviewBiometria();
   var pesoFinalEl=document.getElementById('pesoFinalKg');
+  var atAbateEl=document.getElementById('arrobasAbateCalc');
   var eficEl=document.getElementById('eficienciaBio');
   var atProdEl=document.getElementById('arrobasProdBoitel');
   var atOrigemEl=document.getElementById('arrobasProdOrigem');
@@ -7734,12 +7736,14 @@ function atualizarPreviewBiometria(){
   var custoChegadaEl=document.getElementById('custoProdChegada');
   if(!data){
     if(pesoFinalEl){pesoFinalEl.value='—';delete pesoFinalEl.dataset.raw;}
+    if(atAbateEl){atAbateEl.value='—';delete atAbateEl.dataset.raw;}
     if(eficEl){eficEl.value='—';delete eficEl.dataset.raw;}
     if(atProdEl){atProdEl.value='—';delete atProdEl.dataset.raw;}
     [atOrigemEl,atChegadaEl,atDifEl,quebraPesoEl,eficOrigemEl,eficChegadaEl,custoOrigemEl,custoChegadaEl].forEach(function(el){if(el){el.value='—';delete el.dataset.raw;}});
     return;
   }
   if(pesoFinalEl){pesoFinalEl.value=data.pesoAbate>0?fmtKg(data.pesoAbate):'—';pesoFinalEl.dataset.raw=data.pesoAbate||'';}
+  if(atAbateEl){atAbateEl.value=data.atAbate>0?fmtNum(data.atAbate,2)+' @':'—';atAbateEl.dataset.raw=data.atAbate||'';}
   if(eficEl){eficEl.value=data.efic>0?fmtNum(data.efic,2)+' kg MS / @':'—';eficEl.dataset.raw=data.efic||'';}
   if(atProdEl){atProdEl.value=data.atProd>0?fmtNum(data.atProd,2)+' @':'—';atProdEl.dataset.raw=data.atProd||'';}
   if(atOrigemEl){atOrigemEl.value=data.atProdOrigem>0?fmtNum(data.atProdOrigem,2)+' @':'—';atOrigemEl.dataset.raw=data.atProdOrigem||'';}
@@ -7752,7 +7756,7 @@ function atualizarPreviewBiometria(){
   if(custoChegadaEl){custoChegadaEl.value=data.custoProdChegada>0?fmt(data.custoProdChegada)+'/@':'—';custoChegadaEl.dataset.raw=data.custoProdChegada||'';}
 }
 function limparIndicadoresBiometriaCalc(){
-  ['pesoFinalKg','eficienciaBio','arrobasProdBoitel','arrobasProdOrigem','arrobasProdChegada','arrobasProdDiferenca','quebraPesoKg','eficienciaBioOrigem','eficienciaBioChegada','custoProdOrigem','custoProdChegada'].forEach(function(id){
+  ['pesoFinalKg','arrobasAbateCalc','eficienciaBio','arrobasProdBoitel','arrobasProdOrigem','arrobasProdChegada','arrobasProdDiferenca','quebraPesoKg','eficienciaBioOrigem','eficienciaBioChegada','custoProdOrigem','custoProdChegada'].forEach(function(id){
     var el=document.getElementById(id);
     if(el){el.value='—';delete el.dataset.raw;}
   });
@@ -8359,6 +8363,8 @@ function calcular(opts){
   const consumoTotal=kgDia*dias;
   const pesoFinalField=document.getElementById('pesoFinalKg');
   if(pesoFinalField){pesoFinalField.value=fmtKg(pesoAbate);pesoFinalField.dataset.raw=pesoAbate;}
+  const atAbateField=document.getElementById('arrobasAbateCalc');
+  if(atAbateField){atAbateField.value=atAbate>0?fmtNum(atAbate,2)+' @':'—';atAbateField.dataset.raw=atAbate||'';}
 
   // Eficiência biológica: kg MS consumido / @ produzida
   const efic=atProd>0?consumoTotal/atProd:0;
