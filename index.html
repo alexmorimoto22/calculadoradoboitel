@@ -9013,9 +9013,10 @@ function aplicarTecladoNumerico(root){
     if(el.type==='number')el.type='text';
     var step=String(el.getAttribute('step')||'');
     var id=String(el.id||'').toLowerCase();
-    var decimal=step&&step!=='1'&&step!=='1.0';
+    var declaredDecimal=el.getAttribute('inputmode')==='decimal'||el.dataset.decimal==='1';
+    var decimal=declaredDecimal||(step&&step!=='1'&&step!=='1.0');
     if(/valor|preco|preço|kg|peso|rend|gmd|ms|custo|bonus|bônus|desconto|senar|arroba|quebra|comissao|comissão|capital|fat|lucro|taxa|oper|sanidade|efic/.test(id))decimal=true;
-    if(/qtd|dias|prazo|contratos|distancia|distância|km/.test(id)&&!/(custo|preco|preço|valor)/.test(id))decimal=false;
+    if(!declaredDecimal&&/qtd|dias|prazo|contratos|distancia|distância|km/.test(id)&&!/(custo|preco|preço|valor)/.test(id))decimal=false;
     if(id==='fut-qtd')decimal=false;
     el.setAttribute('inputmode',decimal?'decimal':'numeric');
     el.setAttribute('pattern',decimal?'[0-9]*[,.]?[0-9]*':'[0-9]*');
