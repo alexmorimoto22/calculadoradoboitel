@@ -521,6 +521,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   #panel-futuros .fut-form .field label{font-size:9px;margin-bottom:5px;}
   #panel-futuros .fut-form .field input,#panel-futuros .fut-form .field select{min-height:38px;padding:8px 12px;font-size:14px;border-radius:10px;}
   #panel-futuros .fut-form .hint{font-size:9px;line-height:1.25;margin-top:4px;}
+  .fut-money-control{width:100%;min-height:38px;box-sizing:border-box;display:flex;align-items:center;gap:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;}
+  .fut-money-prefix{font-size:13px;font-weight:850;color:var(--text);}
+  #panel-futuros .fut-form .field .fut-money-control input{border:0!important;background:transparent!important;box-shadow:none!important;min-height:0!important;padding:0!important;border-radius:0!important;flex:1;min-width:0;}
   .fut-span-2{grid-column:span 6;}
   .fut-span-3{grid-column:span 3;}
   .fut-span-4{grid-column:1/-1;}
@@ -2649,7 +2652,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <div class="hint" id="bonus-hint">% sobre o valor da @</div>
           </div>
         </div>
-        <div class="g2 sale-grid">
+        <div class="g3 sale-grid">
           <div class="field">
             <div class="field-label-row"><label>Desconto</label>
               <div class="mode-toggle single"><button type="button" class="mt-btn active" data-field="desconto" data-mode="pct" onclick="toggleFieldMode('desconto',this)">%</button></div>
@@ -2658,6 +2661,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <div class="hint" id="desconto-hint">% sobre o valor da @</div>
           </div>
           <div class="field"><label>Senar</label><div class="unit-input"><span class="unit-input-prefix">%</span><input type="number" id="funrural" value="0.2" step="0.01" min="0" max="5"></div><div class="hint">Ex: 0.2 = 0,2%</div></div>
+          <div class="field"><label>Corretagem B3 (R$/@)</label><div class="unit-input"><span class="unit-input-prefix">R$</span><input type="text" inputmode="decimal" data-decimal="1" id="corretagemB3" value="0,15"></div><div class="hint">Custo por @ nos contratos futuros</div></div>
         </div>
       </div>
 
@@ -2821,6 +2825,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
               <tr><td>Desconto</td><td id="d-descontoAt">—</td><td id="d-descontoTotal">—</td><td id="d-descontoTotalBoitel">—</td></tr>
               <tr><td>@ bruto</td><td id="d-atLiq">—</td><td id="d-fatBruto">—</td><td id="d-fatBrutoBoitel">—</td></tr>
               <tr><td>Senar</td><td id="d-funruralAt">—</td><td id="d-funrural">—</td><td id="d-funruralBoitel">—</td></tr>
+              <tr><td>Corretagem B3</td><td id="d-corretagemB3At">—</td><td id="d-corretagemB3Total">—</td><td id="d-corretagemB3Boitel">—</td></tr>
               <tr class="res-total-arrobas-row"><td>Total de arrobas</td><td>—</td><td id="d-totalAt">—</td><td id="d-totalAtBoitel">—</td></tr>
               <tr class="res-total"><td>Faturamento total</td><td id="d-fatLiqAt">—</td><td id="d-fatLiq">—</td><td id="d-fatLiqBoitel">—</td></tr>
 
@@ -2879,7 +2884,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <div class="fut-form-title" id="fut-form-title">Novo contrato</div>
           <input type="hidden" id="fut-id">
           <div class="fut-form-grid">
-            <div class="field fut-span-2"><label>Lote vinculado</label><select id="fut-lote" onchange="atualizarFuturoPreview()"></select><div class="hint" id="fut-lote-coverage">Selecione a operação que receberá o resultado do hedge.</div></div>
+            <div class="field fut-span-2"><label>Lote vinculado</label><select id="fut-lote" onchange="atualizarCorretagemFuturoPorLote();atualizarFuturoPreview()"></select><div class="hint" id="fut-lote-coverage">Selecione a operação que receberá o resultado do hedge.</div></div>
             <div class="field fut-span-3"><label>Tipo de trava</label><select id="fut-tipo" onchange="atualizarFuturoPreview()"><option value="bolsa">Bolsa B3</option><option value="direto">Direto / contrato físico</option></select><div class="hint">Bolsa ou direto.</div></div>
             <div class="field fut-span-3"><label>Qtd contratos</label><input type="number" id="fut-qtd" value="1" step="1" min="0" oninput="atualizarFuturoPreview()" onblur="ajustarQtdContratoB3NoForm()"><div class="hint">Somente inteiros.</div></div>
             <div class="fut-preview fut-span-4" id="fut-lote-summary" style="display:none;margin:0;"></div>
@@ -2889,8 +2894,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <div class="field fut-span-3"><label>Preço venda (R$/@)</label><input type="number" id="fut-preco-venda" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
             <div class="field fut-span-3"><label>Data liquidação</label><input type="date" id="fut-data-compra"></div>
             <div class="field fut-span-3"><label>Preço compra liquidação (R$/@)</label><input type="number" id="fut-preco-compra" value="" step="0.01" oninput="atualizarFuturoPreview()"><div class="hint">Vazio = aberto.</div></div>
+            <div class="field fut-span-3"><label>Corretagem B3 (R$/@)</label><div class="fut-money-control"><span class="fut-money-prefix">R$</span><input type="text" inputmode="decimal" data-decimal="1" id="fut-corretagem" value="0,15" oninput="atualizarFuturoPreview()"></div><div class="hint">Custo por @ protegida.</div></div>
             <div class="field fut-span-3"><label>Custos / taxas (R$)</label><input type="number" id="fut-custos" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
-            <div class="fut-preview fut-span-3" style="margin:0;">
+            <div class="fut-preview fut-span-4" style="margin:0;">
               <div class="fut-preview-label">Resultado previsto</div>
               <div class="fut-preview-value" id="fut-preview">—</div>
             </div>
@@ -4185,9 +4191,11 @@ function futuroResultado(c){
   var compra=(c.precoCompra!==undefined&&c.precoCompra!==null&&String(c.precoCompra)!=='')?parseFloat(c.precoCompra):NaN;
   var custos=parseFloat(c.custos)||0;
   var arrobas=norm.arrobas;
+  var corretagemArroba=(typeof c.corretagemArroba==='number')?c.corretagemArroba:finNum(c.corretagemArroba);
+  var corretagemTotal=corretagemArroba*arrobas;
   var liquidado=!isNaN(compra)&&compra>0;
-  var resultado=liquidado?((venda-compra)*arrobas-custos):0;
-  return {qtdContratos:qtd,arrobasPorContrato:at,arrobas:arrobas,liquidado:liquidado,resultado:resultado,precoVenda:venda,precoCompra:liquidado?compra:null,custos:custos};
+  var resultado=liquidado?((venda-compra)*arrobas-custos-corretagemTotal):0;
+  return {qtdContratos:qtd,arrobasPorContrato:at,arrobas:arrobas,liquidado:liquidado,resultado:resultado,precoVenda:venda,precoCompra:liquidado?compra:null,custos:custos,corretagemArroba:corretagemArroba,corretagemTotal:corretagemTotal};
 }
 function contratosB3PorLote(loteId){
   return getFuturos().filter(function(c){return c.loteId===loteId;});
@@ -4261,7 +4269,7 @@ function dfParams(){return{
   gmd:1.50,dias:100,rendE:50,rendA:55,consumoMS:2.4,quebra:8.0,
   msKG:1.30,opDia:2.00,custoArrobaProd:0,sanidade:12.00,
   freteCusto:17.00,bonusFrete:60,freteKm:150,
-  funrural:0.2,valorAt:350.00,bonus:1.0,desconto:1.0,prazoPag:7,
+  funrural:0.2,corretagemB3:0.15,valorAt:350.00,bonus:1.0,desconto:1.0,prazoPag:7,
   customCosts:[]
 };}
 
@@ -4988,11 +4996,28 @@ function atualizarFuturoPreview(){
     arrobasPorContrato:330,
     precoVenda:parseFloat((document.getElementById('fut-preco-venda')||{}).value)||0,
     precoCompra:(document.getElementById('fut-preco-compra')||{}).value,
+    corretagemArroba:finInputNum('fut-corretagem'),
     custos:parseFloat((document.getElementById('fut-custos')||{}).value)||0
   };
   var r=futuroResultado(c);
   preview.className='fut-preview-value '+(r.resultado>=0?'pos':'neg');
   preview.textContent=r.liquidado?fmt(r.resultado):'Aberto · '+fmtContratosB3(r.qtdContratos||0)+' contrato(s) protegido(s) · '+(r.arrobas||0).toLocaleString('pt-BR',{maximumFractionDigits:0})+' @';
+}
+function atualizarCorretagemFuturoPorLote(){
+  var editId=((document.getElementById('fut-id')||{}).value)||'';
+  if(editId)return;
+  var loteId=((document.getElementById('fut-lote')||{}).value)||'';
+  var corretagemPadrao=0.15;
+  if(loteId){
+    var lote=(getLotes()||[]).find(function(l){return l.id===loteId;});
+    var orc=((lote&&lote.orcamentos)||[]).slice().reverse().find(function(o){return o&&o.corretagemB3!==undefined&&o.corretagemB3!==null;});
+    if(orc){
+      var corretagemLote=(typeof orc.corretagemB3==='number')?orc.corretagemB3:finNum(orc.corretagemB3);
+      if(isFinite(corretagemLote))corretagemPadrao=corretagemLote;
+    }
+  }
+  var el=document.getElementById('fut-corretagem');
+  if(el)el.value=brNum(corretagemPadrao,2);
 }
 function limparFormFuturo(loteId){
   var ids=['fut-id','fut-codigo','fut-vencimento','fut-data-venda','fut-preco-venda','fut-data-compra','fut-preco-compra','fut-custos','fut-obs'];
@@ -5000,6 +5025,16 @@ function limparFormFuturo(loteId){
   var tipo=document.getElementById('fut-tipo');if(tipo)tipo.value='bolsa';
   var qtd=document.getElementById('fut-qtd');if(qtd)qtd.value='1';
   var at=document.getElementById('fut-arrobas');if(at)at.value='330';
+  var corretagemPadrao=0.15;
+  if(loteId){
+    var lote=(getLotes()||[]).find(function(l){return l.id===loteId;});
+    var orc=((lote&&lote.orcamentos)||[]).slice().reverse().find(function(o){return o&&o.corretagemB3!==undefined&&o.corretagemB3!==null;});
+    if(orc){
+      var corretagemLote=(typeof orc.corretagemB3==='number')?orc.corretagemB3:finNum(orc.corretagemB3);
+      if(isFinite(corretagemLote))corretagemPadrao=corretagemLote;
+    }
+  }
+  var corretagem=document.getElementById('fut-corretagem');if(corretagem)corretagem.value=brNum(corretagemPadrao,2);
   fillFuturoLoteSelects();
   var loteSel=document.getElementById('fut-lote');if(loteSel)loteSel.value=loteId||'';
   var title=document.getElementById('fut-form-title');if(title)title.textContent='Novo contrato';
@@ -5030,6 +5065,7 @@ function salvarFuturo(){
     precoVenda:precoVenda,
     dataCompra:(document.getElementById('fut-data-compra')||{}).value||'',
     precoCompra:(document.getElementById('fut-preco-compra')||{}).value,
+    corretagemArroba:finInputNum('fut-corretagem'),
     custos:parseFloat((document.getElementById('fut-custos')||{}).value)||0,
     obs:(document.getElementById('fut-obs')||{}).value.trim()||'',
     criadoPor:id?(arr.find(function(c){return c.id===id;})||{}).criadoPor||currentUser:currentUser,
@@ -5072,6 +5108,8 @@ function editarFuturo(id){
   set('fut-preco-venda',c.precoVenda);
   set('fut-data-compra',c.dataCompra);
   set('fut-preco-compra',c.precoCompra);
+  var corretagemEdit=(typeof c.corretagemArroba==='number')?c.corretagemArroba:finNum(c.corretagemArroba);
+  set('fut-corretagem',c.corretagemArroba!==undefined?brNum(corretagemEdit,2):'0,15');
   set('fut-custos',c.custos);
   set('fut-obs',c.obs);
   var title=document.getElementById('fut-form-title');if(title)title.textContent='Editar contrato';
@@ -7231,6 +7269,7 @@ function editarOrcamento(loteId,idx){
   _setCalcValue('bonus',_prefer(o.bonus,p.bonus,0));
   _setCalcValue('desconto',_prefer(o.desconto,p.desconto,0));
   _setCalcValue('funrural',_prefer(o.funrural_pct,p.funrural));
+  _setCalcValue('corretagemB3',_prefer(o.corretagemB3,p.corretagemB3,0.15));
   _setCalcValue('dias',_prefer(o.dias,p.dias));
   _setCalcValue('prazoPag',_prefer(snap.prazoPag,o.prazoPag,p.prazoPag,7));
   _setCalcValue('dataEntradaPrev',_prefer(o.dataEntradaPrev,''));
@@ -7547,6 +7586,7 @@ function simularLote(id){
   limparIndicadoresBiometriaCalc();
   _setCalcValue('bonus',0);_setCalcValue('desconto',p.desconto);
   _setCalcValue('funrural',p.funrural);_setCalcValue('dias',p.dias);
+  _setCalcValue('corretagemB3',p.corretagemB3!==undefined?p.corretagemB3:0.15);
   aplicarTipoAnimal();
   if(_precoModeAt){var rE=finNum(document.getElementById('rendEntrada').value)||50;var kg=finNum(document.getElementById('valorKG').value)||0;if(kg>0)_setCalcValue('valorAt_compra',kg*15/(rE/100));}
   recalcularQuebra();
@@ -7950,7 +7990,7 @@ function salvarResultadoNoLote(){
     quebra_pct:g('quebra'),freteKm:g('freteKm'),freteCusto:g('freteCusto'),
     bonusFrete:g('bonusFrete'),valorKG:valorKGCalc,valorAtCompra:g('valorAt_compra'),precoCompraMode:_precoModeAt?'at':'kg',sanidade:g('sanidade'),
     msKG:g('msKG'),opDia:g('opDia'),custoArrobaProd:g('custoArrobaProd'),valorAt:g('valorAt'),
-    bonus:g('bonus'),desconto:g('desconto'),funrural_pct:g('funrural'),
+    bonus:g('bonus'),desconto:g('desconto'),funrural_pct:g('funrural'),corretagemB3:g('corretagemB3'),
     comissao:g('comissao'),comissaoMode:fieldModes.comissao,
     bonusMode:fieldModes.bonus,descontoMode:fieldModes.desconto,
     lucroLote:parseFloat((document.getElementById('r-lucroTotal')||{dataset:{raw:0}}).dataset.raw)||0,
@@ -8209,7 +8249,7 @@ function abrirCalcStandalone(opts){
   var map={qtd:'qtd',pesoCom:'pesoCom',comissao:'comissao',gmd:'gmd',dias:'dias',
     rendE:'rendEntrada',rendA:'rendAbate',consumoMS:'consumoMS',quebra:'quebra',
     msKG:'msKG',opDia:'opDia',custoArrobaProd:'custoArrobaProd',sanidade:'sanidade',freteCusto:'freteCusto',
-    bonusFrete:'bonusFrete',freteKm:'freteKm',valorAt:'valorAt',funrural:'funrural',
+    bonusFrete:'bonusFrete',freteKm:'freteKm',valorAt:'valorAt',funrural:'funrural',corretagemB3:'corretagemB3',
     bonus:'bonus',desconto:'desconto',prazoPag:'prazoPag'};
   Object.keys(map).forEach(function(k){
     if(p[k]===undefined||p[k]===null)return;
@@ -8264,10 +8304,10 @@ function salvarSimulacaoComoPadrao(){
   var map={qtd:'qtd',pesoCom:'pesoCom',comissao:'comissao',gmd:'gmd',dias:'dias',
     rendE:'rendEntrada',rendA:'rendAbate',consumoMS:'consumoMS',quebra:'quebra',
     msKG:'msKG',opDia:'opDia',custoArrobaProd:'custoArrobaProd',sanidade:'sanidade',freteCusto:'freteCusto',
-    bonusFrete:'bonusFrete',freteKm:'freteKm',valorAt:'valorAt',funrural:'funrural',
+    bonusFrete:'bonusFrete',freteKm:'freteKm',valorAt:'valorAt',funrural:'funrural',corretagemB3:'corretagemB3',
     bonus:'bonus',desconto:'desconto',prazoPag:'prazoPag'};
   var cfg=loadConfig();if(!cfg.params)cfg.params={};
-  Object.keys(map).forEach(function(k){var el=document.getElementById(map[k]);if(el&&el.value!=='')cfg.params[k]=parseFloat(el.value);});
+  Object.keys(map).forEach(function(k){var el=document.getElementById(map[k]);if(el&&el.value!=='')cfg.params[k]=finNum(el.value);});
   cfg.params.precoCompraMode=_precoModeAt?'at':'kg';
   cfg.params.valorKG=parseFloat(document.getElementById(_precoModeAt?'valorAt_compra':'valorKG').value)||0;
   cfg.params.comissaoMode=getFieldMode('comissao');
@@ -8329,7 +8369,7 @@ function calcular(opts){
   const quebra=quebra_pct/100;  // convert % to fraction
   const msKG=g('msKG'),consPC_pct=g('consumoMS'),opDia=g('opDia'),custoBoitelAt=g('custoArrobaProd'),prazoPag=g('prazoPag')||7;
   const consPC=consPC_pct/100;  // convert % to fraction
-  const valorAt=g('valorAt'),funrural_pct=g('funrural');
+  const valorAt=g('valorAt'),funrural_pct=g('funrural'),corretagemB3=g('corretagemB3');
   const funrural=funrural_pct/100;  // convert % to fraction
   const frigId=document.getElementById('frigorifico').value;
   const frigNome=frigId?(getFrigs().find(function(f){return f.id===frigId;})||{}).nome||null:null;
@@ -8413,7 +8453,7 @@ function calcular(opts){
   // ── Venda ──────────────────────────────────────
   const dP=checkPesoMin(atAbate);
   const atLiq=valorAt+bonusPerAt-descontoPerAt-dP;
-  const atLiqFR=atLiq*(1-funrural);
+  const atLiqFR=(atLiq*(1-funrural))-corretagemB3;
   const fatAnim=atLiqFR*atAbate;
 
   // ── Custos ─────────────────────────────────────
@@ -8477,6 +8517,7 @@ function calcular(opts){
   const totalAtLote=atAbate*qtd;
   const fatBruto=atLiq*atAbate*qtd;
   const funrV=atLiq*funrural*atAbate*qtd;
+  const corretagemB3Total=corretagemB3*totalAtLote;
   const fatLiq=fatAnim*qtd;
   const lucroLote=lucroAnim*qtd;
   const lucroLoteBoitel=lucroAnimBoitel*qtd;
@@ -8642,6 +8683,9 @@ function calcular(opts){
   s('d-funruralAt','-'+fmt(atLiq*funrural,4)+'/@');
   s('d-funrural','-'+fmt(funrV));
   s('d-funruralBoitel',boi('-'+fmt(funrV)));
+  s('d-corretagemB3At',corretagemB3?'-'+fmt(corretagemB3,2)+'/@':'—');
+  s('d-corretagemB3Total',corretagemB3?'-'+fmt(corretagemB3Total):'—');
+  s('d-corretagemB3Boitel',boi(corretagemB3?'-'+fmt(corretagemB3Total):'—'));
   s('d-totalAt',fmtNum(totalAtLote,2)+' @');
   s('d-totalAtBoitel',boi(fmtNum(totalAtLote,2)+' @'));
   s('d-fatLiqAt',fmt(atLiqFR)+'/@');
