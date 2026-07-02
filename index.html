@@ -3037,13 +3037,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
               <div class="field-label-row"><label>Bônus</label>
                 <div class="mode-toggle"><button type="button" class="mt-btn active" data-frig-field="bonus" data-mode="val" onclick="setFrigFieldMode('bonus','val',this)">R$</button><button type="button" class="mt-btn" data-frig-field="bonus" data-mode="pct" onclick="setFrigFieldMode('bonus','pct',this)">%</button></div>
               </div>
-              <input type="number" id="ff-bonus" value="0" step="0.5"><div class="hint" id="ff-bonus-hint">R$/@ somado ao preço de venda</div>
+              <input type="text" inputmode="decimal" id="ff-bonus" value="0"><div class="hint" id="ff-bonus-hint">R$/@ somado ao preço de venda</div>
             </div>
             <div class="field">
               <div class="field-label-row"><label>Desconto</label>
                 <div class="mode-toggle"><button type="button" class="mt-btn active" data-frig-field="desconto" data-mode="val" onclick="setFrigFieldMode('desconto','val',this)">R$</button><button type="button" class="mt-btn" data-frig-field="desconto" data-mode="pct" onclick="setFrigFieldMode('desconto','pct',this)">%</button></div>
               </div>
-              <input type="number" id="ff-desconto" value="0" step="0.5"><div class="hint" id="ff-desconto-hint">R$/@ descontado do preço de venda</div>
+              <input type="text" inputmode="decimal" id="ff-desconto" value="0"><div class="hint" id="ff-desconto-hint">R$/@ descontado do preço de venda</div>
             </div>
           </div>
           <div class="form-btns">
@@ -3065,12 +3065,12 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <input type="hidden" id="bf-id">
           <div class="field"><label>Nome do Boitel</label><input type="text" id="bf-nome" placeholder="Ex: Boitel Fazenda Modelo"></div>
           <div class="g2">
-            <div class="field"><label>Matéria Seca R$/kg</label><input type="number" id="bf-msKG" value="1.30" step="0.01"></div>
-            <div class="field"><label>Operacional R$/animal/dia</label><input type="number" id="bf-opDia" value="2.00" step="0.01"></div>
+            <div class="field"><label>Matéria Seca R$/kg</label><input type="text" inputmode="decimal" id="bf-msKG" value="1,30"></div>
+            <div class="field"><label>Operacional R$/animal/dia</label><input type="text" inputmode="decimal" id="bf-opDia" value="2,00"></div>
           </div>
           <div class="g2">
-            <div class="field"><label>Sanidade R$/animal</label><input type="number" id="bf-sanidade" value="12.00" step="0.50"></div>
-            <div class="field"><label>Custo boitel R$/@ produzida</label><input type="number" id="bf-custoArrobaProd" value="0" step="0.50"></div>
+            <div class="field"><label>Sanidade R$/animal</label><input type="text" inputmode="decimal" id="bf-sanidade" value="12,00"></div>
+            <div class="field"><label>Custo boitel R$/@ produzida</label><input type="text" inputmode="decimal" id="bf-custoArrobaProd" value="0"></div>
           </div>
           <div class="g2">
             <div class="field"><label>Prazo de Recebimento (dias)</label><input type="number" id="bf-prazoPag" value="7" step="1"></div>
@@ -8855,8 +8855,8 @@ function showFrigForm(id){
     document.getElementById('frig-form-title').textContent='Editar Frigorífico';
     document.getElementById('ff-id').value=id;
     document.getElementById('ff-nome').value=f.nome||'';
-    document.getElementById('ff-bonus').value=parseFloat(f.bonus)||0;
-    document.getElementById('ff-desconto').value=parseFloat(f.desconto)||0;
+    document.getElementById('ff-bonus').value=brNum(f.bonus||0,2);
+    document.getElementById('ff-desconto').value=brNum(f.desconto||0,2);
     setFrigFieldMode('bonus',f.bonusMode==='pct'?'pct':'val',document.querySelector('[data-frig-field="bonus"][data-mode="'+(f.bonusMode==='pct'?'pct':'val')+'"]'));
     setFrigFieldMode('desconto',f.descontoMode==='pct'?'pct':'val',document.querySelector('[data-frig-field="desconto"][data-mode="'+(f.descontoMode==='pct'?'pct':'val')+'"]'));
     var card=document.querySelector('[data-frig-id="'+id+'"]');
@@ -8896,9 +8896,9 @@ function salvarFrigorifico(){
     id:editId||'frig_'+Date.now(),
     nome:nome,
     bonusMode:getFrigFieldMode('bonus'),
-    bonus:parseFloat(document.getElementById('ff-bonus').value)||0,
+    bonus:finInputNum('ff-bonus'),
     descontoMode:getFrigFieldMode('desconto'),
-    desconto:parseFloat(document.getElementById('ff-desconto').value)||0
+    desconto:finInputNum('ff-desconto')
   };
   if(editId){
     const i=cfg.frigorificos.findIndex(f=>f.id===editId);
@@ -8948,19 +8948,19 @@ function showBoitelForm(id){
     document.getElementById('boitel-form-title').textContent='Editar Boitel';
     document.getElementById('bf-id').value=id;
     document.getElementById('bf-nome').value=b.nome||'';
-    document.getElementById('bf-msKG').value=b.msKG||0;
-    document.getElementById('bf-opDia').value=b.opDia||0;
-    document.getElementById('bf-sanidade').value=b.sanidade||0;
-    document.getElementById('bf-custoArrobaProd').value=b.custoArrobaProd||0;
+    document.getElementById('bf-msKG').value=brNum(b.msKG||0,2);
+    document.getElementById('bf-opDia').value=brNum(b.opDia||0,2);
+    document.getElementById('bf-sanidade').value=brNum(b.sanidade||0,2);
+    document.getElementById('bf-custoArrobaProd').value=brNum(b.custoArrobaProd||0,2);
     document.getElementById('bf-prazoPag').value=b.prazoPag||0;
   } else {
     document.getElementById('boitel-form-title').textContent='Novo Boitel';
     document.getElementById('bf-id').value='';
     document.getElementById('bf-nome').value='';
-    document.getElementById('bf-msKG').value=p.msKG||0;
-    document.getElementById('bf-opDia').value=p.opDia||0;
-    document.getElementById('bf-sanidade').value=p.sanidade||0;
-    document.getElementById('bf-custoArrobaProd').value=p.custoArrobaProd||0;
+    document.getElementById('bf-msKG').value=brNum(p.msKG||0,2);
+    document.getElementById('bf-opDia').value=brNum(p.opDia||0,2);
+    document.getElementById('bf-sanidade').value=brNum(p.sanidade||0,2);
+    document.getElementById('bf-custoArrobaProd').value=brNum(p.custoArrobaProd||0,2);
     document.getElementById('bf-prazoPag').value=p.prazoPag||7;
   }
   form.style.display='block';
@@ -8977,11 +8977,11 @@ function salvarBoitel(){
   var entry={
     id:editId||'boitel_'+Date.now(),
     nome:nome,
-    msKG:parseFloat(document.getElementById('bf-msKG').value)||0,
-    opDia:parseFloat(document.getElementById('bf-opDia').value)||0,
-    sanidade:parseFloat(document.getElementById('bf-sanidade').value)||0,
-    custoArrobaProd:parseFloat(document.getElementById('bf-custoArrobaProd').value)||0,
-    prazoPag:parseInt(document.getElementById('bf-prazoPag').value)||0
+    msKG:finInputNum('bf-msKG'),
+    opDia:finInputNum('bf-opDia'),
+    sanidade:finInputNum('bf-sanidade'),
+    custoArrobaProd:finInputNum('bf-custoArrobaProd'),
+    prazoPag:Math.round(finInputNum('bf-prazoPag'))
   };
   if(editId){
     var i=cfg.boiteis.findIndex(function(b){return b.id===editId;});
