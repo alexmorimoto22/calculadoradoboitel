@@ -546,6 +546,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .fut-toolbar{display:flex;gap:10px;align-items:flex-end;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;}
   .fut-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
   .fut-filters select{height:38px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:0 34px 0 12px;font-family:'Inter',sans-serif;font-size:12px;color:var(--text);outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A7967' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;min-width:150px;}
+  .fut-filters input{height:38px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:0 12px;font-family:'Inter',sans-serif;font-size:12px;color:var(--text);outline:none;min-width:130px;box-sizing:border-box;}
   .fut-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:#fff;}
   .fut-table{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;}
   .fut-table th{background:rgba(13,27,42,.035);border-bottom:1px solid var(--border);padding:10px 10px;text-align:left;font-size:8.5px;font-weight:850;letter-spacing:.9px;text-transform:uppercase;color:var(--taupe);white-space:nowrap;}
@@ -559,6 +560,22 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .fut-action{border:1px solid var(--border);background:#fff;border-radius:8px;color:var(--text-2);font-family:'Inter',sans-serif;font-size:10px;font-weight:800;padding:7px 9px;cursor:pointer;margin-right:4px;}
 .fut-action:hover{border-color:var(--accent);color:var(--accent);}
 .fut-action.danger{background:rgba(154,59,48,.06);border-color:rgba(154,59,48,.18);color:var(--red);}
+.fut-action.success{background:rgba(107,112,86,.08);border-color:rgba(107,112,86,.22);color:var(--green);}
+.fut-action.warn{background:rgba(201,162,78,.12);border-color:rgba(201,162,78,.28);color:#8a4b05;}
+.fut-liq-history{margin-top:6px;font-size:10px;color:var(--text-3);line-height:1.35;white-space:normal;}
+.fut-modal-backdrop{position:fixed;inset:0;background:rgba(13,27,42,.45);z-index:9998;display:none;align-items:center;justify-content:center;padding:18px;}
+.fut-modal-backdrop.show{display:flex;}
+.fut-modal{width:min(520px,100%);background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:0 26px 80px rgba(13,27,42,.28);padding:18px;}
+.fut-modal-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px;}
+.fut-modal-title{font-size:18px;font-weight:900;color:var(--navy);}
+.fut-modal-sub{font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.35;}
+.fut-modal-close{border:0;background:rgba(13,27,42,.06);width:34px;height:34px;border-radius:999px;font-size:18px;color:var(--text-2);cursor:pointer;}
+.fut-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fut-modal-grid .field{margin:0;}
+.fut-modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+.fut-modal-actions button{min-height:42px;border-radius:10px;font-family:'Inter',sans-serif;font-weight:850;padding:0 16px;cursor:pointer;}
+.fut-modal-actions .save{background:var(--olive);border:1px solid var(--olive);color:#fff;}
+.fut-modal-actions .cancel{background:#fff;border:1px solid var(--border);color:var(--text-2);}
 .fut-mobile-list{display:none;}
 .fut-mobile-card{background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 2px 10px rgba(13,27,42,.05);}
 .fut-mobile-card summary{list-style:none;cursor:pointer;}
@@ -579,7 +596,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .fut-mobile-cell:nth-last-child(-n+2){border-bottom:none;}
 .fut-mobile-label{font-size:8.5px;font-weight:850;letter-spacing:.8px;text-transform:uppercase;color:var(--taupe);margin-bottom:4px;}
 .fut-mobile-value{font-size:13px;font-weight:850;color:var(--text);line-height:1.25;}
-.fut-mobile-actions{display:flex;gap:8px;flex-wrap:wrap;padding:11px 12px;}
+  .fut-mobile-actions{display:flex;gap:8px;flex-wrap:wrap;padding:11px 12px;}
 .b3-lock-pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:850;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;}
 .b3-lock-pill.locked{background:rgba(107,112,86,.12);color:#4f8d13;}
 .b3-lock-pill.open{background:#eef3f6;color:var(--text-3);}
@@ -1086,9 +1103,10 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 	    .fut-lote-summary-value{font-size:13px;}
 	    .fut-toolbar{align-items:stretch;}
 	    .fut-filters{display:grid;grid-template-columns:1fr 1fr;width:100%;}
-	    .fut-filters select{width:100%;min-width:0;}
+	    .fut-filters select,.fut-filters input{width:100%;min-width:0;}
 	    .fut-table-wrap{display:none;}
 	    .fut-mobile-list{display:block;}
+	    .fut-modal-grid{grid-template-columns:1fr;}
 	    .h-pipeline{overflow-x:auto;grid-template-columns:repeat(5,minmax(70px,1fr));scrollbar-width:none;}
 	    .h-pipeline::-webkit-scrollbar{display:none;}
 	    .h-pipe-item{min-width:70px;}
@@ -2884,16 +2902,18 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <div class="fut-form-title" id="fut-form-title">Novo contrato</div>
           <input type="hidden" id="fut-id">
           <div class="fut-form-grid">
+            <div class="field fut-span-3"><label>Tipo de operação</label><select id="fut-operacao" onchange="alternarOperacaoFuturo();atualizarCorretagemFuturoPorLote();atualizarFuturoPreview()"><option value="hedge">Hedge vinculado a lote</option><option value="livre">Operação livre / especulativa</option></select><div class="hint">Livre não exige lote.</div></div>
+            <div class="field fut-span-3"><label>Lado da abertura</label><select id="fut-lado" onchange="atualizarFuturoPreview()"><option value="venda">Venda</option><option value="compra">Compra</option></select><div class="hint">Define a fórmula do resultado.</div></div>
             <div class="field fut-span-2"><label>Lote vinculado</label><select id="fut-lote" onchange="atualizarCorretagemFuturoPorLote();atualizarFuturoPreview()"></select><div class="hint" id="fut-lote-coverage">Selecione a operação que receberá o resultado do hedge.</div></div>
             <div class="field fut-span-3"><label>Tipo de trava</label><select id="fut-tipo" onchange="atualizarFuturoPreview()"><option value="bolsa">Bolsa B3</option><option value="direto">Direto / contrato físico</option></select><div class="hint">Bolsa ou direto.</div></div>
             <div class="field fut-span-3"><label>Qtd contratos</label><input type="number" id="fut-qtd" value="1" step="1" min="0" oninput="atualizarFuturoPreview()" onblur="ajustarQtdContratoB3NoForm()"><div class="hint">Somente inteiros.</div></div>
             <div class="fut-preview fut-span-4" id="fut-lote-summary" style="display:none;margin:0;"></div>
             <div class="field fut-span-3"><label>Código / vencimento B3</label><input type="text" id="fut-codigo" placeholder="Ex: BGIU26" readonly><div class="hint">Gerado automaticamente pelo vencimento.</div></div>
             <div class="field fut-span-3"><label>Vencimento</label><input type="month" id="fut-vencimento" onchange="atualizarCodigoB3();atualizarFuturoPreview()"></div>
-            <div class="field fut-span-3"><label>Data venda</label><input type="date" id="fut-data-venda"></div>
-            <div class="field fut-span-3"><label>Preço venda (R$/@)</label><input type="number" id="fut-preco-venda" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
-            <div class="field fut-span-3"><label>Data liquidação</label><input type="date" id="fut-data-compra"></div>
-            <div class="field fut-span-3"><label>Preço compra liquidação (R$/@)</label><input type="number" id="fut-preco-compra" value="" step="0.01" oninput="atualizarFuturoPreview()"><div class="hint">Vazio = aberto.</div></div>
+            <div class="field fut-span-3"><label>Data da abertura</label><input type="date" id="fut-data-venda"></div>
+            <div class="field fut-span-3"><label>Preço abertura (R$/@)</label><input type="number" id="fut-preco-venda" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
+            <div class="field fut-span-3 fut-legacy-liq" style="display:none;"><label>Data liquidação inicial</label><input type="date" id="fut-data-compra"></div>
+            <div class="field fut-span-3 fut-legacy-liq" style="display:none;"><label>Preço liquidação inicial (R$/@)</label><input type="number" id="fut-preco-compra" value="" step="0.01" oninput="atualizarFuturoPreview()"><div class="hint">Vazio = aberto.</div></div>
             <div class="field fut-span-3"><label>Corretagem B3 (R$/@)</label><div class="fut-money-control"><span class="fut-money-prefix">R$</span><input type="text" inputmode="decimal" data-decimal="1" id="fut-corretagem" value="0,15" oninput="atualizarFuturoPreview()"></div><div class="hint">Custo por @ protegida.</div></div>
             <div class="field fut-span-3"><label>Custos / taxas (R$)</label><input type="number" id="fut-custos" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
             <div class="fut-preview fut-span-4" style="margin:0;">
@@ -2917,14 +2937,28 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
               <select id="fut-filter-status" onchange="renderFuturos()">
                 <option value="todos">Todos</option>
                 <option value="aberto">Abertos</option>
+                <option value="parcial">Parciais</option>
                 <option value="liquidado">Liquidados</option>
+                <option value="cancelado">Cancelados</option>
+              </select>
+              <select id="fut-filter-operacao" onchange="renderFuturos()">
+                <option value="todos">Hedge + Livres</option>
+                <option value="hedge">Hedge vinculado</option>
+                <option value="livre">Operação livre</option>
+              </select>
+              <select id="fut-filter-lado" onchange="renderFuturos()">
+                <option value="todos">Compra + Venda</option>
+                <option value="compra">Compra</option>
+                <option value="venda">Venda</option>
               </select>
               <select id="fut-filter-lote" onchange="renderFuturos()"></select>
+              <input id="fut-filter-codigo" placeholder="Código B3" oninput="renderFuturos()">
+              <input id="fut-filter-vencimento" type="month" onchange="renderFuturos()">
             </div>
           </div>
           <div class="fut-table-wrap">
             <table class="fut-table">
-              <thead><tr><th>Status</th><th>Lote</th><th>Contrato</th><th>Contratos protegidos</th><th>Venda</th><th>Liquidação</th><th>Resultado</th><th>Ações</th></tr></thead>
+              <thead><tr><th>Status</th><th>Tipo</th><th>Lote / operação</th><th>Código</th><th>Lado</th><th>Qtd original</th><th>Aberto</th><th>Liquidado</th><th>Abertura</th><th>Liquidação média</th><th>Resultado realizado</th><th>Resultado aberto</th><th>Ações</th></tr></thead>
               <tbody id="fut-list"></tbody>
             </table>
           </div>
@@ -4182,20 +4216,102 @@ function normalizarQtdContratoB3(c){
   qtd=Math.round(qtd);
   return {qtd:qtd,arrobasPorContrato:at,arrobas:qtd*at};
 }
+function futuroOperacao(c){
+  c=c||{};
+  return c.operacao||c.operationType||c.operation_type||(c.loteId?'hedge':'livre');
+}
+function futuroLado(c){
+  c=c||{};
+  var lado=c.lado||c.openingSide||c.opening_side||'venda';
+  if(lado==='sell')lado='venda';
+  if(lado==='buy')lado='compra';
+  return lado==='compra'?'compra':'venda';
+}
+function futuroStatusLabel(st){
+  return st==='parcial'?'Parcialmente liquidado':st==='liquidado'?'Liquidado':st==='cancelado'?'Cancelado':'Aberto';
+}
+function futuroStatusClass(st){
+  return st==='liquidado'?'st-receb':st==='parcial'?'st-conf':st==='cancelado'?'st-abat':'st-emb';
+}
+function liquidacoesFuturo(c){
+  c=c||{};
+  var arr=Array.isArray(c.liquidacoes)?c.liquidacoes.slice():[];
+  if(!arr.length&&c.precoCompra!==undefined&&c.precoCompra!==null&&String(c.precoCompra)!==''){
+    var preco=finNum(c.precoCompra);
+    if(isFinite(preco)&&preco>0){
+      var norm=normalizarQtdContratoB3(c);
+      arr.push({
+        id:'legacy',
+        qtdContratos:norm.qtd,
+        data:c.dataCompra||'',
+        preco:preco,
+        corretagemArroba:0,
+        taxas:0,
+        obs:'Liquidação importada do modelo anterior.'
+      });
+    }
+  }
+  return arr.map(function(l){
+    return {
+      id:l.id||('liq_'+Date.now()),
+      qtdContratos:Math.max(0,Math.round(parseFloat(l.qtdContratos||l.liquidation_contracts)||0)),
+      data:l.data||l.liquidation_date||'',
+      preco:finNum(l.preco!==undefined?l.preco:l.liquidation_price),
+      corretagemArroba:finNum(l.corretagemArroba!==undefined?l.corretagemArroba:l.brokerage_liquidation),
+      taxas:finNum(l.taxas!==undefined?l.taxas:l.fees_liquidation),
+      obs:l.obs||l.notes||''
+    };
+  }).filter(function(l){return l.qtdContratos>0&&isFinite(l.preco)&&l.preco>0;});
+}
+function calcularResultadoLiquidacaoB3(c,liq,totalContratos){
+  var norm=normalizarQtdContratoB3(c);
+  var qtd=Math.max(0,Math.round(parseFloat(liq.qtdContratos)||0));
+  var arrobas=qtd*norm.arrobasPorContrato;
+  var abertura=finNum(c.precoVenda!==undefined?c.precoVenda:c.opening_price);
+  var liquidacao=finNum(liq.preco);
+  var lado=futuroLado(c);
+  var gross=(lado==='compra'?(liquidacao-abertura):(abertura-liquidacao))*arrobas;
+  var corretagemAbertura=finNum(c.corretagemArroba!==undefined?c.corretagemArroba:c.brokerage_opening)*arrobas;
+  var corretagemLiquidacao=finNum(liq.corretagemArroba)*arrobas;
+  var custosAbertura=finNum(c.custos!==undefined?c.custos:c.fees_opening);
+  var custoProporcional=totalContratos>0?custosAbertura*(qtd/totalContratos):0;
+  var taxas=finNum(liq.taxas);
+  return gross-corretagemAbertura-corretagemLiquidacao-custoProporcional-taxas;
+}
 function futuroResultado(c){
   c=c||{};
   var norm=normalizarQtdContratoB3(c);
   var qtd=norm.qtd;
   var at=norm.arrobasPorContrato;
-  var venda=parseFloat(c.precoVenda)||0;
-  var compra=(c.precoCompra!==undefined&&c.precoCompra!==null&&String(c.precoCompra)!=='')?parseFloat(c.precoCompra):NaN;
-  var custos=parseFloat(c.custos)||0;
+  var venda=finNum(c.precoVenda!==undefined?c.precoVenda:c.opening_price);
+  var compra=(c.precoCompra!==undefined&&c.precoCompra!==null&&String(c.precoCompra)!=='')?finNum(c.precoCompra):NaN;
+  var custos=finNum(c.custos!==undefined?c.custos:c.fees_opening);
   var arrobas=norm.arrobas;
   var corretagemArroba=(typeof c.corretagemArroba==='number')?c.corretagemArroba:finNum(c.corretagemArroba);
   var corretagemTotal=corretagemArroba*arrobas;
-  var liquidado=!isNaN(compra)&&compra>0;
-  var resultado=liquidado?((venda-compra)*arrobas-custos-corretagemTotal):0;
-  return {qtdContratos:qtd,arrobasPorContrato:at,arrobas:arrobas,liquidado:liquidado,resultado:resultado,precoVenda:venda,precoCompra:liquidado?compra:null,custos:custos,corretagemArroba:corretagemArroba,corretagemTotal:corretagemTotal};
+  var liqsRaw=liquidacoesFuturo(c);
+  var liqs=[];
+  var saldo=qtd;
+  liqsRaw.forEach(function(l){
+    var q=Math.min(Math.max(0,Math.round(l.qtdContratos||0)),saldo);
+    if(q>0){
+      var cp=Object.assign({},l,{qtdContratos:q});
+      liqs.push(cp);
+      saldo-=q;
+    }
+  });
+  var qtdLiquidada=qtd-saldo;
+  var qtdAberta=Math.max(0,saldo);
+  var valorLiq=0;
+  var resultado=0;
+  liqs.forEach(function(l){
+    valorLiq+=(l.preco||0)*(l.qtdContratos||0)*at;
+    resultado+=calcularResultadoLiquidacaoB3(c,l,qtd);
+  });
+  var precoMedio=qtdLiquidada>0?valorLiq/(qtdLiquidada*at):(!isNaN(compra)&&compra>0?compra:null);
+  var status=c.status==='cancelado'?'cancelado':(qtdLiquidada<=0?'aberto':(qtdAberta>0?'parcial':'liquidado'));
+  var liquidado=status==='liquidado';
+  return {qtdContratos:qtd,arrobasPorContrato:at,arrobas:arrobas,liquidado:liquidado,status:status,qtdAberta:qtdAberta,qtdLiquidada:qtdLiquidada,arrobasAbertas:qtdAberta*at,arrobasLiquidadas:qtdLiquidada*at,resultado:resultado,resultadoAberto:0,precoVenda:venda,precoCompra:precoMedio,custos:custos,corretagemArroba:corretagemArroba,corretagemTotal:corretagemTotal,liquidacoes:liqs,lado:futuroLado(c),operacao:futuroOperacao(c)};
 }
 function contratosB3PorLote(loteId){
   return getFuturos().filter(function(c){return c.loteId===loteId;});
@@ -4208,11 +4324,12 @@ function resultadoB3Lote(loteId){
     out.contratos+=r.qtdContratos||0;
     out.arrobas+=r.arrobas;
     out.valorVenda+=(r.precoVenda||0)*(r.arrobas||0);
-    if(r.liquidado){out.liquidados+=r.qtdContratos||0;out.resultado+=r.resultado;}
-    else out.abertos+=r.qtdContratos||0;
-    if(r.liquidado){
-      out.valorCompra+=(r.precoCompra||0)*(r.arrobas||0);
-      out.arrobasCompra+=r.arrobas||0;
+    out.liquidados+=r.qtdLiquidada||0;
+    out.abertos+=r.qtdAberta||0;
+    out.resultado+=r.resultado||0;
+    if(r.qtdLiquidada){
+      out.valorCompra+=(r.precoCompra||0)*(r.arrobasLiquidadas||0);
+      out.arrobasCompra+=r.arrobasLiquidadas||0;
     }
   });
   out.vendaMedia=out.arrobas>0?out.valorVenda/out.arrobas:0;
@@ -4923,13 +5040,20 @@ function fillFuturoLoteSelects(){
     return '<option value="'+l.id+'">'+escHtml(loteLabelB3(l))+' · '+escHtml(sc.label)+' · '+escHtml(cobertura)+'</option>';
   }).join('');
   if(form){
-    form.innerHTML='<option value="">Selecione o lote...</option>'+formOpts;
+    form.innerHTML='<option value="">Sem lote / operação livre</option>'+formOpts;
     if(formVal)form.value=formVal;
     if(formVal&&form.value!==formVal)form.value='';
   }
   if(filter){
-    filter.innerHTML='<option value="todos">Todos os lotes</option>'+filterOpts;
+    filter.innerHTML='<option value="todos">Todos os lotes</option><option value="livre">Operações livres</option>'+filterOpts;
     if(filterVal)filter.value=filterVal;
+  }
+}
+function alternarOperacaoFuturo(){
+  var op=(document.getElementById('fut-operacao')||{}).value||'hedge';
+  var covEl=document.getElementById('fut-lote-coverage');
+  if(covEl&&!((document.getElementById('fut-lote')||{}).value)){
+    covEl.textContent=op==='livre'?'Operação livre: lote opcional e resultado não entra em um lote específico.':'Selecione a operação que receberá o resultado do hedge.';
   }
 }
 function atualizarCodigoB3(){
@@ -4955,6 +5079,7 @@ function ajustarQtdContratoB3NoForm(){
 function atualizarFuturoPreview(){
   var preview=document.getElementById('fut-preview');
   if(!preview)return;
+  var op=(document.getElementById('fut-operacao')||{}).value||'hedge';
   var loteId=((document.getElementById('fut-lote')||{}).value)||'';
   var lote=loteId?getLotes().find(function(l){return l.id===loteId;}):null;
   var covEl=document.getElementById('fut-lote-coverage');
@@ -4986,22 +5111,28 @@ function atualizarFuturoPreview(){
         +'</div>';
       }
     }else{
-      covEl.textContent='Selecione a operação que receberá o resultado do hedge.';
+      covEl.textContent=op==='livre'?'Operação livre: lote opcional e resultado não entra em um lote específico.':'Selecione a operação que receberá o resultado do hedge.';
       if(sumEl){sumEl.style.display='none';sumEl.innerHTML='';}
     }
   }
   atualizarCodigoB3();
+  var editId=((document.getElementById('fut-id')||{}).value)||'';
+  var existente=editId?getFuturos().find(function(x){return x.id===editId;}):null;
   var c={
+    operacao:op,
+    lado:(document.getElementById('fut-lado')||{}).value||'venda',
     qtdContratos:parseFloat((document.getElementById('fut-qtd')||{}).value)||0,
     arrobasPorContrato:330,
-    precoVenda:parseFloat((document.getElementById('fut-preco-venda')||{}).value)||0,
+    precoVenda:finNum((document.getElementById('fut-preco-venda')||{}).value),
     precoCompra:(document.getElementById('fut-preco-compra')||{}).value,
     corretagemArroba:finInputNum('fut-corretagem'),
-    custos:parseFloat((document.getElementById('fut-custos')||{}).value)||0
+    custos:finNum((document.getElementById('fut-custos')||{}).value),
+    liquidacoes:existente&&Array.isArray(existente.liquidacoes)?existente.liquidacoes:[],
+    status:existente&&existente.status
   };
   var r=futuroResultado(c);
   preview.className='fut-preview-value '+(r.resultado>=0?'pos':'neg');
-  preview.textContent=r.liquidado?fmt(r.resultado):'Aberto · '+fmtContratosB3(r.qtdContratos||0)+' contrato(s) protegido(s) · '+(r.arrobas||0).toLocaleString('pt-BR',{maximumFractionDigits:0})+' @';
+  preview.textContent=futuroStatusLabel(r.status)+' · '+fmtContratosB3(r.qtdAberta)+' aberto(s) · '+fmtContratosB3(r.qtdLiquidada)+' liquidado(s) · resultado '+fmt(r.resultado);
 }
 function atualizarCorretagemFuturoPorLote(){
   var editId=((document.getElementById('fut-id')||{}).value)||'';
@@ -5022,6 +5153,8 @@ function atualizarCorretagemFuturoPorLote(){
 function limparFormFuturo(loteId){
   var ids=['fut-id','fut-codigo','fut-vencimento','fut-data-venda','fut-preco-venda','fut-data-compra','fut-preco-compra','fut-custos','fut-obs'];
   ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var op=document.getElementById('fut-operacao');if(op)op.value=loteId?'hedge':'hedge';
+  var lado=document.getElementById('fut-lado');if(lado)lado.value='venda';
   var tipo=document.getElementById('fut-tipo');if(tipo)tipo.value='bolsa';
   var qtd=document.getElementById('fut-qtd');if(qtd)qtd.value='1';
   var at=document.getElementById('fut-arrobas');if(at)at.value='330';
@@ -5038,24 +5171,33 @@ function limparFormFuturo(loteId){
   fillFuturoLoteSelects();
   var loteSel=document.getElementById('fut-lote');if(loteSel)loteSel.value=loteId||'';
   var title=document.getElementById('fut-form-title');if(title)title.textContent='Novo contrato';
+  alternarOperacaoFuturo();
   atualizarCodigoB3();
   atualizarFuturoPreview();
 }
 function salvarFuturo(){
+  var operacao=(document.getElementById('fut-operacao')||{}).value||'hedge';
+  var lado=(document.getElementById('fut-lado')||{}).value||'venda';
   var loteId=(document.getElementById('fut-lote')||{}).value||'';
-  if(!loteId){toast('⚠ Selecione o lote vinculado');return;}
-  var precoVenda=parseFloat((document.getElementById('fut-preco-venda')||{}).value)||0;
-  if(!precoVenda){toast('⚠ Informe o preço de venda do contrato');return;}
+  if(operacao==='hedge'&&!loteId){toast('⚠ Selecione o lote vinculado para hedge');return;}
+  var precoVenda=finNum((document.getElementById('fut-preco-venda')||{}).value);
+  if(!precoVenda){toast('⚠ Informe o preço de abertura do contrato');return;}
   var id=(document.getElementById('fut-id')||{}).value||'';
   var arr=getFuturos();
+  var antigo=id?(arr.find(function(c){return c.id===id;})||null):null;
   var norm=normalizarQtdContratoB3({
     qtdContratos:parseFloat((document.getElementById('fut-qtd')||{}).value)||0,
     arrobasPorContrato:330
   });
+  if(!norm.qtd){toast('⚠ Informe a quantidade de contratos');return;}
   var vencimento=(document.getElementById('fut-vencimento')||{}).value||'';
   var entry={
     id:id||('b3_'+Date.now()),
-    loteId:loteId,
+    operacao:operacao,
+    operationType:operacao,
+    lado:lado,
+    openingSide:lado,
+    loteId:operacao==='livre'?(loteId||''):loteId,
     tipo:(document.getElementById('fut-tipo')||{}).value||'bolsa',
     codigo:gerarCodigoB3(vencimento)||((document.getElementById('fut-codigo')||{}).value||'').trim()||'Contrato B3',
     vencimento:vencimento,
@@ -5066,9 +5208,11 @@ function salvarFuturo(){
     dataCompra:(document.getElementById('fut-data-compra')||{}).value||'',
     precoCompra:(document.getElementById('fut-preco-compra')||{}).value,
     corretagemArroba:finInputNum('fut-corretagem'),
-    custos:parseFloat((document.getElementById('fut-custos')||{}).value)||0,
+    custos:finNum((document.getElementById('fut-custos')||{}).value),
     obs:(document.getElementById('fut-obs')||{}).value.trim()||'',
-    criadoPor:id?(arr.find(function(c){return c.id===id;})||{}).criadoPor||currentUser:currentUser,
+    liquidacoes:antigo&&Array.isArray(antigo.liquidacoes)?antigo.liquidacoes:[],
+    status:antigo&&antigo.status==='cancelado'?'cancelado':undefined,
+    criadoPor:id?(antigo||{}).criadoPor||currentUser:currentUser,
     atualizadoEm:new Date().toISOString()
   };
   var i=arr.findIndex(function(c){return c.id===entry.id;});
@@ -5078,7 +5222,7 @@ function salvarFuturo(){
   renderFuturos();
   renderHome();
   if(document.getElementById('panel-lotes')&&document.getElementById('panel-lotes').style.display!=='none')renderLotes();
-  toast('✓ Contrato B3 salvo e vinculado ao lote');
+  toast('✓ Contrato B3 salvo');
 }
 function editarFuturo(id){
   var c=getFuturos().find(function(x){return x.id===id;});
@@ -5097,6 +5241,8 @@ function editarFuturo(id){
   }
   function set(id,val){var el=document.getElementById(id);if(el)el.value=val||'';}
   set('fut-id',c.id);
+  set('fut-operacao',futuroOperacao(c));
+  set('fut-lado',futuroLado(c));
   set('fut-lote',c.loteId);
   set('fut-tipo',c.tipo||'bolsa');
   set('fut-vencimento',c.vencimento);
@@ -5113,6 +5259,7 @@ function editarFuturo(id){
   set('fut-custos',c.custos);
   set('fut-obs',c.obs);
   var title=document.getElementById('fut-form-title');if(title)title.textContent='Editar contrato';
+  alternarOperacaoFuturo();
   atualizarCodigoB3();
   atualizarFuturoPreview();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -5124,6 +5271,84 @@ function deletarFuturo(id){
   renderHome();
   if(document.getElementById('panel-lotes')&&document.getElementById('panel-lotes').style.display!=='none')renderLotes();
 }
+function abrirModalLiquidarFuturo(id){
+  var c=getFuturos().find(function(x){return x.id===id;});
+  if(!c)return;
+  var r=futuroResultado(c);
+  if(r.status==='cancelado'||r.qtdAberta<=0){toast('⚠ Este contrato não possui saldo aberto');return;}
+  function set(id,val){var el=document.getElementById(id);if(el)el.value=val||'';}
+  set('fut-liquidar-id',c.id);
+  set('fut-liquidar-qtd',Math.max(1,r.qtdAberta));
+  set('fut-liquidar-data','');
+  set('fut-liquidar-preco','');
+  set('fut-liquidar-corretagem','0,00');
+  set('fut-liquidar-taxas','0,00');
+  set('fut-liquidar-obs','');
+  var saldo=document.getElementById('fut-liquidar-saldo');
+  if(saldo)saldo.textContent='Saldo aberto: '+fmtContratosB3(r.qtdAberta)+' contrato(s)';
+  var modal=document.getElementById('fut-liquidar-modal');
+  if(modal){modal.classList.add('show');modal.setAttribute('aria-hidden','false');}
+}
+function fecharModalLiquidarFuturo(){
+  var modal=document.getElementById('fut-liquidar-modal');
+  if(modal){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}
+}
+function confirmarLiquidacaoFuturo(){
+  var id=(document.getElementById('fut-liquidar-id')||{}).value||'';
+  var arr=getFuturos();
+  var i=arr.findIndex(function(c){return c.id===id;});
+  if(i<0)return;
+  var c=arr[i];
+  var r=futuroResultado(c);
+  var qtd=Math.round(parseFloat((document.getElementById('fut-liquidar-qtd')||{}).value)||0);
+  var preco=finNum((document.getElementById('fut-liquidar-preco')||{}).value);
+  if(qtd<=0||qtd>r.qtdAberta){toast('⚠ Informe uma quantidade válida até '+fmtContratosB3(r.qtdAberta)+' contrato(s)');return;}
+  if(!preco){toast('⚠ Informe o preço de liquidação');return;}
+  var liq={
+    id:'liq_'+Date.now(),
+    qtdContratos:qtd,
+    data:(document.getElementById('fut-liquidar-data')||{}).value||'',
+    preco:preco,
+    corretagemArroba:finNum((document.getElementById('fut-liquidar-corretagem')||{}).value),
+    taxas:finNum((document.getElementById('fut-liquidar-taxas')||{}).value),
+    obs:(document.getElementById('fut-liquidar-obs')||{}).value.trim()||''
+  };
+  c.liquidacoes=Array.isArray(c.liquidacoes)?c.liquidacoes:[];
+  c.liquidacoes.push(liq);
+  c.dataCompra=liq.data||c.dataCompra||'';
+  c.precoCompra=liq.preco;
+  c.status=undefined;
+  c.atualizadoEm=new Date().toISOString();
+  arr[i]=c;
+  saveFuturos(arr);
+  fecharModalLiquidarFuturo();
+  renderFuturos();
+  renderHome();
+  if(document.getElementById('panel-lotes')&&document.getElementById('panel-lotes').style.display!=='none')renderLotes();
+  toast('✓ Liquidação registrada');
+}
+function cancelarFuturo(id){
+  if(!confirm('Cancelar este contrato? O histórico será mantido.'))return;
+  var arr=getFuturos();
+  var i=arr.findIndex(function(c){return c.id===id;});
+  if(i<0)return;
+  arr[i].status='cancelado';
+  arr[i].atualizadoEm=new Date().toISOString();
+  saveFuturos(arr);
+  renderFuturos();
+  renderHome();
+  if(document.getElementById('panel-lotes')&&document.getElementById('panel-lotes').style.display!=='none')renderLotes();
+}
+function verLiquidacoesFuturo(id){
+  var c=getFuturos().find(function(x){return x.id===id;});
+  if(!c)return;
+  var liqs=liquidacoesFuturo(c);
+  if(!liqs.length){toast('Nenhuma liquidação registrada');return;}
+  alert(liqs.map(function(l,i){
+    var res=calcularResultadoLiquidacaoB3(c,l,normalizarQtdContratoB3(c).qtd);
+    return (i+1)+'. '+fmtContratosB3(l.qtdContratos)+' ctr · '+(l.data?dateBRFromIso(l.data):'sem data')+' · R$ '+fmtNum(l.preco,2)+'/@ · '+fmt(res);
+  }).join('\n'));
+}
 function renderFuturos(){
   fillFuturoLoteSelects();
   var lotes=lotesDisponiveisB3();
@@ -5131,27 +5356,39 @@ function renderFuturos(){
   lotes.forEach(function(l){loteMap[l.id]=l;});
   var arr=getFuturos().filter(function(c){
     if(!FULL_ACCESS.includes(currentUser)&&c.criadoPor&&c.criadoPor!==currentUser)return false;
-    return !c.loteId||loteMap[c.loteId];
+    return !c.loteId||loteMap[c.loteId]||getLotes().some(function(l){return l.id===c.loteId;});
   });
   var filtroStatus=(document.getElementById('fut-filter-status')||{}).value||'todos';
+  var filtroOperacao=(document.getElementById('fut-filter-operacao')||{}).value||'todos';
+  var filtroLado=(document.getElementById('fut-filter-lado')||{}).value||'todos';
   var filtroLote=(document.getElementById('fut-filter-lote')||{}).value||'todos';
+  var filtroCodigo=String((document.getElementById('fut-filter-codigo')||{}).value||'').trim().toUpperCase();
+  var filtroVenc=(document.getElementById('fut-filter-vencimento')||{}).value||'';
   var filtrados=arr.filter(function(c){
     var r=futuroResultado(c);
-    return (filtroStatus==='todos'||(filtroStatus==='liquidado'&&r.liquidado)||(filtroStatus==='aberto'&&!r.liquidado))
-      &&(filtroLote==='todos'||c.loteId===filtroLote);
+    var codigo=String(gerarCodigoB3(c.vencimento)||c.codigo||'').toUpperCase();
+    return (filtroStatus==='todos'||r.status===filtroStatus)
+      &&(filtroOperacao==='todos'||r.operacao===filtroOperacao)
+      &&(filtroLado==='todos'||r.lado===filtroLado)
+      &&(filtroLote==='todos'||(filtroLote==='livre'&&!c.loteId)||c.loteId===filtroLote)
+      &&(!filtroCodigo||codigo.indexOf(filtroCodigo)>=0)
+      &&(!filtroVenc||c.vencimento===filtroVenc);
   });
   var total={registros:arr.length,contratos:0,abertos:0,liquidados:0,arrobas:0,resultado:0};
   arr.forEach(function(c){
     var r=futuroResultado(c);
     total.contratos+=r.qtdContratos||0;
     total.arrobas+=r.arrobas;
-    if(r.liquidado){total.liquidados+=r.qtdContratos||0;total.resultado+=r.resultado;}else total.abertos+=r.qtdContratos||0;
+    total.abertos+=r.qtdAberta||0;
+    total.liquidados+=r.qtdLiquidada||0;
+    total.resultado+=r.resultado||0;
   });
   var sum=document.getElementById('fut-summary');
   if(sum){
     sum.innerHTML='<div class="fut-card primary"><div class="fut-card-label">Resultado B3</div><div class="fut-card-value">'+fmt(total.resultado)+'</div><div class="fut-card-sub">'+fmtContratosB3(total.liquidados)+' contrato(s) liquidado(s)</div></div>'
-      +'<div class="fut-card"><div class="fut-card-label">Lançamentos</div><div class="fut-card-value">'+total.registros+'</div><div class="fut-card-sub">'+fmtContratosB3(total.abertos)+' aberto(s) · '+fmtContratosB3(total.liquidados)+' liquidado(s)</div></div>'
-      +'<div class="fut-card"><div class="fut-card-label">Contratos protegidos</div><div class="fut-card-value">'+fmtContratosB3(total.contratos)+' ctr</div><div class="fut-card-sub">'+total.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ equivalentes</div></div>'
+      +'<div class="fut-card"><div class="fut-card-label">Lançamentos</div><div class="fut-card-value">'+total.registros+'</div><div class="fut-card-sub">'+fmtContratosB3(total.contratos)+' contrato(s) cadastrados</div></div>'
+      +'<div class="fut-card"><div class="fut-card-label">Contratos em aberto</div><div class="fut-card-value">'+fmtContratosB3(total.abertos)+' ctr</div><div class="fut-card-sub">Saldo ainda não liquidado</div></div>'
+      +'<div class="fut-card"><div class="fut-card-label">Contratos liquidados</div><div class="fut-card-value">'+fmtContratosB3(total.liquidados)+' ctr</div><div class="fut-card-sub">'+total.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ totais cadastradas</div></div>'
       +'<div class="fut-card"><div class="fut-card-label">Filtro atual</div><div class="fut-card-value">'+filtrados.length+'</div><div class="fut-card-sub">lançamento(s) na lista</div></div>';
   }
   var note=document.getElementById('fut-list-note');
@@ -5160,7 +5397,7 @@ function renderFuturos(){
   var mobileList=document.getElementById('fut-mobile-list');
   if(!list)return;
   if(!filtrados.length){
-    list.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-3);padding:24px;">Nenhum contrato encontrado.</td></tr>';
+    list.innerHTML='<tr><td colspan="13" style="text-align:center;color:var(--text-3);padding:24px;">Nenhum contrato encontrado.</td></tr>';
     if(mobileList)mobileList.innerHTML='<div class="home-empty-small">Nenhum contrato encontrado.</div>';
     return;
   }
@@ -5169,48 +5406,60 @@ function renderFuturos(){
   var cards=[];
   filtrados.forEach(function(c){
     var r=futuroResultado(c);
-    var lote=loteMap[c.loteId];
+    var lote=loteMap[c.loteId]||getLotes().find(function(l){return l.id===c.loteId;});
     var tipo=c.tipo==='direto'?'Direto':'Bolsa B3';
-    var st=r.liquidado?'<span class="badge st-receb">Liquidado</span>':'<span class="badge st-emb">Aberto</span>';
+    var st='<span class="badge '+futuroStatusClass(r.status)+'">'+escHtml(futuroStatusLabel(r.status))+'</span>';
     var contrato=escHtml(gerarCodigoB3(c.vencimento)||c.codigo||'Contrato B3');
     var mesContrato=mesAnoVencimentoB3(c.vencimento);
     var contratoComMes=contrato+(mesContrato?'<span class="fut-contract-month">'+escHtml(mesContrato)+'</span>':'');
-    var loteNome=escHtml(loteLabelB3(lote));
-    var loteStatus=escHtml(lote&&STATUS_CFG[lote.status]?STATUS_CFG[lote.status].label:'—');
+    var loteNome=escHtml(lote?loteLabelB3(lote):(c.operacaoNome||'Operação livre'));
+    var loteStatus=escHtml(lote&&STATUS_CFG[lote.status]?STATUS_CFG[lote.status].label:(r.operacao==='livre'?'Livre':'—'));
     var cobertura=lote?textoCoberturaB3(lote,(lote.orcamentos&&lote.orcamentos[0]),resultadoB3Lote(lote.id)):(fmtContratosB3(r.qtdContratos)+' ctr');
-    var venda='R$ '+(r.precoVenda||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@';
+    var abertura='R$ '+(r.precoVenda||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@';
     var vendaData=c.dataVenda?dateBRFromIso(c.dataVenda):'—';
-    var liq=r.liquidado?'R$ '+r.precoCompra.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@':'—';
-    var liqData=c.dataCompra?dateBRFromIso(c.dataCompra):'Aberto';
-    var resultado=r.liquidado?fmt(r.resultado):'—';
+    var liq=r.qtdLiquidada?'R$ '+(r.precoCompra||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@':'—';
+    var liqData=r.qtdLiquidada?(c.dataCompra?dateBRFromIso(c.dataCompra):'média'):'Aberto';
+    var resultado=r.qtdLiquidada?fmt(r.resultado):'—';
     var resClass=r.resultado>=0?'pos':'neg';
+    var actions=(r.qtdAberta>0&&r.status!=='cancelado'?'<button class="fut-action success" onclick="abrirModalLiquidarFuturo(\''+c.id+'\')">Liquidar</button>':'')
+      +(c.loteId?'<button class="fut-action" onclick="abrirLoteNoStatus(\''+c.loteId+'\')">Status</button>':'')
+      +'<button class="fut-action" onclick="editarFuturo(\''+c.id+'\')">Editar</button>'
+      +(r.liquidacoes.length?'<button class="fut-action" onclick="verLiquidacoesFuturo(\''+c.id+'\')">Histórico</button>':'')
+      +(r.status!=='cancelado'?'<button class="fut-action warn" onclick="cancelarFuturo(\''+c.id+'\')">Cancelar</button>':'')
+      +'<button class="fut-action danger" onclick="deletarFuturo(\''+c.id+'\')">Excluir</button>';
     rows.push('<tr>'
       +'<td>'+st+'</td>'
+      +'<td><span class="strong">'+(r.operacao==='livre'?'Livre':'Hedge')+'</span><div class="muted">'+escHtml(tipo)+'</div></td>'
       +'<td><span class="strong">'+loteNome+'</span><div class="muted">'+loteStatus+'</div></td>'
-      +'<td>'+contratoComMes+'<div class="muted">'+escHtml(tipo)+' · '+escHtml(cobertura)+'</div></td>'
-      +'<td>'+fmtContratosB3(r.qtdContratos||0)+' ctr<div class="muted">'+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></td>'
-      +'<td class="money">'+venda+'<div class="muted">'+vendaData+'</div></td>'
+      +'<td>'+contratoComMes+'<div class="muted">'+escHtml(c.vencimento||'Sem vencimento')+'</div></td>'
+      +'<td>'+escHtml(r.lado==='compra'?'Compra':'Venda')+'</td>'
+      +'<td>'+fmtContratosB3(r.qtdContratos||0)+' ctr</td>'
+      +'<td>'+fmtContratosB3(r.qtdAberta||0)+' ctr</td>'
+      +'<td>'+fmtContratosB3(r.qtdLiquidada||0)+' ctr</td>'
+      +'<td class="money">'+abertura+'<div class="muted">'+vendaData+'</div></td>'
       +'<td class="money">'+liq+'<div class="muted">'+liqData+'</div></td>'
       +'<td class="money '+resClass+'">'+resultado+'</td>'
-      +'<td><button class="fut-action" onclick="abrirLoteNoStatus(\''+c.loteId+'\')">Status</button><button class="fut-action" onclick="editarFuturo(\''+c.id+'\')">Editar</button><button class="fut-action danger" onclick="deletarFuturo(\''+c.id+'\')">Excluir</button></td>'
+      +'<td class="money">Em aberto</td>'
+      +'<td>'+actions+'</td>'
     +'</tr>');
     cards.push('<details class="fut-mobile-card">'
       +'<summary>'
         +'<div class="fut-mobile-top"><div><div class="fut-mobile-title">'+contratoComMes+'</div><div class="fut-mobile-sub">'+loteNome+' · '+loteStatus+'</div><div class="fut-mobile-expand">Toque para ver detalhes</div></div>'+st+'</div>'
         +'<div class="fut-mobile-quick">'
-          +'<div class="fut-mobile-quick-item"><div class="fut-mobile-quick-label">Contratos</div><div class="fut-mobile-quick-value">'+fmtContratosB3(r.qtdContratos||0)+' ctr · '+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></div>'
+          +'<div class="fut-mobile-quick-item"><div class="fut-mobile-quick-label">Contratos</div><div class="fut-mobile-quick-value">'+fmtContratosB3(r.qtdLiquidada)+'/'+fmtContratosB3(r.qtdContratos||0)+' ctr · '+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></div>'
           +'<div class="fut-mobile-quick-item"><div class="fut-mobile-quick-label">Resultado</div><div class="fut-mobile-quick-value '+resClass+'">'+resultado+'</div></div>'
         +'</div>'
       +'</summary>'
       +'<div class="fut-mobile-grid">'
-        +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Cobertura do lote</div><div class="fut-mobile-value">'+escHtml(cobertura)+'</div></div>'
-        +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Contratos protegidos</div><div class="fut-mobile-value">'+fmtContratosB3(r.qtdContratos||0)+' ctr<div class="muted">'+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></div></div>'
-        +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Venda</div><div class="fut-mobile-value">'+venda+'<div class="muted">'+vendaData+'</div></div></div>'
+        +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Tipo / lado</div><div class="fut-mobile-value">'+(r.operacao==='livre'?'Livre':'Hedge')+' · '+(r.lado==='compra'?'Compra':'Venda')+'</div></div>'
+        +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Cobertura</div><div class="fut-mobile-value">'+escHtml(cobertura)+'</div></div>'
+        +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Saldo</div><div class="fut-mobile-value">'+fmtContratosB3(r.qtdAberta)+' aberto(s)<div class="muted">'+fmtContratosB3(r.qtdLiquidada)+' liquidado(s)</div></div></div>'
+        +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Abertura</div><div class="fut-mobile-value">'+abertura+'<div class="muted">'+vendaData+'</div></div></div>'
         +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Liquidação</div><div class="fut-mobile-value">'+liq+'<div class="muted">'+liqData+'</div></div></div>'
         +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Resultado</div><div class="fut-mobile-value '+resClass+'">'+resultado+'</div></div>'
         +'<div class="fut-mobile-cell"><div class="fut-mobile-label">Tipo</div><div class="fut-mobile-value">'+escHtml(tipo)+'</div></div>'
       +'</div>'
-      +'<div class="fut-mobile-actions"><button class="fut-action" onclick="abrirLoteNoStatus(\''+c.loteId+'\')">Status</button><button class="fut-action" onclick="editarFuturo(\''+c.id+'\')">Editar</button><button class="fut-action danger" onclick="deletarFuturo(\''+c.id+'\')">Excluir</button></div>'
+      +'<div class="fut-mobile-actions">'+actions+'</div>'
     +'</details>');
   });
   list.innerHTML=rows.join('');
@@ -5365,14 +5614,22 @@ function renderContratosPrecoStatusHtml(lote){
     var r=futuroResultado(c);
     var tipo=c.tipo==='direto'?'Direto':'Bolsa B3';
     var codigo=gerarCodigoB3(c.vencimento)||c.codigo||'Contrato';
+    var statusLabel=futuroStatusLabel(r.status);
+    var statusClass=futuroStatusClass(r.status);
+    var liqLabel=r.qtdLiquidada?(fmt(r.precoCompra)+'/@'):'Aberto';
+    var liqSub=r.qtdLiquidada?(c.dataCompra?dateBRFromIso(c.dataCompra):'Preço médio'):'Sem liquidação';
+    var resultado=r.qtdLiquidada?fmt(r.resultado):'—';
+    var actions=(r.qtdAberta>0&&r.status!=='cancelado'?'<button type="button" class="fut-action success" onclick="abrirModalLiquidarFuturo(\''+c.id+'\')">Liquidar</button>':'')
+      +'<button type="button" class="fut-action" onclick="switchTab(\'futuros\');editarFuturo(\''+c.id+'\')">Editar</button>'
+      +(r.liquidacoes.length?'<button type="button" class="fut-action" onclick="verLiquidacoesFuturo(\''+c.id+'\')">Histórico</button>':'');
     return '<tr>'
-      +'<td><span class="badge '+(r.liquidado?'st-receb':'st-emb')+'">'+(r.liquidado?'Liquidado':'Aberto')+'</span><div class="muted">'+escHtml(tipo)+'</div></td>'
+      +'<td><span class="badge '+statusClass+'">'+escHtml(statusLabel)+'</span><div class="muted">'+escHtml(tipo)+'</div></td>'
       +'<td>'+escHtml(codigo)+'<div class="muted">'+escHtml(c.vencimento||'Sem vencimento')+'</div></td>'
-      +'<td>'+fmtContratosB3(r.qtdContratos)+' ctr<div class="muted">'+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></td>'
+      +'<td>'+fmtContratosB3(r.qtdLiquidada)+'/'+fmtContratosB3(r.qtdContratos)+' ctr<div class="muted">'+fmtContratosB3(r.qtdAberta)+' aberto(s)</div></td>'
       +'<td class="money">'+(r.precoVenda?fmt(r.precoVenda)+'/@':'—')+'<div class="muted">'+(c.dataVenda?dateBRFromIso(c.dataVenda):'—')+'</div></td>'
-      +'<td class="money">'+(r.liquidado?fmt(r.precoCompra)+'/@':'Aberto')+'<div class="muted">'+(c.dataCompra?dateBRFromIso(c.dataCompra):'Sem liquidação')+'</div></td>'
-      +'<td class="money '+(r.resultado>=0?'pos':'neg')+'">'+(r.liquidado?fmt(r.resultado):'—')+'</td>'
-      +'<td><button type="button" class="fut-action" onclick="switchTab(\'futuros\');editarFuturo(\''+c.id+'\')">Editar</button></td>'
+      +'<td class="money">'+liqLabel+'<div class="muted">'+liqSub+'</div></td>'
+      +'<td class="money '+(r.resultado>=0?'pos':'neg')+'">'+resultado+'</td>'
+      +'<td>'+actions+'</td>'
     +'</tr>';
   }).join('');
   var semFechamento=resumo.contratos&&!resumo.liquidados;
@@ -7060,14 +7317,23 @@ function renderDTabB3(){
   var cobertura=textoCoberturaB3(lote,(lote.orcamentos&&lote.orcamentos[0]),resumo,true);
   var rows=contratos.map(function(c){
     var r=futuroResultado(c);
+    var statusLabel=futuroStatusLabel(r.status);
+    var statusClass=futuroStatusClass(r.status);
+    var liqLabel=r.qtdLiquidada?'R$ '+(r.precoCompra||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@':'—';
+    var liqSub=r.qtdLiquidada?(c.dataCompra?dateBRFromIso(c.dataCompra):'Preço médio'):'Aberto';
+    var resultado=r.qtdLiquidada?fmt(r.resultado):'—';
+    var actions=(r.qtdAberta>0&&r.status!=='cancelado'?'<button class="fut-action success" onclick="abrirModalLiquidarFuturo(\''+c.id+'\')">Liquidar</button>':'')
+      +'<button class="fut-action" onclick="abrirLoteNoStatus(\''+lote.id+'\')">Status</button>'
+      +'<button class="fut-action" onclick="switchTab(\'futuros\');editarFuturo(\''+c.id+'\')">Editar</button>'
+      +(r.liquidacoes.length?'<button class="fut-action" onclick="verLiquidacoesFuturo(\''+c.id+'\')">Histórico</button>':'');
     return '<tr>'
-      +'<td>'+(r.liquidado?'<span class="badge st-receb">Liquidado</span>':'<span class="badge st-emb">Aberto</span>')+'</td>'
+      +'<td><span class="badge '+statusClass+'">'+escHtml(statusLabel)+'</span></td>'
       +'<td>'+escHtml(gerarCodigoB3(c.vencimento)||c.codigo||'Contrato B3')+'<div class="muted">'+escHtml(cobertura)+' · '+escHtml(mesAnoVencimentoB3(c.vencimento)||'Sem vencimento')+'</div></td>'
-      +'<td>'+fmtContratosB3(r.qtdContratos||0)+' ctr<div class="muted">'+r.arrobas.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @</div></td>'
+      +'<td>'+fmtContratosB3(r.qtdLiquidada)+'/'+fmtContratosB3(r.qtdContratos||0)+' ctr<div class="muted">'+fmtContratosB3(r.qtdAberta)+' aberto(s)</div></td>'
       +'<td class="money">R$ '+(r.precoVenda||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@</td>'
-      +'<td class="money">'+(r.liquidado?'R$ '+r.precoCompra.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'/@':'—')+'</td>'
-      +'<td class="money '+(r.resultado>=0?'pos':'neg')+'">'+(r.liquidado?fmt(r.resultado):'—')+'</td>'
-      +'<td><button class="fut-action" onclick="abrirLoteNoStatus(\''+lote.id+'\')">Status</button><button class="fut-action" onclick="switchTab(\'futuros\');editarFuturo(\''+c.id+'\')">Editar</button></td>'
+      +'<td class="money">'+liqLabel+'<div class="muted">'+liqSub+'</div></td>'
+      +'<td class="money '+(r.resultado>=0?'pos':'neg')+'">'+resultado+'</td>'
+      +'<td>'+actions+'</td>'
     +'</tr>';
   }).join('');
   el.innerHTML='<div class="fut-summary">'
@@ -9379,10 +9645,54 @@ function buildStatusExportData(){
   return {tab:'Status',title:'Relatório por Status',file:'VM_Agro_Status_'+exportDateFile(),filters:filters,sheets:[{name:'Resumo por Status',rows:buildStatusSummaryRows()},{name:'Lotes por Status',rows:buildStatusLotRows()}]};
 }
 function buildB3ExportData(){
-  var filters=[['Status',exportSelectText('fut-filter-status')],['Lote',exportSelectText('fut-filter-lote')]];
+  var filters=[
+    ['Status',exportSelectText('fut-filter-status')],
+    ['Tipo de operação',exportSelectText('fut-filter-operacao')],
+    ['Lado',exportSelectText('fut-filter-lado')],
+    ['Lote',exportSelectText('fut-filter-lote')],
+    ['Código',exportVal('fut-filter-codigo')],
+    ['Vencimento',exportVal('fut-filter-vencimento')]
+  ];
   var resumo=exportSummaryCards('#panel-futuros','.fut-card','.fut-card-label','.fut-card-value','.fut-card-sub');
-  var contratos=exportRowsFromTable('#panel-futuros','.fut-table');
-  if(contratos.length&&contratos[0][contratos[0].length-1]==='Ações')contratos.forEach(function(r){r.pop();});
+  var lotes=lotesDisponiveisB3();
+  var loteMap={};
+  lotes.forEach(function(l){loteMap[l.id]=l;});
+  var filtroStatus=(document.getElementById('fut-filter-status')||{}).value||'todos';
+  var filtroOperacao=(document.getElementById('fut-filter-operacao')||{}).value||'todos';
+  var filtroLado=(document.getElementById('fut-filter-lado')||{}).value||'todos';
+  var filtroLote=(document.getElementById('fut-filter-lote')||{}).value||'todos';
+  var filtroCodigo=String((document.getElementById('fut-filter-codigo')||{}).value||'').trim().toUpperCase();
+  var filtroVenc=(document.getElementById('fut-filter-vencimento')||{}).value||'';
+  var contratos=[['Status','Tipo operação','Lote / operação','Código','Vencimento','Lado','Qtd original','Qtd aberta','Qtd liquidada','Preço abertura','Data abertura','Liquidação média','Resultado realizado','Custos']];
+  getFuturos().filter(function(c){
+    var r=futuroResultado(c);
+    var codigo=String(gerarCodigoB3(c.vencimento)||c.codigo||'').toUpperCase();
+    return (filtroStatus==='todos'||r.status===filtroStatus)
+      &&(filtroOperacao==='todos'||r.operacao===filtroOperacao)
+      &&(filtroLado==='todos'||r.lado===filtroLado)
+      &&(filtroLote==='todos'||(filtroLote==='livre'&&!c.loteId)||c.loteId===filtroLote)
+      &&(!filtroCodigo||codigo.indexOf(filtroCodigo)>=0)
+      &&(!filtroVenc||c.vencimento===filtroVenc);
+  }).forEach(function(c){
+    var r=futuroResultado(c);
+    var lote=loteMap[c.loteId]||getLotes().find(function(l){return l.id===c.loteId;});
+    contratos.push([
+      futuroStatusLabel(r.status),
+      r.operacao==='livre'?'Livre / especulativa':'Hedge vinculado a lote',
+      lote?loteLabelB3(lote):(c.operacaoNome||'Operação livre'),
+      gerarCodigoB3(c.vencimento)||c.codigo||'Contrato B3',
+      c.vencimento||'',
+      r.lado==='compra'?'Compra':'Venda',
+      fmtContratosB3(r.qtdContratos),
+      fmtContratosB3(r.qtdAberta),
+      fmtContratosB3(r.qtdLiquidada),
+      r.precoVenda?fmt(r.precoVenda)+'/@':'',
+      c.dataVenda?dateBRFromIso(c.dataVenda):'',
+      r.qtdLiquidada?fmt(r.precoCompra)+'/@':'Aberto',
+      r.qtdLiquidada?fmt(r.resultado):'Em aberto',
+      fmt(r.custos||0)
+    ]);
+  });
   return {tab:'B3',title:'Relatório B3',file:'VM_Agro_B3_'+exportDateFile(),filters:filters,sheets:[{name:'Resumo B3',rows:resumo},{name:'Contratos',rows:contratos}]};
 }
 function buildCalcExportData(){
@@ -9666,6 +9976,30 @@ initCalcResizableColumns();
 })();
 
 </script>
+<div class="fut-modal-backdrop" id="fut-liquidar-modal" aria-hidden="true">
+  <div class="fut-modal" role="dialog" aria-modal="true" aria-labelledby="fut-liquidar-title">
+    <div class="fut-modal-head">
+      <div>
+        <div class="fut-modal-title" id="fut-liquidar-title">Liquidar contrato</div>
+        <div class="fut-modal-sub" id="fut-liquidar-sub">Informe a quantidade e o preço da liquidação.</div>
+      </div>
+      <button class="fut-modal-close" type="button" onclick="fecharModalLiquidarFuturo()">×</button>
+    </div>
+    <input type="hidden" id="fut-liquidar-id">
+    <div class="fut-modal-grid">
+      <div class="field"><label>Qtd contratos a liquidar</label><input type="number" id="fut-liquidar-qtd" min="1" step="1"><div class="hint" id="fut-liquidar-saldo">Saldo aberto: —</div></div>
+      <div class="field"><label>Data da liquidação</label><input type="date" id="fut-liquidar-data"></div>
+      <div class="field"><label>Preço liquidação (R$/@)</label><input type="text" id="fut-liquidar-preco" inputmode="decimal" data-decimal="1"></div>
+      <div class="field"><label>Corretagem / taxas liquidação (R$/@)</label><input type="text" id="fut-liquidar-corretagem" inputmode="decimal" data-decimal="1" value="0,00"></div>
+      <div class="field fut-span-4"><label>Taxas adicionais (R$)</label><input type="text" id="fut-liquidar-taxas" inputmode="decimal" data-decimal="1" value="0,00"></div>
+      <div class="field fut-span-4"><label>Observação</label><textarea id="fut-liquidar-obs" rows="2" class="ep-textarea" placeholder="Observação da liquidação parcial..."></textarea></div>
+    </div>
+    <div class="fut-modal-actions">
+      <button type="button" class="cancel" onclick="fecharModalLiquidarFuturo()">Cancelar</button>
+      <button type="button" class="save" onclick="confirmarLiquidacaoFuturo()">Confirmar liquidação</button>
+    </div>
+  </div>
+</div>
 <div id="toast"></div>
 </body>
 </html>
