@@ -4362,6 +4362,27 @@ function textoCoberturaB3(lote,orc,resumo,mostrarMetaDecimal){
   var meta=fmtContratosB3(nec.metaOperacional);
   return fmtContratosB3(contratosTravados)+'/'+meta+' ctr';
 }
+function coberturaStatusB3(lote,orc,resumo){
+  resumo=resumo||resultadoB3Lote(lote&&lote.id);
+  var nec=necessidadeContratosB3(lote,orc);
+  var contratosTravados=parseFloat(resumo.contratos!==undefined?resumo.contratos:resumo.contratosB3)||0;
+  if(!nec.necessarios){
+    return {
+      cobertura:contratosTravados?fmtContratosB3(contratosTravados)+' ctr':'Sem meta',
+      remanescente:'',
+      meta:0,
+      travados:contratosTravados
+    };
+  }
+  var meta=parseFloat(nec.necessarios)||0;
+  var remanescente=Math.max(0,meta-contratosTravados);
+  return {
+    cobertura:fmtContratosB3(contratosTravados)+'/'+fmtMetaContratosB3(meta)+' ctr',
+    remanescente:fmtMetaContratosB3(remanescente)+' ctr aberto(s)',
+    meta:meta,
+    travados:contratosTravados
+  };
+}
 function normalizarFrigorifico(f){
   f=f||{};
   var oldBonus=f.bonuses?(f.bonuses.outro||f.bonuses.nelore||0):0;
@@ -6879,11 +6900,13 @@ function renderLotes(){
     var eficienciaVal=o&&metric.eficienciaBio?(fmtNum(metric.eficienciaBio,2)+' kg MS/@'):'—';
     var eficienciaChegadaVal=o&&metric.eficienciaBioChegada?(fmtNum(metric.eficienciaBioChegada,2)+' kg MS/@'):'—';
     var b3Nec=necessidadeContratosB3(l,o);
-    var b3Cobertura=textoCoberturaB3(l,o,metric,true);
+    var b3Status=coberturaStatusB3(l,o,metric);
+    var b3Cobertura=b3Status.cobertura;
+    var b3Remanescente=b3Status.remanescente;
     var b3ProjLine=(b3Nec.necessarios&&Math.abs(b3Nec.necessarios-(b3Nec.metaOperacional||0))>.05)
       ?'<span class="status-cell-sub">Projeção '+fmtMetaContratosB3(b3Nec.necessarios)+' ctr</span>'
       :'';
-    var b3Val=metric.contratosB3?('Travado · '+b3Cobertura+' · '+metric.arrobasB3.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ · venda '+fmt(metric.b3VendaMedia||0)+'/@'+(metric.b3CompraMedia?' · liq. '+fmt(metric.b3CompraMedia)+'/@':' · aberto')):('Sem trava · '+b3Cobertura);
+    var b3Val=metric.contratosB3?('Travado · '+b3Cobertura+(b3Remanescente?' · '+b3Remanescente:'')+' · '+metric.arrobasB3.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ · venda '+fmt(metric.b3VendaMedia||0)+'/@'+(metric.b3CompraMedia?' · liq. '+fmt(metric.b3CompraMedia)+'/@':' · aberto')):('Sem trava · '+b3Cobertura+(b3Remanescente?' · '+b3Remanescente:''));
     var filtroLote=cardTitle+(vend?' '+vend.nome:'')+(tipo?' '+tipo:'')+(metric.real?' realizado':' simulado');
     var attrs=' data-qtd-raw="'+qtdRaw+'" data-faturamento-raw="'+(o?faturamento:0)+'" data-capital-raw="'+(o?capital:0)+'" data-lucro-raw="'+(o?lucro:0)+'" data-prazo-dias-raw="'+prazoDias+'"'
       +' data-filter-status="'+escHtml(sc.label)+'"'
@@ -6913,6 +6936,7 @@ function renderLotes(){
     var b3Cell='<div class="status-cell" title="'+escHtml(b3Val)+'">'
       +'<span class="b3-lock-pill '+(metric.contratosB3?'locked':'open')+'">'+(metric.contratosB3?'Travado':'Sem trava')+'</span>'
       +'<span class="status-cell-sub">'+escHtml(b3Cobertura)+(metric.arrobasB3?' · '+metric.arrobasB3.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @':'')+'</span>'
+      +(b3Remanescente?'<span class="status-cell-sub">'+escHtml(b3Remanescente)+'</span>':'')
       +b3ProjLine
       +(metric.contratosB3?'<span class="status-cell-sub">Venda '+fmt(metric.b3VendaMedia||0)+'/@</span>':'')
       +(metric.contratosB3&&metric.b3CompraMedia?'<span class="status-cell-sub">Liq. '+fmt(metric.b3CompraMedia||0)+'/@</span>':'')
