@@ -4683,7 +4683,7 @@ function renderHome(){
       var ent=parseISO(o.dataEntradaPrev);
       var ab=addDays(ent,o.dias||0);
       var rec=addDays(ent,(o.dias||0)+(o.prazoPag||0));
-      var titulo=(o.label||(l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal]?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'Lote')))+' · '+(l.qtd||0)+' cab.';
+      var titulo=(getLoteNomeReferencia(l,o)||(l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal]?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'Lote')))+' · '+(l.qtd||0)+' cab.';
       if((l.status==='embarque'||l.status==='confinando'||l.status==='escalado')&&ab)schedule.push({l:l,date:ab,tipo:'Abate',titulo:titulo,sub:nomeConfinamento(l,m),status:l.status,d:daysDiff(ab)});
       if(l.status==='abatido'&&rec)schedule.push({l:l,date:rec,tipo:'Recebimento',titulo:titulo,sub:nomeConfinamento(l,m),status:l.status,d:daysDiff(rec)});
     });
@@ -4741,7 +4741,7 @@ function renderHome(){
         var frigNome=o.frigNome||(l.frigId?(getFrigs().find(function(f){return f.id===l.frigId;})||{}).nome||null:null);
         var m=loteMetric(l);
         all.push({lid:l.id,dot:SCOL[l.status]||'var(--text-3)',
-          name:(o.label||(l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal]?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'A definir'))+' · '+l.qtd+' cab.'),
+          name:(getLoteNomeReferencia(l,o)||(l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal]?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'A definir'))+' · '+l.qtd+' cab.'),
           vendNome:vn,frigNome:frigNome||null,
           time:o.data+(o.hora?' '+o.hora:''),lucro:m.lucro,rent:m.rentMes,oid:o.id,status:l.status});
       });
@@ -4829,7 +4829,8 @@ function renderHomeDashboardNovo(lotes){
     return 'Manual / sem boitel';
   }
   function tituloLote(l,o){
-    if(o&&o.label)return o.label;
+    var nome=getLoteNomeReferencia(l,o);
+    if(nome)return nome;
     var tipo=(l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal])?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'Lote');
     return tipo+' · '+(l.qtd||o&&o.qtd||0)+' cab.';
   }
@@ -5000,7 +5001,8 @@ function renderHomeDashboardNovo(lotes){
 function loteLabelB3(lote){
   if(!lote)return 'Lote não encontrado';
   var o=lote.orcamentos&&lote.orcamentos[0];
-  if(o&&o.label)return o.label;
+  var nome=getLoteNomeReferencia(lote,o);
+  if(nome)return nome;
   var tipo=(lote.tipoAnimal&&TIPO_LABEL[lote.tipoAnimal])?TIPO_LABEL[lote.tipoAnimal]:(lote.tipoCustom||'Lote');
   return tipo+' · '+(lote.qtd||0)+' cab.';
 }
@@ -5782,7 +5784,7 @@ function openEditPanel(loteId, cardEl){
       +'<div class="ep-result-summary">'
         +'<div class="ep-rs-item">Modalidade<strong>'+calcModeloLabel(o.modeloConta||'msop')+'</strong></div>'
         +'<div class="ep-rs-item">Confinamento<strong>'+escHtml(simConfinamento)+'</strong></div>'
-        +'<div class="ep-rs-item">Lote<strong>'+escHtml(o.label||('Lote '+((o.qtd||lote.qtd||'')+' cab.')))+'</strong></div>'
+        +'<div class="ep-rs-item">Lote<strong>'+escHtml(getLoteNomeReferencia(lote,o)||('Lote '+((o.qtd||lote.qtd||'')+' cab.')))+'</strong></div>'
         +'<div class="ep-rs-item">Qtd<strong>'+(o.qtd||lote.qtd||'—')+' cab.</strong></div>'
         +'<div class="ep-rs-item">Entrada prevista<strong>'+(simEntrada?_fmtDataBR(_addDias(simEntrada,0)):'—')+'</strong></div>'
         +'<div class="ep-rs-item">Abate previsto<strong>'+simAbate+'</strong></div>'
@@ -6082,7 +6084,7 @@ function excluirLotePainel(){
   var lote=arr.find(function(l){return l.id===_editLoteId;});
   if(!lote)return;
   var o=lote.orcamentos&&lote.orcamentos[0];
-  var nome=(o&&o.label)||('Lote '+((lote.qtd||'')+' cab.'));
+  var nome=getLoteNomeReferencia(lote,o)||('Lote '+((lote.qtd||'')+' cab.'));
   if(!confirm('Excluir definitivamente este lote?\n\n'+nome+'\n\nEssa ação não pode ser desfeita.'))return;
   var id=_editLoteId;
   saveLotes(arr.filter(function(l){return l.id!==id;}));
@@ -6843,7 +6845,8 @@ function renderLotes(){
     var o=l.orcamentos&&l.orcamentos[0];
     var barColor=STATUS_COLORS[l.status]||ST_COLORS[l.status]||'var(--border)';
     var tipo=l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal]?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'');
-    var cardTitle=(o&&o.label)?o.label:(vend?vend.nome:(tipo?tipo+' · '+l.qtd+' cab.':'Lote '+(l.qtd?l.qtd+' cab.':'sem vendedor')));
+    var nomeReferencia=getLoteNomeReferencia(l,o);
+    var cardTitle=nomeReferencia||((vend?vend.nome:(tipo?tipo+' · '+l.qtd+' cab.':'Lote '+(l.qtd?l.qtd+' cab.':'sem vendedor'))));
     var confinamento=(o&&o.precificacaoSnapshot&&o.precificacaoSnapshot.boitelNome)
       ||(o&&o.boitelSnapshot&&(o.boitelSnapshot.boitelNome||o.boitelSnapshot.nome))
       ||(o&&o.boitelNome)||l.boitelNome||'Manual / sem boitel';
@@ -6969,7 +6972,8 @@ function renderLotes(){
     var o=l.orcamentos&&l.orcamentos[0];
     var sc=STATUS_CFG[l.status]||STATUS_CFG.embarque;
     var tipo=l.tipoAnimal&&TIPO_LABEL[l.tipoAnimal]?TIPO_LABEL[l.tipoAnimal]:(l.tipoCustom||'');
-    var cardTitle=(o&&o.label)?o.label:(vend?vend.nome:(tipo?tipo+' · '+l.qtd+' cab.':'Lote '+(l.qtd?l.qtd+' cab.':'sem vendedor')));
+    var nomeReferencia=getLoteNomeReferencia(l,o);
+    var cardTitle=nomeReferencia||((vend?vend.nome:(tipo?tipo+' · '+l.qtd+' cab.':'Lote '+(l.qtd?l.qtd+' cab.':'sem vendedor'))));
     var confinamento=(o&&o.precificacaoSnapshot&&o.precificacaoSnapshot.boitelNome)
       ||(o&&o.boitelSnapshot&&(o.boitelSnapshot.boitelNome||o.boitelSnapshot.nome))
       ||(o&&o.boitelNome)||l.boitelNome||'Manual / sem boitel';
@@ -7289,8 +7293,12 @@ function renderLoteDetailHeader(){
   const lote=getLotes().find(l=>l.id===activeLoteDetailId);if(!lote)return;
   const vend=getVends().find(v=>v.id===lote.vendedorId);
   const sc=STATUS_CFG[lote.status]||STATUS_CFG.embarque;
-  document.getElementById('detail-vend-nome').innerHTML=vend?vend.nome:'<em style="color:var(--text-3)">A definir</em>';
-  document.getElementById('detail-lote-sub').innerHTML=[lote.tipoCustom||labelRaca(lote.tipoAnimal)||'A definir',lote.qtd+' cab.',lote.pesoMedio+'kg entrada','R$'+lote.precoKg+'/kg',lote.distanciaKm+'km'].join(' · ');
+  const o=(lote.orcamentos&&lote.orcamentos[0])||null;
+  const nomeRef=getLoteNomeReferencia(lote,o);
+  document.getElementById('detail-vend-nome').innerHTML=nomeRef?escHtml(nomeRef):(vend?escHtml(vend.nome):'<em style="color:var(--text-3)">A definir</em>');
+  const sub=[lote.tipoCustom||labelRaca(lote.tipoAnimal)||'A definir',lote.qtd+' cab.',lote.pesoMedio+'kg entrada','R$'+lote.precoKg+'/kg',lote.distanciaKm+'km'];
+  if(nomeRef)sub.unshift(vend?('Vendedor: '+vend.nome):'Vendedor: A definir');
+  document.getElementById('detail-lote-sub').innerHTML=sub.map(escHtml).join(' · ');
   const badge=document.getElementById('detail-badge');badge.className='badge '+sc.cls;badge.textContent=sc.label;
   document.getElementById('detail-status-sel').value=lote.status;
 }
@@ -7434,7 +7442,7 @@ function renderDTabOrcamentos(){
     ${orcs.map((o,i)=>`<div class="orc-card">
       <div class="orc-card-header">
         <div><div style="font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">Simulação ${orcs.length-i} <span style="font-size:10px;color:var(--accent);border-radius:5px;padding:2px 8px;background:rgba(13,27,42,.08);font-weight:700;">${calcModeloLabel(o.modeloConta||'msop')}</span> ${o.aprovado?'<span style="font-size:10px;background:rgba(107,112,86,.12);color:var(--green);border-radius:5px;padding:2px 8px;font-weight:700;">✓ APROVADO</span>':'<span style="font-size:10px;background:var(--surface2);color:var(--text-3);border-radius:5px;padding:2px 8px;font-weight:600;">Em análise</span>'} ${i===0?'<span style="font-size:10px;color:var(--accent);border-radius:5px;padding:2px 8px;background:rgba(13,27,42,.08);font-weight:700;">RECENTE</span>':''}</div>
-        <div class="orc-card-meta">${o.label?'<strong>'+o.label+'</strong> · ':''}${o.data}${o.hora?' '+o.hora:''} · por ${o.user} · ${o.frigNome?'Frig.: '+o.frigNome:''}</div></div>
+        <div class="orc-card-meta">${getLoteNomeReferencia(lote,o)?'<strong>'+escHtml(getLoteNomeReferencia(lote,o))+'</strong> · ':''}${o.data}${o.hora?' '+o.hora:''} · por ${o.user} · ${o.frigNome?'Frig.: '+o.frigNome:''}</div></div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="btn-ic-ed" onclick="editarOrcamento('${lote.id}',${i})">Editar na calculadora</button>
           <button class="btn-orc-del" onclick="deletarOrcamento('${lote.id}',${i})">✕</button>
@@ -7462,6 +7470,22 @@ function _prefer(){
     if(arguments[i]!==undefined&&arguments[i]!==null&&arguments[i]!=='')return arguments[i];
   }
   return undefined;
+}
+function getLoteNomeReferencia(lote,orc){
+  return (_prefer(
+    lote&&lote.referenceName,
+    lote&&lote.label,
+    lote&&lote.nomeReferencia,
+    lote&&lote.name,
+    orc&&orc.label,
+    ''
+  )||'').toString().trim();
+}
+function setLoteNomeReferencia(lote,nome){
+  if(!lote)return;
+  var limpo=(nome||'').toString().trim();
+  lote.referenceName=limpo||null;
+  lote.label=limpo||null;
 }
 function _setCalcValue(id,val){
   if(val===undefined||val===null)return;
@@ -7568,17 +7592,17 @@ function editarOrcamento(loteId,idx){
   );
 
   var labelEl=document.getElementById('orc-label-main')||document.getElementById('orc-label');
-  if(labelEl)labelEl.value=o.label||'';
+  if(labelEl)labelEl.value=getLoteNomeReferencia(lote,o)||'';
   limparIndicadoresBiometriaCalc();
   var res=document.getElementById('resultado');if(res)res.style.display='none';
   var card=document.getElementById('orc-action-card');if(card)card.style.display='none';
-  var opts=document.getElementById('calc-orc-opts');if(opts)opts.style.display='none';
+  var opts=document.getElementById('calc-orc-opts');if(opts)opts.style.display='block';
   var ctx=document.getElementById('calc-context');if(ctx)ctx.style.display='flex';
   var num=(lote.orcamentos.length-idx);
   _setCalcValue('ctx-label','Editando: Simulação '+num);
   var ctxLabel=document.getElementById('ctx-label');if(ctxLabel)ctxLabel.textContent='Editando: Simulação '+num;
   var ctxSub=document.getElementById('ctx-sub');
-  if(ctxSub)ctxSub.textContent=(o.data||'')+(o.hora?' '+o.hora:'')+' · ao aprovar, será salva uma nova simulação';
+  if(ctxSub)ctxSub.textContent=(o.data||'')+(o.hora?' '+o.hora:'')+' · editando o mesmo lote, com status preservado';
   _orcAprovado=false;
   _lastCalcBoitel=null;
   atualizarHintPreco();
@@ -7839,7 +7863,10 @@ function simularLote(id){
   const p=getParams();const a=getRacas()[lote.tipoAnimal]||DEFAULT_RACAS.nelore;
   calcMode='lote';activeLoteId=id;activeOrcEditIndex=null;activeLoteReturnStatus=lote.status||'embarque';
   setCalcModelo('msop',true);
+  populateCalcVendSelect();
   populateBoitelSelect('');
+  _setCalcValue('orc-label',getLoteNomeReferencia(lote,null)||'');
+  _setCalcValue('calc-vend',lote.vendedorId||'');
   document.getElementById('tipoAnimal').value=lote.tipoAnimal||'';
   _setCalcValue('tipoAnimalCustom',lote.tipoCustom||labelRaca(lote.tipoAnimal)||'');
   _setCalcValue('qtd',lote.qtd);_setCalcValue('pesoCom',lote.pesoMedio);
@@ -7873,9 +7900,8 @@ function simularLote(id){
   var naoBtn=document.getElementById('orc-nao-btn');
   if(naoBtn){naoBtn.disabled=false;naoBtn.textContent='Manter em análise';}
   if(simBtn){simBtn.disabled=false;simBtn.textContent='Aprovar e enviar ao Status';}
-  // Hide optional opts when linked to lote (lote already has vendor)
   const optsEl=document.getElementById('calc-orc-opts');
-  if(optsEl)optsEl.style.display='none';
+  if(optsEl)optsEl.style.display='block';
   switchTab('calc');
   calcular({silent:true,auto:true,noScroll:true});
 }
@@ -8207,6 +8233,7 @@ function salvarResultadoNoLote(){
     return false;
   }
   var now=new Date();
+  var loteNomeReferencia=((document.getElementById('orc-label-main')||{value:''}).value.trim()||(document.getElementById('orc-label')||{value:''}).value.trim())||'';
   var tipoVal=document.getElementById('tipoAnimal').value;
   var tipoCustom=(document.getElementById('tipoAnimalCustom')||{value:''}).value.trim();
   var valorKGCalc=_precoModeAt?(g('valorAt_compra')*(g('rendEntrada')/100)/15):g('valorKG');
@@ -8249,7 +8276,7 @@ function salvarResultadoNoLote(){
     precificacaoSnapshot:precificacaoSnapshot,
     boitelSnapshot:boitelIdAtual?Object.assign({id:boitelIdAtual,nome:boitelNomeCongelado},precificacaoSnapshot):null,
     vendedorId_orc:(document.getElementById('calc-vend')||{value:''}).value||null,
-    label:((document.getElementById('orc-label-main')||{value:''}).value.trim()||(document.getElementById('orc-label')||{value:''}).value.trim())||null,
+    label:loteNomeReferencia||null,
     dataEntradaPrev:(document.getElementById('dataEntradaPrev')||{value:''}).value||null,
     qtd:g('qtd'),pesoCom:g('pesoCom'),gmd:g('gmd'),dias:g('dias'),
     rendE_pct:g('rendEntrada'),rendA_pct:g('rendAbate'),consPC_pct:g('consumoMS'),
@@ -8285,7 +8312,8 @@ function salvarResultadoNoLote(){
       }
       arr[i].status=preservedStatus;
       statusDestino=preservedStatus;
-      if(calcVend)arr[i].vendedorId=calcVend;
+      setLoteNomeReferencia(arr[i],loteNomeReferencia);
+      arr[i].vendedorId=calcVend||null;
       arr[i].tipoAnimal=tipoVal;
       arr[i].tipoCustom=tipoCustom||null;
       arr[i].qtd=g('qtd');
@@ -8300,6 +8328,7 @@ function salvarResultadoNoLote(){
     var novoLote={
       id:'lote_'+Date.now(),dataCriacao:orc.data,criadoPor:currentUser,
       status:'embarque',vendedorId:calcVend,
+      referenceName:loteNomeReferencia||null,label:loteNomeReferencia||null,
       tipoAnimal:tipoVal,tipoCustom:tipoCustom||null,
       qtd:g('qtd'),pesoMedio:g('pesoCom'),precoKg:valorKGCalc,distanciaKm:g('freteKm'),
       obs:'',relatorio:'',arquivos:[],videosEntrada:[],videosSaida:[],
@@ -9698,7 +9727,7 @@ function buildB3ExportData(){
 function buildCalcExportData(){
   var dados=[
     ['Campo','Valor'],
-    ['Nome/referência',exportVal('nomeRef')],
+    ['Nome/referência',exportVal('orc-label')],
     ['Vendedor',exportVal('calc-vend')],
     ['Raça/categoria',exportVal('tipoCustom')],
     ['Quantidade de animais',exportVal('qtd')],
