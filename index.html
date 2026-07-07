@@ -817,8 +817,25 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .status-table{width:100%;min-width:1320px;}
 .status-head,.status-filter-row,.status-row{display:grid;grid-template-columns:88px 48px 92px minmax(220px,1.35fr) 128px 58px 82px 82px 92px minmax(104px,.95fr) minmax(104px,.95fr) minmax(94px,.85fr) 68px 68px 96px 96px;align-items:center;}
   .status-head{background:#f6f9fb;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;}
-  .status-head-cell{padding:10px 9px;font-size:8.5px;font-weight:850;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3);white-space:nowrap;}
+  .status-head-cell{position:relative;padding:10px 9px;font-size:8.5px;font-weight:850;letter-spacing:.9px;text-transform:uppercase;color:var(--text-3);white-space:nowrap;cursor:pointer;user-select:none;}
   .status-head-cell:first-child{text-align:center;}
+  .status-head-cell:hover{color:var(--accent);}
+  .status-sort-mark{margin-left:4px;font-size:9px;color:var(--accent);}
+  .status-col-resizer{position:absolute;right:-4px;top:0;width:9px;height:100%;cursor:col-resize;z-index:4;border-radius:99px;}
+  .status-head-cell:hover .status-col-resizer{background:rgba(201,162,78,.18);}
+  .status-col-hidden{padding-left:0!important;padding-right:0!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important;}
+  .status-viewbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;}
+  .status-view-actions{position:relative;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .status-view-btn{height:32px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--text);font-family:'Inter',sans-serif;font-size:10px;font-weight:850;letter-spacing:.2px;padding:0 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(13,27,42,.04);}
+  .status-view-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .status-column-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:30;width:260px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 18px 42px rgba(13,27,42,.18);padding:14px;display:none;}
+  .status-column-panel.open{display:block;}
+  .status-column-panel-title{font-size:13px;font-weight:850;color:var(--text);margin-bottom:6px;}
+  .status-column-panel-sub{font-size:10px;color:var(--text-3);line-height:1.35;margin-bottom:10px;}
+  .status-column-option{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid rgba(216,203,181,.55);padding:8px 0;font-size:11px;font-weight:700;color:var(--text-2);}
+  .status-column-option input{width:16px;height:16px;accent-color:var(--accent);}
+  .status-sort-tools{display:flex;align-items:center;gap:6px;}
+  .status-sort-tools select{height:32px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--text);font-size:10px;font-weight:750;padding:0 28px 0 10px;outline:none;}
   .status-filter-row{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:37px;z-index:2;}
   .status-filter-cell{padding:6px 6px;}
   .status-filter-control{position:relative;width:100%;}
@@ -841,9 +858,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .status-cell-title{display:inline;min-width:0;font-weight:850;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .status-cell-sub{display:none;margin-top:2px;font-size:10px;color:var(--text-3);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .status-row>.status-cell:nth-child(4){display:flex;align-items:center;gap:8px;}
-  .status-row>.status-cell:nth-child(5){display:flex;align-items:center;gap:6px;}
-  .status-row>.status-cell:nth-child(5) .status-cell-sub{display:inline;margin:0;font-size:11px;}
-  .status-row>.status-cell:nth-child(5) .status-cell-sub:nth-of-type(n+2){display:none;}
+  .status-row>.status-cell:nth-child(5){display:flex;align-items:center;gap:8px;}
+  .status-row>.status-cell:nth-child(5) .status-cell-sub{display:inline;margin:0;font-size:11px;line-height:1.1;}
+  .status-row>.status-cell:nth-child(5) .b3-coverage-main{font-weight:850;color:var(--text);}
   .status-badge-cell{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;}
   .status-drag-dot{width:7px;height:26px;border-radius:99px;flex-shrink:0;background:var(--border);}
   .status-table-note{font-size:10px;color:var(--text-3);margin:8px 2px 0;}
@@ -1168,6 +1185,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 	  @media(max-width:640px){
 	    #panel-lotes{width:100%;max-width:100%;margin-left:0;transform:none;overflow-x:hidden;}
+	    #panel-lotes .status-viewbar{display:none!important;}
 	    #panel-lotes .status-summary{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 	    #panel-lotes .status-total-card{padding:10px;border-radius:12px;}
 	    #panel-lotes .status-total-label{font-size:8px;letter-spacing:.75px;}
@@ -2911,11 +2929,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <div class="field fut-span-3"><label>Código / vencimento B3</label><input type="text" id="fut-codigo" placeholder="Ex: BGIU26" readonly><div class="hint">Gerado automaticamente pelo vencimento.</div></div>
             <div class="field fut-span-3"><label>Vencimento</label><input type="month" id="fut-vencimento" onchange="atualizarCodigoB3();atualizarFuturoPreview()"></div>
             <div class="field fut-span-3"><label>Data da abertura</label><input type="date" id="fut-data-venda"></div>
-            <div class="field fut-span-3"><label>Preço abertura (R$/@)</label><input type="number" id="fut-preco-venda" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
+            <div class="field fut-span-3"><label>Preço abertura (R$/@)</label><input type="text" inputmode="decimal" data-decimal="1" id="fut-preco-venda" value="0" oninput="atualizarFuturoPreview()"></div>
             <div class="field fut-span-3 fut-legacy-liq" style="display:none;"><label>Data liquidação inicial</label><input type="date" id="fut-data-compra"></div>
-            <div class="field fut-span-3 fut-legacy-liq" style="display:none;"><label>Preço liquidação inicial (R$/@)</label><input type="number" id="fut-preco-compra" value="" step="0.01" oninput="atualizarFuturoPreview()"><div class="hint">Vazio = aberto.</div></div>
+            <div class="field fut-span-3 fut-legacy-liq" style="display:none;"><label>Preço liquidação inicial (R$/@)</label><input type="text" inputmode="decimal" data-decimal="1" id="fut-preco-compra" value="" oninput="atualizarFuturoPreview()"><div class="hint">Vazio = aberto.</div></div>
             <div class="field fut-span-3"><label>Corretagem B3 (R$/@)</label><div class="fut-money-control"><span class="fut-money-prefix">R$</span><input type="text" inputmode="decimal" data-decimal="1" id="fut-corretagem" value="0,15" oninput="atualizarFuturoPreview()"></div><div class="hint">Custo por @ protegida.</div></div>
-            <div class="field fut-span-3"><label>Custos / taxas (R$)</label><input type="number" id="fut-custos" value="0" step="0.01" oninput="atualizarFuturoPreview()"></div>
+            <div class="field fut-span-3"><label>Custos / taxas (R$)</label><input type="text" inputmode="decimal" data-decimal="1" id="fut-custos" value="0" oninput="atualizarFuturoPreview()"></div>
             <div class="fut-preview fut-span-4" style="margin:0;">
               <div class="fut-preview-label">Resultado previsto</div>
               <div class="fut-preview-value" id="fut-preview">—</div>
@@ -3283,6 +3301,20 @@ let activeOrcEditIndex=null;
 let activeLoteReturnStatus=null;
 let pillFilter='';
 var statusColumnFilters={status:'',ano:'',confinamento:'',lote:'',b3:'',qtd:'',entrada:'',abate:'',recebimento:'',faturamento:'',capital:'',lucro:'',rent:'',rentmes:'',eficiencia:'',eficienciaChegada:''};
+var STATUS_COLS=[
+  {key:'status',label:'Status',w:88},{key:'ano',label:'Ano',w:52},{key:'confinamento',label:'Confinamento',w:112},
+  {key:'lote',label:'Lote',w:230},{key:'b3',label:'B3',w:126},{key:'qtd',label:'Qtd',w:62},
+  {key:'entrada',label:'Entrada',w:92},{key:'abate',label:'Abate',w:92},{key:'recebimento',label:'Recebimento',w:104},
+  {key:'faturamento',label:'Fat. lote',w:126},{key:'capital',label:'Capital',w:126},{key:'lucro',label:'Lucro',w:116},
+  {key:'rent',label:'% Oper.',w:76},{key:'rentmes',label:'% Mês',w:76},{key:'eficiencia',label:'Efic. Origem',w:116},{key:'eficienciaChegada',label:'Efic. Cheg.',w:116}
+];
+var STATUS_COL_VISIBLE_KEY='vm_status_cols_visible_v1';
+var STATUS_COL_WIDTH_KEY='vm_status_cols_width_v1';
+var STATUS_SORT_KEY='vm_status_sort_v1';
+var statusSortState=(function(){
+  try{return JSON.parse(localStorage.getItem(STATUS_SORT_KEY)||'{}')||{};}catch(e){return {};}
+})();
+if(!statusSortState.key){statusSortState={key:'status',dir:'asc'};}
 
 const DEFAULT_RACAS={
   nelore:    {nome:'Nelore',                     rendE:50,rendA:56,gmd:1.30,ms:1.8,qExtra:0.0, desc:'Melhor rendimento de carcaça. Alta rusticidade. Carne magra. Ideal para acabamento rápido.'},
@@ -3666,7 +3698,21 @@ function getFinFreights(){try{return JSON.parse(localStorage.getItem(FIN_FREIGHT
 function saveFinFreights(a){localStorage.setItem(FIN_FREIGHT_KEY,JSON.stringify(a||[]));}
 function finId(prefix){return (prefix||'fin')+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);}
 function finHoje(){return _isoDate(new Date());}
-function finNum(v){return parseFloat(String(v||'').replace(/\s/g,'').replace(/\./g,'').replace(',','.'))||0;}
+function finNum(v){
+  if(typeof v==='number')return isFinite(v)?v:0;
+  var s=String(v||'').trim();
+  if(!s)return 0;
+  s=s.replace(/[^\d,.-]/g,'');
+  if(!s)return 0;
+  if(s.indexOf(',')>=0){
+    s=s.replace(/\./g,'').replace(',', '.');
+  }else{
+    var parts=s.split('.');
+    if(parts.length>2)s=parts.join('');
+  }
+  var n=parseFloat(s);
+  return isFinite(n)?n:0;
+}
 function finInputNum(id){var el=document.getElementById(id);return el?finNum(el.value):0;}
 function finText(id){var el=document.getElementById(id);return el?String(el.value||'').trim():'';}
 function finSet(id,val){var el=document.getElementById(id);if(el)el.value=(val===undefined||val===null)?'':val;}
@@ -4367,18 +4413,24 @@ function coberturaStatusB3(lote,orc,resumo){
   var nec=necessidadeContratosB3(lote,orc);
   var contratosTravados=parseFloat(resumo.contratos!==undefined?resumo.contratos:resumo.contratosB3)||0;
   if(!nec.necessarios){
+    var estadoSemMeta=contratosTravados?'Travado':'Aberto';
     return {
-      cobertura:contratosTravados?fmtContratosB3(contratosTravados)+' ctr':'Sem meta',
+      cobertura:contratosTravados?fmtContratosB3(contratosTravados)+'/'+fmtContratosB3(contratosTravados):'0/0',
       remanescente:'',
+      estado:estadoSemMeta,
       meta:0,
       travados:contratosTravados
     };
   }
   var meta=parseFloat(nec.necessarios)||0;
-  var remanescente=Math.max(0,meta-contratosTravados);
+  var metaOperacional=parseFloat(nec.metaOperacional)||0;
+  var cobertura=fmtContratosB3(contratosTravados)+'/'+fmtMetaContratosB3(meta);
+  var estado=contratosTravados<=0?'Aberto':(contratosTravados>=metaOperacional?'Travado':'Parcial');
   return {
-    cobertura:fmtContratosB3(contratosTravados)+'/'+fmtMetaContratosB3(meta)+' ctr',
-    remanescente:fmtMetaContratosB3(remanescente)+' ctr aberto(s)',
+    cobertura:cobertura,
+    remanescente:'',
+    estado:estado,
+    filtro:estado+' '+cobertura,
     meta:meta,
     travados:contratosTravados
   };
@@ -5274,12 +5326,12 @@ function editarFuturo(id){
   set('fut-qtd',norm.qtd);
   set('fut-arrobas',330);
   set('fut-data-venda',c.dataVenda);
-  set('fut-preco-venda',c.precoVenda);
+  set('fut-preco-venda',c.precoVenda!==undefined&&c.precoVenda!==null&&String(c.precoVenda)!==''?brNum(finNum(c.precoVenda),2):'');
   set('fut-data-compra',c.dataCompra);
-  set('fut-preco-compra',c.precoCompra);
+  set('fut-preco-compra',c.precoCompra!==undefined&&c.precoCompra!==null&&String(c.precoCompra)!==''?brNum(finNum(c.precoCompra),2):'');
   var corretagemEdit=(typeof c.corretagemArroba==='number')?c.corretagemArroba:finNum(c.corretagemArroba);
   set('fut-corretagem',c.corretagemArroba!==undefined?brNum(corretagemEdit,2):'0,15');
-  set('fut-custos',c.custos);
+  set('fut-custos',c.custos!==undefined&&c.custos!==null&&String(c.custos)!==''?brNum(finNum(c.custos),2):'0,00');
   set('fut-obs',c.obs);
   var title=document.getElementById('fut-form-title');if(title)title.textContent='Editar contrato';
   alternarOperacaoFuturo();
@@ -6805,6 +6857,111 @@ function abrirSugestoesFiltroStatus(input){
   },0);
 }
 
+function getStatusColVisible(){
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(STATUS_COL_VISIBLE_KEY)||'{}')||{};}catch(e){saved={};}
+  var out={};
+  STATUS_COLS.forEach(function(c){out[c.key]=saved[c.key]!==false;});
+  return out;
+}
+function getStatusColWidths(){
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(STATUS_COL_WIDTH_KEY)||'{}')||{};}catch(e){saved={};}
+  return saved;
+}
+function isStatusColVisible(key){return getStatusColVisible()[key]!==false;}
+function statusColClass(key){return isStatusColVisible(key)?'':' status-col-hidden';}
+function statusGridTemplate(){
+  var visible=getStatusColVisible();
+  var widths=getStatusColWidths();
+  return STATUS_COLS.map(function(c){
+    if(visible[c.key]===false)return '0px';
+    var w=parseFloat(widths[c.key]||c.w)||c.w;
+    return Math.max(42,w)+'px';
+  }).join(' ');
+}
+function applyStatusGridTemplate(){
+  var tpl=statusGridTemplate();
+  document.querySelectorAll('#panel-lotes .status-head,#panel-lotes .status-filter-row,#panel-lotes .status-row').forEach(function(el){
+    el.style.gridTemplateColumns=tpl;
+  });
+}
+function setStatusSort(key,dir){
+  statusSortState={key:key||'status',dir:dir||((statusSortState.key===key&&statusSortState.dir==='asc')?'desc':'asc')};
+  try{localStorage.setItem(STATUS_SORT_KEY,JSON.stringify(statusSortState));}catch(e){}
+  sortStatusRows();
+  document.querySelectorAll('#panel-lotes .status-head-cell').forEach(function(el){
+    var active=el.getAttribute('data-col')===statusSortState.key;
+    var mark=el.querySelector('.status-sort-mark');
+    if(mark)mark.textContent=active?(statusSortState.dir==='asc'?'↑':'↓'):'';
+  });
+  var sortSel=document.getElementById('status-sort-key');
+  var dirSel=document.getElementById('status-sort-dir');
+  if(sortSel)sortSel.value=statusSortState.key;
+  if(dirSel)dirSel.value=statusSortState.dir;
+}
+function statusSortValue(row,key){
+  var v=row.getAttribute('data-sort-'+key);
+  if(v===null||v===undefined)v=row.getAttribute('data-filter-'+key)||row.textContent||'';
+  var n=parseFloat(String(v).replace(/\./g,'').replace(',','.'));
+  if(['ano','qtd','faturamento','capital','lucro','rent','rentmes','eficiencia','eficienciaChegada','status'].indexOf(key)>=0&&!isNaN(n))return n;
+  return _statusNorm(v);
+}
+function sortStatusRows(){
+  var body=document.querySelector('#panel-lotes .status-table-body');
+  if(!body||!statusSortState.key)return;
+  var rows=Array.from(body.querySelectorAll('.status-row[data-lid]'));
+  var dir=statusSortState.dir==='desc'?-1:1;
+  rows.sort(function(a,b){
+    var av=statusSortValue(a,statusSortState.key);
+    var bv=statusSortValue(b,statusSortState.key);
+    if(typeof av==='number'&&typeof bv==='number')return (av-bv)*dir;
+    return String(av).localeCompare(String(bv),'pt-BR',{numeric:true})*dir;
+  });
+  rows.forEach(function(row){body.appendChild(row);});
+}
+function toggleStatusColumnsPanel(){
+  var p=document.getElementById('status-column-panel');
+  if(p)p.classList.toggle('open');
+}
+function setStatusColumnVisible(key,checked){
+  var visible=getStatusColVisible();
+  visible[key]=!!checked;
+  if(Object.keys(visible).filter(function(k){return visible[k];}).length<2){
+    visible.status=true;visible.lote=true;
+  }
+  try{localStorage.setItem(STATUS_COL_VISIBLE_KEY,JSON.stringify(visible));}catch(e){}
+  renderLotes();
+}
+function resetStatusColumns(){
+  try{
+    localStorage.removeItem(STATUS_COL_VISIBLE_KEY);
+    localStorage.removeItem(STATUS_COL_WIDTH_KEY);
+  }catch(e){}
+  renderLotes();
+}
+var statusResizeState=null;
+function startStatusColumnResize(ev,key){
+  ev.preventDefault();
+  ev.stopPropagation();
+  var widths=getStatusColWidths();
+  var col=STATUS_COLS.find(function(c){return c.key===key;});
+  statusResizeState={key:key,startX:ev.clientX,startW:parseFloat(widths[key]||(col&&col.w)||90)||90};
+  document.addEventListener('mousemove',moveStatusColumnResize);
+  document.addEventListener('mouseup',endStatusColumnResize,{once:true});
+}
+function moveStatusColumnResize(ev){
+  if(!statusResizeState)return;
+  var widths=getStatusColWidths();
+  widths[statusResizeState.key]=Math.max(44,statusResizeState.startW+(ev.clientX-statusResizeState.startX));
+  try{localStorage.setItem(STATUS_COL_WIDTH_KEY,JSON.stringify(widths));}catch(e){}
+  applyStatusGridTemplate();
+}
+function endStatusColumnResize(){
+  statusResizeState=null;
+  document.removeEventListener('mousemove',moveStatusColumnResize);
+}
+
 function renderLotes(){
   var container=document.getElementById('lote-list');
   if(!container)return;
@@ -6842,9 +6999,9 @@ function renderLotes(){
     if(!n||isNaN(n))return '—';
     return n.toLocaleString('pt-BR',{maximumFractionDigits:0})+' cab.';
   }
-  function statusCell(val,cls){
+  function statusCell(key,val,cls){
     var v=(val===null||val===undefined||val==='')?'—':String(val);
-    return '<div class="status-cell '+(cls||'')+'" title="'+escHtml(v)+'">'+escHtml(v)+'</div>';
+    return '<div class="status-cell '+statusColClass(key)+' '+(cls||'')+'" title="'+escHtml(v)+'">'+escHtml(v)+'</div>';
   }
   var statusFilterOptions={};
   function filterOptionsHtml(key){
@@ -6854,11 +7011,61 @@ function renderLotes(){
   }
   function filterInput(key,placeholder){
     var v=statusColumnFilters[key]||'';
-    return '<div class="status-filter-cell"><div class="status-filter-control"><input type="text" list="status-dl-'+key+'" value="'+escHtml(v)+'" placeholder="'+escHtml(placeholder||'Filtrar')+'" onfocus="abrirSugestoesFiltroStatus(this)" oninput="updateStatusColumnFilter(\''+key+'\',this.value)" onclick="event.stopPropagation();abrirSugestoesFiltroStatus(this)" onpointerdown="event.stopPropagation()">'+filterOptionsHtml(key)+'</div></div>';
+    return '<div class="status-filter-cell '+statusColClass(key)+'"><div class="status-filter-control"><input type="text" list="status-dl-'+key+'" value="'+escHtml(v)+'" placeholder="'+escHtml(placeholder||'Filtrar')+'" onfocus="abrirSugestoesFiltroStatus(this)" oninput="updateStatusColumnFilter(\''+key+'\',this.value)" onclick="event.stopPropagation();abrirSugestoesFiltroStatus(this)" onpointerdown="event.stopPropagation()">'+filterOptionsHtml(key)+'</div></div>';
   }
   function filterStatus(){
     var cur=statusColumnFilters.status||'';
-    return '<div class="status-filter-cell"><div class="status-filter-control"><input type="text" list="status-dl-status" value="'+escHtml(cur)+'" placeholder="Todos" onfocus="abrirSugestoesFiltroStatus(this)" oninput="updateStatusColumnFilter(\'status\',this.value)" onclick="event.stopPropagation();abrirSugestoesFiltroStatus(this)" onpointerdown="event.stopPropagation()">'+filterOptionsHtml('status')+'</div></div>';
+    return '<div class="status-filter-cell '+statusColClass('status')+'"><div class="status-filter-control"><input type="text" list="status-dl-status" value="'+escHtml(cur)+'" placeholder="Todos" onfocus="abrirSugestoesFiltroStatus(this)" oninput="updateStatusColumnFilter(\'status\',this.value)" onclick="event.stopPropagation();abrirSugestoesFiltroStatus(this)" onpointerdown="event.stopPropagation()">'+filterOptionsHtml('status')+'</div></div>';
+  }
+  function statusHeaderHtml(){
+    return STATUS_COLS.map(function(c){
+      var mark=statusSortState.key===c.key?(statusSortState.dir==='asc'?'↑':'↓'):'';
+      return '<div class="status-head-cell '+statusColClass(c.key)+'" data-col="'+c.key+'" onclick="setStatusSort(\''+c.key+'\')">'
+        +escHtml(c.label)
+        +'<span class="status-sort-mark">'+mark+'</span>'
+        +'<span class="status-col-resizer" onmousedown="startStatusColumnResize(event,\''+c.key+'\')"></span>'
+      +'</div>';
+    }).join('');
+  }
+  function statusFiltersHtml(){
+    var placeholders={
+      status:'Todos',ano:'Ano',confinamento:'Confinamento',lote:'Lote',b3:'B3',qtd:'Qtd',
+      entrada:'Entrada',abate:'Abate',recebimento:'Receb.',faturamento:'R$',capital:'R$',
+      lucro:'R$',rent:'%',rentmes:'%',eficiencia:'kg MS/@ origem',eficienciaChegada:'kg MS/@ cheg.'
+    };
+    return STATUS_COLS.map(function(c){
+      return c.key==='status'?filterStatus():filterInput(c.key,placeholders[c.key]||c.label);
+    }).join('');
+  }
+  function statusColumnPanelHtml(){
+    var visible=getStatusColVisible();
+    return '<div id="status-column-panel" class="status-column-panel">'
+      +'<div class="status-column-panel-title">Informações visíveis</div>'
+      +'<div class="status-column-panel-sub">Selecione quais colunas deseja ver na tabela de Status.</div>'
+      +STATUS_COLS.map(function(c){
+        var checked=visible[c.key]!==false?' checked':'';
+        return '<label class="status-column-option"><input type="checkbox"'+checked+' onchange="setStatusColumnVisible(\''+c.key+'\',this.checked)"> <span>'+escHtml(c.label)+'</span></label>';
+      }).join('')
+    +'</div>';
+  }
+  function statusViewbarHtml(){
+    return '<div class="status-viewbar">'
+      +'<div class="status-sort-tools">'
+        +'<span>Ordenar</span>'
+        +'<select id="status-sort-key" onchange="setStatusSort(this.value,document.getElementById(\'status-sort-dir\').value)">'
+          +STATUS_COLS.map(function(c){return '<option value="'+c.key+'" '+(statusSortState.key===c.key?'selected':'')+'>'+escHtml(c.label)+'</option>';}).join('')
+        +'</select>'
+        +'<select id="status-sort-dir" onchange="setStatusSort(document.getElementById(\'status-sort-key\').value,this.value)">'
+          +'<option value="asc" '+(statusSortState.dir==='asc'?'selected':'')+'>Crescente</option>'
+          +'<option value="desc" '+(statusSortState.dir==='desc'?'selected':'')+'>Decrescente</option>'
+        +'</select>'
+      +'</div>'
+      +'<div class="status-view-actions">'
+        +'<button type="button" class="status-view-btn" onclick="toggleStatusColumnsPanel()">Colunas visíveis</button>'
+        +'<button type="button" class="status-view-btn" onclick="resetStatusColumns()">Restaurar</button>'
+        +statusColumnPanelHtml()
+      +'</div>'
+    +'</div>';
   }
   function buildStatusCard(l,idx){
     var vend=vends.find(function(v){return v.id===l.vendedorId;});
@@ -6899,14 +7106,13 @@ function renderLotes(){
     var dataAbateCurta=dataAbate&&dataAbate!=='—'?dataAbate.slice(0,5):'—';
     var eficienciaVal=o&&metric.eficienciaBio?(fmtNum(metric.eficienciaBio,2)+' kg MS/@'):'—';
     var eficienciaChegadaVal=o&&metric.eficienciaBioChegada?(fmtNum(metric.eficienciaBioChegada,2)+' kg MS/@'):'—';
+    var abateSortDate=saidaIso||(entradaIso&&dias&&_addDias(entradaIso,dias)?_addDias(entradaIso,dias).toISOString().slice(0,10):'');
+    var recebSortDate=recebDate?recebDate.toISOString().slice(0,10):'';
     var b3Nec=necessidadeContratosB3(l,o);
     var b3Status=coberturaStatusB3(l,o,metric);
     var b3Cobertura=b3Status.cobertura;
-    var b3Remanescente=b3Status.remanescente;
-    var b3ProjLine=(b3Nec.necessarios&&Math.abs(b3Nec.necessarios-(b3Nec.metaOperacional||0))>.05)
-      ?'<span class="status-cell-sub">Projeção '+fmtMetaContratosB3(b3Nec.necessarios)+' ctr</span>'
-      :'';
-    var b3Val=metric.contratosB3?('Travado · '+b3Cobertura+(b3Remanescente?' · '+b3Remanescente:'')+' · '+metric.arrobasB3.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @ · venda '+fmt(metric.b3VendaMedia||0)+'/@'+(metric.b3CompraMedia?' · liq. '+fmt(metric.b3CompraMedia)+'/@':' · aberto')):('Sem trava · '+b3Cobertura+(b3Remanescente?' · '+b3Remanescente:''));
+    var b3Estado=b3Status.estado||'Aberto';
+    var b3Val=b3Estado+' · '+b3Cobertura;
     var filtroLote=cardTitle+(vend?' '+vend.nome:'')+(tipo?' '+tipo:'')+(metric.real?' realizado':' simulado');
     var attrs=' data-qtd-raw="'+qtdRaw+'" data-faturamento-raw="'+(o?faturamento:0)+'" data-capital-raw="'+(o?capital:0)+'" data-lucro-raw="'+(o?lucro:0)+'" data-prazo-dias-raw="'+prazoDias+'"'
       +' data-filter-status="'+escHtml(sc.label)+'"'
@@ -6924,52 +7130,62 @@ function renderLotes(){
       +' data-filter-rent="'+escHtml(rentVal)+'"'
       +' data-filter-rentmes="'+escHtml(rentMesVal)+'"'
       +' data-filter-eficiencia="'+escHtml(eficienciaVal)+'"'
-      +' data-filter-eficienciaChegada="'+escHtml(eficienciaChegadaVal)+'"';
-    var statusLabel='<div class="status-cell status-badge-cell">'
+      +' data-filter-eficienciaChegada="'+escHtml(eficienciaChegadaVal)+'"'
+      +' data-sort-status="'+STATUS_ORDER.indexOf(l.status||'embarque')+'"'
+      +' data-sort-ano="'+escHtml(anoVal)+'"'
+      +' data-sort-confinamento="'+escHtml(confinamento)+'"'
+      +' data-sort-lote="'+escHtml(cardTitle)+'"'
+      +' data-sort-b3="'+escHtml(b3Val)+'"'
+      +' data-sort-qtd="'+qtdRaw+'"'
+      +' data-sort-entrada="'+escHtml(entradaIso||'')+'"'
+      +' data-sort-abate="'+escHtml(abateSortDate)+'"'
+      +' data-sort-recebimento="'+escHtml(recebSortDate)+'"'
+      +' data-sort-faturamento="'+(o?faturamento:0)+'"'
+      +' data-sort-capital="'+(o?capital:0)+'"'
+      +' data-sort-lucro="'+(o?lucro:0)+'"'
+      +' data-sort-rent="'+(o?metric.rent:0)+'"'
+      +' data-sort-rentmes="'+(o?metric.rentMes:0)+'"'
+      +' data-sort-eficiencia="'+(o&&metric.eficienciaBio?metric.eficienciaBio:0)+'"'
+      +' data-sort-eficienciaChegada="'+(o&&metric.eficienciaBioChegada?metric.eficienciaBioChegada:0)+'"';
+    var statusLabel='<div class="status-cell status-badge-cell '+statusColClass('status')+'">'
       +'<span class="status-drag-dot" style="background:'+(barColor||'var(--border)')+'"></span>'
       +'<span class="badge '+sc.cls+'">'+escHtml(sc.label)+'</span>'
     +'</div>';
-    var loteCell='<div class="status-cell"><span class="status-seq-pc">Lote '+((idx||0)+1)+'</span><span class="status-cell-title">'+escHtml(cardTitle)+'</span>'
+    var loteCell='<div class="status-cell '+statusColClass('lote')+'"><span class="status-seq-pc">Lote '+((idx||0)+1)+'</span><span class="status-cell-title">'+escHtml(cardTitle)+'</span>'
       +(vend?'<span class="status-cell-sub">'+escHtml(vend.nome)+'</span>':'')
       +(metric.real?'<span class="status-cell-sub" style="color:var(--green)">Realizado ajustado</span>':'')
     +'</div>';
-    var b3Cell='<div class="status-cell" title="'+escHtml(b3Val)+'">'
-      +'<span class="b3-lock-pill '+(metric.contratosB3?'locked':'open')+'">'+(metric.contratosB3?'Travado':'Sem trava')+'</span>'
-      +'<span class="status-cell-sub">'+escHtml(b3Cobertura)+(metric.arrobasB3?' · '+metric.arrobasB3.toLocaleString('pt-BR',{maximumFractionDigits:0})+' @':'')+'</span>'
-      +(b3Remanescente?'<span class="status-cell-sub">'+escHtml(b3Remanescente)+'</span>':'')
-      +b3ProjLine
-      +(metric.contratosB3?'<span class="status-cell-sub">Venda '+fmt(metric.b3VendaMedia||0)+'/@</span>':'')
-      +(metric.contratosB3&&metric.b3CompraMedia?'<span class="status-cell-sub">Liq. '+fmt(metric.b3CompraMedia||0)+'/@</span>':'')
-      +(metric.contratosB3&&!metric.b3CompraMedia?'<span class="status-cell-sub" style="color:#8a4b05">Contrato em aberto</span>':'')
-      +(metric.resultadoB3?'<span class="status-cell-sub" style="color:'+(metric.resultadoB3>=0?'var(--green)':'var(--red)')+'">'+fmt(metric.resultadoB3)+'</span>':'')
+    var b3Cell='<div class="status-cell '+statusColClass('b3')+'" title="'+escHtml(b3Val)+'">'
+      +'<span class="b3-lock-pill '+(b3Estado==='Aberto'?'open':'locked')+'">'+escHtml(b3Estado)+'</span>'
+      +'<span class="status-cell-sub b3-coverage-main">'+escHtml(b3Cobertura)+'</span>'
     +'</div>';
     var mobileLine='<div class="status-mobile-line">'
       +'<span><em>Qtd</em>'+escHtml(qtdVal)+'</span>'
       +'<span><em>Entrada</em>'+escHtml(dataEntradaCurta)+'</span>'
       +'<span><em>Abate</em>'+escHtml(dataAbateCurta)+'</span>'
       +'<span><em>B3</em>'+escHtml(b3Cobertura)+'</span>'
-      +'<span class="muted"><em>Trava</em>'+(metric.contratosB3?'Travado':'Sem trava')+'</span>'
+      +'<span class="muted"><em>Trava</em>'+escHtml(b3Estado)+'</span>'
       +'<span class="money"><em>Capital</em>'+escHtml(fmtCompactMoney(capital))+'</span>'
       +'<span class="profit"><em>Lucro</em>'+escHtml(fmtCompactMoney(lucro))+'</span>'
       +'<span class="rate"><em>% mês</em>'+escHtml(rentMesVal)+'</span>'
     +'</div>';
-    return '<div class="status-row" data-lid="'+l.id+'" data-lote-seq="'+((idx||0)+1)+'" data-status="'+(l.status||'embarque')+'" draggable="true"'+attrs+'>'
+    return '<div class="status-row" style="grid-template-columns:'+statusGridTemplate()+'" data-lid="'+l.id+'" data-lote-seq="'+((idx||0)+1)+'" data-status="'+(l.status||'embarque')+'" draggable="true"'+attrs+'>'
       +statusLabel
-      +statusCell(anoVal,'muted')
-      +statusCell(confinamento,'muted')
+      +statusCell('ano',anoVal,'muted')
+      +statusCell('confinamento',confinamento,'muted')
       +loteCell
       +b3Cell
-      +statusCell(qtdVal)
-      +statusCell(dataEntrada,'muted')
-      +statusCell(dataAbate,'muted')
-      +statusCell(dataRecebimento,'muted')
-      +statusCell(faturamentoVal,'money')
-      +statusCell(capitalVal,'money')
-      +statusCell(lucroVal,'money '+lucroCls)
-      +statusCell(rentVal,'rate')
-      +statusCell(rentMesVal,'rate')
-      +statusCell(eficienciaVal,'rate')
-      +statusCell(eficienciaChegadaVal,'rate')
+      +statusCell('qtd',qtdVal)
+      +statusCell('entrada',dataEntrada,'muted')
+      +statusCell('abate',dataAbate,'muted')
+      +statusCell('recebimento',dataRecebimento,'muted')
+      +statusCell('faturamento',faturamentoVal,'money')
+      +statusCell('capital',capitalVal,'money')
+      +statusCell('lucro',lucroVal,'money '+lucroCls)
+      +statusCell('rent',rentVal,'rate')
+      +statusCell('rentmes',rentMesVal,'rate')
+      +statusCell('eficiencia',eficienciaVal,'rate')
+      +statusCell('eficienciaChegada',eficienciaChegadaVal,'rate')
       +mobileLine
     +'</div>';
   }
@@ -7055,42 +7271,13 @@ function renderLotes(){
       +'<div class="status-total-card"><div class="status-total-label">% lucro operação</div><div class="status-total-value" id="status-total-rent">—</div></div>'
       +'<div class="status-total-card"><div class="status-total-label">% lucro ao mês</div><div class="status-total-value" id="status-total-rentmes">—</div><div class="status-total-sub" id="status-total-prazo">Prazo médio: —</div></div>'
     +'</div>'
+    +statusViewbarHtml()
     +'<div class="status-table-wrap"><div class="status-table">'
-    +'<div class="status-head">'
-      +'<div class="status-head-cell">Status</div>'
-      +'<div class="status-head-cell">Ano</div>'
-      +'<div class="status-head-cell">Confinamento</div>'
-      +'<div class="status-head-cell">Lote</div>'
-      +'<div class="status-head-cell">B3</div>'
-      +'<div class="status-head-cell">Qtd</div>'
-      +'<div class="status-head-cell">Entrada</div>'
-      +'<div class="status-head-cell">Abate</div>'
-      +'<div class="status-head-cell">Recebimento</div>'
-      +'<div class="status-head-cell">Fat. lote</div>'
-      +'<div class="status-head-cell">Capital</div>'
-      +'<div class="status-head-cell">Lucro</div>'
-      +'<div class="status-head-cell">% Oper.</div>'
-      +'<div class="status-head-cell">% Mês</div>'
-      +'<div class="status-head-cell">Efic. Origem</div>'
-      +'<div class="status-head-cell">Efic. Cheg.</div>'
+    +'<div class="status-head" style="grid-template-columns:'+statusGridTemplate()+'">'
+      +statusHeaderHtml()
     +'</div>'
-    +'<div class="status-filter-row">'
-      +filterStatus()
-      +filterInput('ano','Ano')
-      +filterInput('confinamento','Confinamento')
-      +filterInput('lote','Lote')
-      +filterInput('b3','B3')
-      +filterInput('qtd','Qtd')
-      +filterInput('entrada','Entrada')
-      +filterInput('abate','Abate')
-      +filterInput('recebimento','Receb.')
-      +filterInput('faturamento','R$')
-      +filterInput('capital','R$')
-      +filterInput('lucro','R$')
-      +filterInput('rent','%')
-      +filterInput('rentmes','%')
-      +filterInput('eficiencia','kg MS/@ origem')
-      +filterInput('eficienciaChegada','kg MS/@ cheg.')
+    +'<div class="status-filter-row" style="grid-template-columns:'+statusGridTemplate()+'">'
+      +statusFiltersHtml()
     +'</div>'
     +'<div class="status-table-body">'
       +lotes.map(function(l,idx){return buildStatusCard(l,idx);}).join('')
@@ -7106,6 +7293,8 @@ function renderLotes(){
       openEditPanel(el.dataset.lid,el);
     });
   });
+  sortStatusRows();
+  applyStatusGridTemplate();
   applyStatusColumnFilters();
 }
 
